@@ -167,6 +167,8 @@ namespace Terminals.Data.DB
             this.isLoaded = true;
         }
 
+        // Note: DbCredentialBase has no rowversion (Version) column, so a lightweight
+        // MAX(Version) pre-check is not available here. Always performing a full reload.
         internal void RefreshCache()
         {
             this.cache.Clear();
