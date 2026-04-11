@@ -35,6 +35,9 @@ namespace Terminals.Data.DB
 
         private readonly DbFavoriteImagesStore favoriteIcons;
 
+        private byte[] _lastKnownMaxVersion;
+        private bool _versionInitialized;
+
         internal Favorites(SqlPersistence persistence, Groups groups, StoredCredentials credentials,
             ConnectionManager connectionManager, FavoriteIcons favoriteIcons)
         {
@@ -349,8 +352,42 @@ namespace Terminals.Data.DB
             this.isLoaded = true;
         }
 
+        private bool HasDatabaseChanged()
+        {
+            try
+            {
+                using (Database database = DatabaseConnections.CreateInstance())
+                {
+                    byte[] currentMax = database.Database
+                        .SqlQuery<byte[]>("SELECT MAX(Version) FROM Favorites")
+                        .FirstOrDefault();
+
+                    if (_versionInitialized && VersionsEqual(_lastKnownMaxVersion, currentMax))
+                        return false;
+
+                    _lastKnownMaxVersion = currentMax;
+                    _versionInitialized = true;
+                    return true;
+                }
+            }
+            catch (EntityException)
+            {
+                return true;
+            }
+        }
+
+        private static bool VersionsEqual(byte[] a, byte[] b)
+        {
+            if (a == null && b == null) return true;
+            if (a == null || b == null) return false;
+            return a.SequenceEqual(b);
+        }
+
         internal void RefreshCache()
         {
+            if (!this.HasDatabaseChanged())
+                return;
+
             List<DbFavorite> newlyLoaded = LoadFromDatabase();
             List<DbFavorite> oldFavorites = this.Cached;
             List<DbFavorite> missing = ListsHelper.GetMissingSourcesInTarget(newlyLoaded, oldFavorites, new ByIdComparer<DbFavorite>());

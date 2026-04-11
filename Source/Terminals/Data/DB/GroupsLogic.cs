@@ -21,6 +21,9 @@ namespace Terminals.Data.DB
 
         private bool isLoaded;
 
+        private byte[] _lastKnownMaxVersion;
+        private bool _versionInitialized;
+
         private List<DbGroup> Cached
         {
             get
@@ -256,8 +259,42 @@ namespace Terminals.Data.DB
                 .ToList();
         }
 
+        private bool HasDatabaseChanged()
+        {
+            try
+            {
+                using (Database database = DatabaseConnections.CreateInstance())
+                {
+                    byte[] currentMax = database.Database
+                        .SqlQuery<byte[]>("SELECT MAX(Version) FROM Groups")
+                        .FirstOrDefault();
+
+                    if (_versionInitialized && VersionsEqual(_lastKnownMaxVersion, currentMax))
+                        return false;
+
+                    _lastKnownMaxVersion = currentMax;
+                    _versionInitialized = true;
+                    return true;
+                }
+            }
+            catch (EntityException)
+            {
+                return true;
+            }
+        }
+
+        private static bool VersionsEqual(byte[] a, byte[] b)
+        {
+            if (a == null && b == null) return true;
+            if (a == null || b == null) return false;
+            return a.SequenceEqual(b);
+        }
+
         internal void RefreshCache()
         {
+            if (!this.HasDatabaseChanged())
+                return;
+
             List<DbGroup> newlyLoaded = this.Load(this.Cached);
             List<DbGroup> oldGroups = this.Cached;
 
