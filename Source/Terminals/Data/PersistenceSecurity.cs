@@ -1,4 +1,6 @@
-﻿using System;
+using System;
+using System.Runtime.InteropServices;
+using System.Security;
 using Terminals.Configuration;
 using Terminals.Security;
 
@@ -8,14 +10,14 @@ namespace Terminals.Data
     /// Provides persistence authentication and manipulations with master password.
     /// Doesn't distinguish between application and persistence master password.
     /// </summary>
-    internal class PersistenceSecurity
+    internal class PersistenceSecurity : IDisposable
     {
         private readonly Settings settings = Settings.Instance;
         private bool isAuthenticated;
 
-        protected string KeyMaterial { get; private set; }
+        protected SecureString KeyMaterial { get; private set; }
 
-        protected virtual string PersistenceKeyMaterial { get { return this.KeyMaterial; }  }
+        protected virtual SecureString PersistenceKeyMaterial { get { return this.KeyMaterial; } }
 
         internal bool IsMasterPasswordDefined
         {
@@ -29,7 +31,7 @@ namespace Terminals.Data
 
         internal PersistenceSecurity()
         {
-            this.KeyMaterial = string.Empty;
+            this.KeyMaterial = new SecureString();
         }
 
         /// <summary>
@@ -38,7 +40,7 @@ namespace Terminals.Data
         /// <param name="sourceSecurity">Not null current security instance to initialize from.</param>
         internal PersistenceSecurity(PersistenceSecurity sourceSecurity)
         {
-            this.KeyMaterial = sourceSecurity.KeyMaterial;
+            this.KeyMaterial = sourceSecurity.KeyMaterial.Copy();
         }
 
         internal bool Authenticate(Func<bool, AuthenticationPrompt> knowsUserPassword)
@@ -46,7 +48,7 @@ namespace Terminals.Data
             // don't prompt user third time for password when upgrading passwords from v2
             if (this.isAuthenticated)
                 return true;
-            
+
             var authentication = new AuthenticationSequence(this.IsMasterPasswordValid, knowsUserPassword);
             this.isAuthenticated = authentication.AuthenticateIfRequired();
             return this.isAuthenticated;
@@ -58,7 +60,8 @@ namespace Terminals.Data
             bool isValid = PasswordFunctions2.MasterPasswordIsValid(passwordToCheck, storedMasterPassword);
             if (isValid)
             {
-                this.KeyMaterial = PasswordFunctions2.CalculateMasterPasswordKey(passwordToCheck, storedMasterPassword);
+                string key = PasswordFunctions2.CalculateMasterPasswordKey(passwordToCheck, storedMasterPassword);
+                this.SetKeyMaterial(key);
                 return true;
             }
 
@@ -77,7 +80,14 @@ namespace Terminals.Data
 
             this.settings.UpdateConfigurationPasswords(newMasterKey, storedMasterPassword);
             // finish transaction, the passwords now reflect the new key
-            this.KeyMaterial = newMasterKey;
+            this.SetKeyMaterial(newMasterKey);
+        }
+
+        private void SetKeyMaterial(string key)
+        {
+            if (this.KeyMaterial != null)
+                this.KeyMaterial.Dispose();
+            this.KeyMaterial = ToSecureString(key);
         }
 
         /// <summary>
@@ -110,6 +120,29 @@ namespace Terminals.Data
         internal string EncryptPersistencePassword(string decryptedPassword)
         {
             return PasswordFunctions2.EncryptPassword(decryptedPassword, this.PersistenceKeyMaterial);
+        }
+
+        protected static SecureString ToSecureString(string value)
+        {
+            var secure = new SecureString();
+            if (!string.IsNullOrEmpty(value))
+            {
+                foreach (char c in value)
+                    secure.AppendChar(c);
+            }
+            secure.MakeReadOnly();
+            return secure;
+        }
+
+        public void Dispose()
+        {
+            this.Dispose(true);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing && this.KeyMaterial != null)
+                this.KeyMaterial.Dispose();
         }
     }
 }

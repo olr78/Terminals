@@ -1,5 +1,7 @@
 using System;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Security;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -117,6 +119,34 @@ namespace Terminals.Security
             }
         }
 
+        internal static string EncryptPassword(string password, SecureString keyMaterial)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(password))
+                    return string.Empty;
+
+                if (keyMaterial == null || keyMaterial.Length == 0)
+                    return EncryptByEmptyKeyMaterial(password);
+
+                byte[] keyBytes = SecureStringToKeyBytes(keyMaterial);
+                try
+                {
+                    byte[] initializationVector = CreateRandomKeySalt();
+                    return EncryptPassword(password, keyBytes, initializationVector);
+                }
+                finally
+                {
+                    Array.Clear(keyBytes, 0, keyBytes.Length);
+                }
+            }
+            catch (Exception exception)
+            {
+                Logging.Error("Error Encrypting Password", exception);
+                return String.Empty;
+            }
+        }
+
         private static string TryEncryptPassword(string password, string keyMaterial)
         {
             if (string.IsNullOrEmpty(password))
@@ -155,6 +185,33 @@ namespace Terminals.Security
             try
             {
                 return TryDecryptPassword(encryptedPassword, keyMaterial);
+            }
+            catch (Exception exception)
+            {
+                Logging.Error("Error Decrypting Password", exception);
+                return String.Empty;
+            }
+        }
+
+        internal static string DecryptPassword(string encryptedPassword, SecureString keyMaterial)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(encryptedPassword) || encryptedPassword.Length < IV_LENGTH)
+                    return string.Empty;
+
+                if (keyMaterial == null || keyMaterial.Length == 0)
+                    return DecryptByEmptyKeyMaterial(encryptedPassword);
+
+                byte[] keyBytes = SecureStringToKeyBytes(keyMaterial);
+                try
+                {
+                    return DecryptPassword(encryptedPassword, keyBytes);
+                }
+                finally
+                {
+                    Array.Clear(keyBytes, 0, keyBytes.Length);
+                }
             }
             catch (Exception exception)
             {
@@ -217,6 +274,24 @@ namespace Terminals.Security
             byte[] initializationVector = encryptedBytes.Take(IV_LENGTH).ToArray();
             byte[] passwordPart = encryptedBytes.Skip(IV_LENGTH).ToArray();
             return new Tuple<byte[], byte[]>(initializationVector, passwordPart);
+        }
+
+        /// <summary>
+        /// Extracts key bytes from a SecureString containing a Base64-encoded key.
+        /// Caller must zero the returned array after use.
+        /// </summary>
+        private static byte[] SecureStringToKeyBytes(SecureString keyMaterial)
+        {
+            IntPtr ptr = Marshal.SecureStringToGlobalAllocUnicode(keyMaterial);
+            try
+            {
+                string base64 = Marshal.PtrToStringUni(ptr);
+                return Convert.FromBase64String(base64);
+            }
+            finally
+            {
+                Marshal.ZeroFreeGlobalAllocUnicode(ptr);
+            }
         }
 
         private static byte[] CreateRandomKeySalt()

@@ -178,6 +178,7 @@ namespace Terminals.Connections
                 // if next line fails on Protected memory access exception,
                 // some string property is set to null, which leads to this exception
                 this.client.Connect();
+                this.ClearCredentialsFromComObject();
 
                 this.service.CheckForTerminalServer(this.Favorite);
                 return true;
@@ -573,10 +574,37 @@ namespace Terminals.Connections
             this.client.FullScreen = true;
         }
 
+        private void ClearCredentialsFromComObject()
+        {
+            try
+            {
+                this.client.UserName = string.Empty;
+                this.client.Domain = string.Empty;
+                if (this.nonScriptable != null)
+                    this.nonScriptable.ClearTextPassword = string.Empty;
+            }
+            catch (Exception exc)
+            {
+                Logging.Error("Error clearing credentials from RDP COM object", exc);
+            }
+
+            try
+            {
+                this.client.TransportSettings2.GatewayUsername = string.Empty;
+                this.client.TransportSettings2.GatewayDomain = string.Empty;
+                this.client.TransportSettings2.GatewayPassword = string.Empty;
+            }
+            catch (Exception exc)
+            {
+                Logging.Error("Error clearing gateway credentials from RDP COM object", exc);
+            }
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
+                this.ClearCredentialsFromComObject();
                 this.connectionStateDetector.Dispose();
                 this.client.Dispose();
                 this.client = null;
