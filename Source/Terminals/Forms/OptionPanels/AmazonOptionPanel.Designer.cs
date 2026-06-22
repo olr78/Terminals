@@ -151,11 +151,12 @@ namespace Terminals.Forms
             this.label16.Text = "Your Access Key ID:";
             // 
             // SecretKeyTextbox
-            // 
+            //
             this.SecretKeyTextbox.Location = new System.Drawing.Point(174, 70);
             this.SecretKeyTextbox.Name = "SecretKeyTextbox";
             this.SecretKeyTextbox.Size = new System.Drawing.Size(212, 22);
             this.SecretKeyTextbox.TabIndex = 15;
+            this.SecretKeyTextbox.PasswordChar = '*';
             // 
             // AccessKeyTextbox
             // 
