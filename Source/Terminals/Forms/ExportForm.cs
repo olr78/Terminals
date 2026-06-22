@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using Terminals.Configuration;
 using Terminals.Connections;
 using Terminals.Data;
 using Terminals.Forms.Controls;
 using Terminals.Integration;
 using Terminals.Integration.Export;
+using Terminals.Security;
 
 namespace Terminals.Forms
 {
@@ -47,12 +49,34 @@ namespace Terminals.Forms
         {
             if (this.saveFileDialog.ShowDialog() == DialogResult.OK)
             {
+                if (this.checkBox1.Checked && !this.ConfirmMasterPassword())
+                    return;
+
                 if (this.favsTree.SelectedNode != null)
                     this.RunExport();
 
                 string message = "Done exporting, you can find your exported file at " + this.saveFileDialog.FileName;
                 MessageBox.Show(message, "Terminals export");
                 this.Close();
+            }
+        }
+
+        private bool ConfirmMasterPassword()
+        {
+            if (!AuthenticationSequence.IsMasterPasswordDefined())
+                return true;
+
+            bool firstTry = true;
+            while (true)
+            {
+                AuthenticationPrompt prompt = RequestPassword.KnowsUserPassword(!firstTry);
+                if (prompt.Canceled)
+                    return false;
+
+                if (PasswordFunctions2.MasterPasswordIsValid(prompt.Password, Settings.Instance.MasterPasswordHash))
+                    return true;
+
+                firstTry = false;
             }
         }
 
