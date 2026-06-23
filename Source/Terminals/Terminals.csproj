@@ -587,6 +587,7 @@
     </Compile>
     <Compile Include="Data\ListsHelper.cs" />
     <Compile Include="Data\GroupsChangedArgs.cs" />
+    <Compile Include="Forms\InactivityLockManager.cs" />
     <Compile Include="Forms\ExportForm.cs">
       <SubType>Form</SubType>
     </Compile>

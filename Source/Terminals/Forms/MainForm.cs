@@ -56,6 +56,8 @@ namespace Terminals
 
         private FavoriteIcons favoriteIcons;
 
+        private readonly InactivityLockManager inactivityLockManager;
+
         #endregion
 
         #region Properties
@@ -166,6 +168,9 @@ namespace Terminals
 
                 ProtocolHandler.Register();
                 this.persistence.AssignSynchronizationObject(this);
+
+                this.inactivityLockManager = new InactivityLockManager();
+                this.inactivityLockManager.Start();
             }
             catch (Exception exc)
             {
@@ -547,6 +552,9 @@ namespace Terminals
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (this.inactivityLockManager != null)
+                this.inactivityLockManager.Stop();
+
             favsList1.SaveState();
 
             if (this.FullScreen)
