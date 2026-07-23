@@ -30,6 +30,7 @@ namespace Terminals.Connections
         private readonly object activityLock = new object();
         private bool disabled;
         private bool isRunning;
+        private bool disposed;
 
         private readonly Action<string, int> testAction;
 
@@ -144,7 +145,7 @@ namespace Terminals.Connections
         {
             lock (this.activityLock)
             {
-                if (this.disabled)
+                if (this.disabled || this.disposed)
                     return;
 
                 this.isRunning = true;
@@ -158,24 +159,30 @@ namespace Terminals.Connections
             lock (this.activityLock)
             {
                 this.isRunning = false;
+
+                // The timer callback runs on a threadpool thread and can still be
+                // in flight (e.g. blocked on a slow TCP connect attempt) when the GUI
+                // thread disposes this detector concurrently. Without this guard,
+                // Change() below can race with Dispose() and throw
+                // ObjectDisposedException on the threadpool thread, which is fatal
+                // to the whole process.
+                if (this.disposed)
+                    return;
+
                 this.retriesTimer.Change(Timeout.Infinite, Timeout.Infinite);
             }
         }
 
         public void Dispose()
         {
-            this.Disable();
-            this.retriesTimer.Dispose();
-        }
-
-        /// <summary>
-        /// Fill space between disconnected request from GUI and real disconnect of the client.
-        /// </summary>
-        private void Disable()
-        {
             lock (this.activityLock)
             {
                 this.disabled = true;
+                if (this.disposed)
+                    return;
+
+                this.disposed = true;
+                this.retriesTimer.Dispose();
             }
         }
 
