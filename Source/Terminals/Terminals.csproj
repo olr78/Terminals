@@ -467,6 +467,7 @@
     <Compile Include="Data\Favorites\DisplayOptions.cs" />
     <Compile Include="Data\Favorites\BeforeConnectExecuteOptions.cs" />
     <Compile Include="Data\Favorites\Favorite.cs" />
+    <Compile Include="Data\Favorites\NotesEncryptionContext.cs" />
     <Compile Include="Data\FilePersisted\FavoritesFile.cs" />
     <Compile Include="Data\FilePersisted\FavoritesInGroup.cs" />
     <Compile Include="Data\Favorites\Group.cs" />

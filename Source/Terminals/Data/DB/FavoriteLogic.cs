@@ -13,6 +13,8 @@ namespace Terminals.Data.DB
 
         private StoredCredentials credentials;
 
+        private PersistenceSecurity security;
+
         /// <summary>
         /// cant be set in constructor, because the constructor is used by EF when loading the entities
         /// </summary>
@@ -81,6 +83,34 @@ namespace Terminals.Data.DB
         List<IGroup> IFavorite.Groups
         {
             get { return GetInvariantGroups(); }
+        }
+
+        /// <summary>
+        /// Gets or sets the decrypted notes. The <see cref="Notes"/> property (mapped by EF)
+        /// always holds the encrypted, at rest representation.
+        /// </summary>
+        string IFavorite.Notes
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(this.Notes))
+                    return string.Empty;
+                // security isn't assigned yet for favorites created outside the normal
+                // Factory/AssignStores flow (e.g. validation-only instances); don't lose the value.
+                if (this.security == null)
+                    return this.Notes;
+
+                return this.security.DecryptPersistencePassword(this.Notes);
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    this.Notes = string.Empty;
+                else if (this.security == null)
+                    this.Notes = value;
+                else
+                    this.Notes = this.security.EncryptPersistencePassword(value);
+            }
         }
 
         /// <summary>
@@ -182,7 +212,7 @@ namespace Terminals.Data.DB
 
         IFavorite IFavorite.Copy()
         {
-            DbFavorite copy = Factory.CreateFavorite(this.groups, this.credentials, this.Details.Dispatcher);
+            DbFavorite copy = Factory.CreateFavorite(this.groups, this.credentials, this.Details.Dispatcher, this.security);
             copy.UpdateFrom(this);
             return copy;
         }
@@ -215,7 +245,7 @@ namespace Terminals.Data.DB
             // protocolProperties don't have a favorite Id reference, so we can overwrite complete content
             ProtocolOptions sourceProperties = source.protocolProperties.Copy();
             this.ChangeProtocol(source.Protocol, sourceProperties);
-            this.AssignStores(source.groups, source.credentials, source.Details.Dispatcher);
+            this.AssignStores(source.groups, source.credentials, source.Details.Dispatcher, source.security);
         }
 
         bool IStoreIdEquals<IFavorite>.StoreIdEquals(IFavorite oponent)
@@ -241,11 +271,12 @@ namespace Terminals.Data.DB
                 .ToList();
         }
 
-        internal void AssignStores(Groups groups, StoredCredentials credentials, DataDispatcher dispatcher)
+        internal void AssignStores(Groups groups, StoredCredentials credentials, DataDispatcher dispatcher, PersistenceSecurity security)
         {
             this.groups = groups;
             this.credentials = credentials;
             this.Details.Dispatcher = dispatcher;
+            this.security = security;
         }
 
         internal void SaveDetails(Database database)

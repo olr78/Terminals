@@ -103,7 +103,7 @@ namespace Terminals.Data.DB
             this.favorites = new Favorites(this, this.groups, this.credentials, this.connectionManager, this.favoriteIcons);
             this.groups.AssignStores(this.Dispatcher, this.favorites);
             this.connectionHistory = new ConnectionHistory(this.favorites, this.Dispatcher);
-            this.Factory = new Factory(this.groups, this.favorites, this.credentials, this.Dispatcher, this.connectionManager);
+            this.Factory = new Factory(this.groups, this.favorites, this.credentials, this.Dispatcher, this.connectionManager, this.security);
             return true;
         }
 

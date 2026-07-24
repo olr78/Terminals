@@ -164,7 +164,8 @@ namespace Terminals.Data
         }
 
         /// <summary>
-        /// Gets or sets the notes property as Base64 encoded string. This is used only for xml serialization.
+        /// Legacy Base64 encoded (not encrypted) notes element, kept only to read files
+        /// created by older versions. Never written anymore, see <see cref="ShouldSerializeNotes"/>.
         /// </summary>
         public String Notes
         {
@@ -175,6 +176,30 @@ namespace Terminals.Data
             set
             {
                 this.notes = TextConverter.DecodeFrom64(value);
+            }
+        }
+
+        /// <summary>
+        /// Prevents XmlSerializer from writing the legacy plaintext <see cref="Notes"/> element.
+        /// </summary>
+        public bool ShouldSerializeNotes()
+        {
+            return false;
+        }
+
+        /// <summary>
+        /// Gets or sets the notes property encrypted for xml serialization.
+        /// See <see cref="NotesEncryptionContext"/> for how the key is supplied during (de)serialization.
+        /// </summary>
+        public String EncryptedNotes
+        {
+            get
+            {
+                return NotesEncryptionContext.Encrypt(this.notes);
+            }
+            set
+            {
+                this.notes = NotesEncryptionContext.Decrypt(value);
             }
         }
 
@@ -235,7 +260,7 @@ namespace Terminals.Data
             this.ExecuteBeforeConnect = source.ExecuteBeforeConnect.Copy();
             this.Name = source.Name;
             this.NewWindow = source.NewWindow;
-            this.Notes = source.Notes;
+            this.notes = source.notes;
             this.Port = source.Port;
             this.Protocol = source.Protocol;
             this.security = (SecurityOptions)source.security.Copy();

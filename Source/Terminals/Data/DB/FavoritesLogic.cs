@@ -35,6 +35,8 @@ namespace Terminals.Data.DB
 
         private readonly DbFavoriteImagesStore favoriteIcons;
 
+        private readonly PersistenceSecurity security;
+
         private byte[] _lastKnownMaxVersion;
         private bool _versionInitialized;
 
@@ -47,6 +49,7 @@ namespace Terminals.Data.DB
             this.connectionManager = connectionManager;
             this.favoriteIcons = new DbFavoriteImagesStore(this.dispatcher, favoriteIcons);
             this.batchActions = new FavoritesBatchActions(this, this.cache, persistence);
+            this.security = persistence.Security;
         }
 
         IFavorite IFavorites.this[Guid favoriteId]
@@ -447,7 +450,7 @@ namespace Terminals.Data.DB
 
         private void PrepareFavorite(DbFavorite favorite)
         {
-            favorite.AssignStores(this.groups, this.credentials, this.dispatcher);
+            favorite.AssignStores(this.groups, this.credentials, this.dispatcher, this.security);
             // not real change, but synchronizing loaded properties to empty state, before details are loaded from DB.
             var correctOptions = this.connectionManager.UpdateProtocolPropertiesByProtocol(favorite.Protocol, new EmptyOptions());
             favorite.ChangeProtocol(favorite.Protocol, correctOptions);

@@ -95,7 +95,7 @@
           <Property Name="ServerName" Type="nvarchar" Nullable="false" MaxLength="255" />
           <Property Name="NewWindow" Type="bit" Nullable="false" />
           <Property Name="DesktopShare" Type="nvarchar" MaxLength="255" />
-          <Property Name="Notes" Type="nvarchar" MaxLength="500" />
+          <Property Name="Notes" Type="nvarchar(max)" />
           <Property Name="ProtocolProperties" Type="xml" />
           <Property Name="IconData" Type="varbinary(max)" />
           <Property Name="Version" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
@@ -520,7 +520,7 @@
           <Property Type="String" Name="ServerName" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Type="Boolean" Name="NewWindow" Nullable="false" />
           <Property Type="String" Name="DesktopShare" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="Notes" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Notes" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="ExecuteBeforeConnect" Relationship="Terminals.Data.DB.FK_BeforeConnectExecute_BeforeConnectExecute" FromRole="Favorites" ToRole="BeforeConnectExecute" />
           <NavigationProperty Name="Display" Relationship="Terminals.Data.DB.FK_DisplayOptions_Favorites" FromRole="Favorites" ToRole="DisplayOptions" />
           <NavigationProperty Name="Security" Relationship="Terminals.Data.DB.FK_Security_Favorites" FromRole="Favorites" ToRole="Security" />

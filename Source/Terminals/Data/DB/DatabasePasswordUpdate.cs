@@ -87,6 +87,23 @@ namespace Terminals.Data.DB
             this.UpdateCredentialBasePasswords();
             List<int> rdpFavoriteIds = this.database.GetRdpFavoriteIds();
             this.UpdateFavoriteProtocolPasswords(rdpFavoriteIds);
+            this.UpdateFavoriteNotes();
+        }
+
+        /// <summary>
+        /// Notes are stored encrypted the same way as passwords, so they also have to be
+        /// re-encrypted by the new master password key.
+        /// </summary>
+        private void UpdateFavoriteNotes()
+        {
+            foreach (DbFavorite favorite in this.database.Favorites)
+            {
+                if (!string.IsNullOrEmpty(favorite.Notes))
+                {
+                    string plainNotes = this.persistenceSecurity.DecryptPersistencePassword(favorite.Notes);
+                    favorite.Notes = PasswordFunctions2.EncryptPassword(plainNotes, this.newKeyMaterial);
+                }
+            }
         }
 
         private void UpdateFavoriteProtocolPasswords(List<int> rdpFavorites)

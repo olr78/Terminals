@@ -8,6 +8,7 @@ using Terminals.Configuration;
 using Terminals.Connections;
 using Terminals.Data.FilePersisted;
 using Terminals.History;
+using Terminals.Security;
 
 namespace Terminals.Data
 {
@@ -93,7 +94,7 @@ namespace Terminals.Data
             FavoriteIcons favoriteIcons, ConnectionManager connectionManager)
         {
             this.fileLocations = Settings.Instance.FileLocations;
-            this.serializer = new FavoritesFileSerializer(connectionManager);
+            this.serializer = new FavoritesFileSerializer(connectionManager, security);
             this.Security = security;
             this.Dispatcher = new DataDispatcher();
             this.storedCredentials = new StoredCredentials(security);
@@ -163,7 +164,19 @@ namespace Terminals.Data
         {
             this.storedCredentials.UpdatePasswordsByNewKeyMaterial(newMasterKey);
             this.favorites.UpdatePasswordsByNewMasterPassword(newMasterKey);
-            this.SaveImmediatelyIfRequested();
+
+            // at this point this.Security.KeyMaterial still holds the OLD key
+            // (it is updated only after this event handler returns), so Notes
+            // must be (re)encrypted explicitly with the new key for this one save.
+            NotesEncryptionContext.Encryptor = plainText => PasswordFunctions2.EncryptPassword(plainText, newMasterKey);
+            try
+            {
+                this.SaveImmediatelyIfRequested();
+            }
+            finally
+            {
+                NotesEncryptionContext.Encryptor = null;
+            }
         }
 
         internal void SaveImmediatelyIfRequested()

@@ -19,20 +19,23 @@ namespace Terminals.Data.DB
 
         private readonly ConnectionManager connectionManager;
 
-        internal Factory(Groups groups, Favorites favorites, 
+        private readonly PersistenceSecurity security;
+
+        internal Factory(Groups groups, Favorites favorites,
             StoredCredentials credentials, DataDispatcher dispatcher,
-            ConnectionManager connectionManager)
+            ConnectionManager connectionManager, PersistenceSecurity security)
         {
             this.groups = groups;
             this.favorites = favorites;
             this.credentials = credentials;
             this.dispatcher = dispatcher;
             this.connectionManager = connectionManager;
+            this.security = security;
         }
 
         public IFavorite CreateFavorite()
         {
-            var favorite = CreateFavorite(this.groups, this.credentials, this.dispatcher);
+            var favorite = CreateFavorite(this.groups, this.credentials, this.dispatcher, this.security);
             this.connectionManager.SetDefaultProtocol(favorite);
             return favorite;
         }
@@ -40,13 +43,13 @@ namespace Terminals.Data.DB
         /// <summary>
         /// Does not set the protocol options.
         /// </summary>
-        internal static DbFavorite CreateFavorite(Groups groups, StoredCredentials credentials, DataDispatcher dispatcher)
+        internal static DbFavorite CreateFavorite(Groups groups, StoredCredentials credentials, DataDispatcher dispatcher, PersistenceSecurity security)
         {
             var favorite = new DbFavorite();
             favorite.Display = new DbDisplayOptions();
             favorite.Security = new DbSecurityOptions();
             favorite.ExecuteBeforeConnect = new DbBeforeConnectExecute();
-            favorite.AssignStores(groups, credentials, dispatcher);
+            favorite.AssignStores(groups, credentials, dispatcher, security);
             favorite.MarkAsNewlyCreated();
             return favorite;
         }

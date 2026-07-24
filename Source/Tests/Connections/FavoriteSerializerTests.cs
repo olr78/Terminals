@@ -100,7 +100,7 @@ namespace Tests.Connections
             unknownElements.Favorites.Add(vncCachedFavorite);
             unknownElements.GroupMembership[GROUP_ID] = new List<XElement>() {UNKNOWN_VNC};
             var context = new SerializationContext(file, unknownElements);
-            var limitedSerializer = new FavoritesFileSerializer(rdpOnlyManager);
+            var limitedSerializer = new FavoritesFileSerializer(rdpOnlyManager, new PersistenceSecurity());
 
             limitedSerializer.Serialize(context, FILE_NAME);
             string saved = File.ReadAllText(FILE_NAME);
@@ -146,12 +146,12 @@ namespace Tests.Connections
 
         private static SerializationContext SerializeRdpVncDeserializeRdpOnly()
         {
-            var fullSerializer = new FavoritesFileSerializer(TestConnectionManager.Instance);
+            var fullSerializer = new FavoritesFileSerializer(TestConnectionManager.Instance, new PersistenceSecurity());
             FavoritesFile file = CreateTestFile(RDP_FAVORITE, VNC_FAVORITE);
             var context = new SerializationContext(file, new UnknonwPluginElements());
             fullSerializer.Serialize(context, FILE_NAME);
             var rdpOnlyManager = TestConnectionManager.CreateRdpOnlyManager();
-            var limitedSerializer = new FavoritesFileSerializer(rdpOnlyManager);
+            var limitedSerializer = new FavoritesFileSerializer(rdpOnlyManager, new PersistenceSecurity());
             return limitedSerializer.Deserialize(FILE_NAME);
         }
 
@@ -176,7 +176,7 @@ namespace Tests.Connections
         
         private static bool RestoreXmlSerializedFavorite(Tuple<string, Type> testCase)
         {
-            var serializer = new FavoritesFileSerializer(TestConnectionManager.Instance);
+            var serializer = new FavoritesFileSerializer(TestConnectionManager.Instance, new PersistenceSecurity());
             FavoritesFile file = CreateTestFile(testCase.Item1);
             var context = new SerializationContext(file, new UnknonwPluginElements());
             serializer.Serialize(context, FILE_NAME);

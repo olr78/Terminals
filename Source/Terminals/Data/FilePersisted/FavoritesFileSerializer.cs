@@ -12,9 +12,12 @@ namespace Terminals.Data.FilePersisted
     {
         private readonly ConnectionManager connectinManager;
 
-        internal FavoritesFileSerializer(ConnectionManager connectinManager)
+        private readonly PersistenceSecurity security;
+
+        internal FavoritesFileSerializer(ConnectionManager connectinManager, PersistenceSecurity security)
         {
             this.connectinManager = connectinManager;
+            this.security = security;
         }
 
         internal void Serialize(SerializationContext context, string fileName)
@@ -28,10 +31,18 @@ namespace Terminals.Data.FilePersisted
 
         private void Serialize(SerializationContext context, XDocument document)
         {
-            using (XmlWriter writer = document.CreateWriter())
+            NotesEncryptionContext.Encryptor = this.security.EncryptPersistencePassword;
+            try
             {
-                XmlSerializer serializer = this.CreateSerializer();
-                serializer.Serialize(writer, context.File);
+                using (XmlWriter writer = document.CreateWriter())
+                {
+                    XmlSerializer serializer = this.CreateSerializer();
+                    serializer.Serialize(writer, context.File);
+                }
+            }
+            finally
+            {
+                NotesEncryptionContext.Encryptor = null;
             }
         }
 
@@ -49,7 +60,17 @@ namespace Terminals.Data.FilePersisted
             FavoritesXmlFile document = FavoritesXmlFile.LoadXmlDocument(fileLocation);
             UnknonwPluginElements unknown = document.RemoveUnknownFavorites(availableProtocols);
             XmlSerializer serializer = this.CreateSerializer();
-            FavoritesFile loaded = DeSerialize(document, serializer);
+
+            NotesEncryptionContext.Decryptor = this.security.DecryptPersistencePassword;
+            FavoritesFile loaded;
+            try
+            {
+                loaded = DeSerialize(document, serializer);
+            }
+            finally
+            {
+                NotesEncryptionContext.Decryptor = null;
+            }
 
             if (loaded != null)
                 return new SerializationContext(loaded, unknown);
