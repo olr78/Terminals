@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Terminals.Common.Connections;
 using Terminals.Common.Converters;
 using Terminals.Configuration;
@@ -42,10 +43,23 @@ namespace Terminals.Data
             return result;
         }
 
+        /// <summary>
+        /// Stores each group as its full path (e.g. "Parent/Child"), so the nested
+        /// structure survives export/import instead of collapsing every group to root level.
+        /// </summary>
         private static void ConvertGroups(FavoriteConfigurationElement result, IFavorite sourceFavorite)
         {
-            var groupNames = sourceFavorite.Groups.Select(group => group.Name).ToArray();
-            result.Tags = string.Join(",", groupNames);
+            var groupPaths = sourceFavorite.Groups.Select(GetGroupPath).ToArray();
+            result.Tags = string.Join(",", groupPaths);
+        }
+
+        private static string GetGroupPath(IGroup group)
+        {
+            var pathSegments = new List<string>();
+            for (IGroup current = group; current != null; current = current.Parent)
+                pathSegments.Insert(0, current.Name);
+
+            return string.Join("/", pathSegments);
         }
 
         private static void ConvertGeneralProperties(FavoriteConfigurationElement result, IFavorite sourceFavorite)
