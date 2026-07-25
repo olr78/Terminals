@@ -99,15 +99,26 @@ namespace Terminals.Data
         /// </summary>
         /// <param name="persistence">Not null persistence, where to search for groups</param>
         /// <param name="groupName">Name of the group to search in persistence.</param>
+        /// <param name="parent">
+        /// Optional parent to nest the group under. Only applied to a newly created group
+        /// or to an already existing group, which doesn't have a parent assigned yet,
+        /// so an existing, already nested group is never silently moved elsewhere.
+        /// </param>
         /// <returns>Not null value of Group obtained from persistence or newly created group</returns>
-        internal static IGroup GetOrAddNewGroup(IPersistence persistence, string groupName)
+        internal static IGroup GetOrAddNewGroup(IPersistence persistence, string groupName, IGroup parent = null)
         {
             IGroups groups = persistence.Groups;
             IGroup group = groups[groupName];
             if (group == null)
             {
                 group = persistence.Factory.CreateGroup(groupName);
-                groups.Add(group); 
+                group.Parent = parent;
+                groups.Add(group);
+            }
+            else if (parent != null && group.Parent == null)
+            {
+                group.Parent = parent;
+                groups.Update(group);
             }
 
             return group;

@@ -126,21 +126,55 @@ namespace Terminals.Forms.Controls
             Logging.Warn(message);
         }
 
+        /// <summary>
+        /// Each tag may be a single group name or a "/" separated group path (e.g. "Parent/Child"),
+        /// used to recreate nested groups on import. A path is valid only if every segment is valid.
+        /// </summary>
         private IEnumerable<string> SelectValidGroupNames(FavoriteConfigurationElement toImport)
         {
             var validator = new GroupNameValidator(this.persistence);
             var tagsConverter = new TagsConverter();
             return tagsConverter.ResolveTagsList(toImport)
-                .Where(groupName => string.IsNullOrEmpty(validator.ValidateNameValue(groupName)));
+                .Where(groupPath => IsValidGroupPath(groupPath, validator));
+        }
+
+        private static bool IsValidGroupPath(string groupPath, GroupNameValidator validator)
+        {
+            string[] groupNames = SplitGroupPath(groupPath);
+            return groupNames.Length > 0 &&
+                   groupNames.All(groupName => string.IsNullOrEmpty(validator.ValidateNameValue(groupName)));
+        }
+
+        private static string[] SplitGroupPath(string groupPath)
+        {
+            return groupPath.Split('/')
+                .Select(groupName => groupName.Trim())
+                .Where(groupName => groupName.Length > 0)
+                .ToArray();
         }
 
         internal static void AddFavoriteIntoGroups(IPersistence persistence, IFavorite toPerisist, IEnumerable<string> validGroupNames)
         {
-            foreach (string groupName in validGroupNames)
+            foreach (string groupPath in validGroupNames)
             {
-                IGroup group = FavoritesFactory.GetOrAddNewGroup(persistence, groupName);
+                IGroup group = GetOrCreateGroupHierarchy(persistence, groupPath);
                 group.AddFavorite(toPerisist);
             }
+        }
+
+        /// <summary>
+        /// Walks the "/" separated path, creating or reusing each segment as a group
+        /// nested under the previous one, and returns the leaf group of the path.
+        /// </summary>
+        private static IGroup GetOrCreateGroupHierarchy(IPersistence persistence, string groupPath)
+        {
+            IGroup parent = null;
+            foreach (string groupName in SplitGroupPath(groupPath))
+            {
+                parent = FavoritesFactory.GetOrAddNewGroup(persistence, groupName, parent);
+            }
+
+            return parent;
         }
         
         private void ImportToPersistence(IFavorite favorite)

@@ -139,6 +139,54 @@ namespace Tests.Integrations
         }
 
         [TestMethod]
+        public void ExportImportFavorite_PreservesNestedGroupHierarchy()
+        {
+            const string PARENT_GROUP = "NestedParentGroup";
+            const string CHILD_GROUP = "NestedChildGroup";
+            const string NESTED_GROUPS_FILE = "testNestedGroups.xml";
+
+            IGroup parent = this.AddNewGroup(PARENT_GROUP);
+            IGroup child = this.Persistence.Factory.CreateGroup(CHILD_GROUP);
+            child.Parent = parent;
+            this.Persistence.Groups.Add(child);
+
+            IFavorite favorite = this.AddFavorite("NestedGroupFavorite");
+            child.AddFavorite(favorite);
+            this.Favorites.UpdateFavorite(favorite, new List<IGroup> { child });
+
+            ExportFavoriteToFile(favorite, this.Persistence, NESTED_GROUPS_FILE);
+
+            // simulate a clean environment, which doesn't know about the source hierarchy yet
+            this.Persistence.Favorites.Delete(favorite);
+            this.Persistence.Groups.Delete(child);
+            this.Persistence.Groups.Delete(parent);
+
+            List<FavoriteConfigurationElement> toImport = ImportItemsFromFile(this.Persistence,
+                this.TestContext.DeploymentDirectory, NESTED_GROUPS_FILE);
+            InvokeTheImport(toImport, this.Persistence, rename);
+
+            IGroup importedChild = this.Persistence.Groups[CHILD_GROUP];
+            Assert.IsNotNull(importedChild, "Child group wasn't imported.");
+            Assert.IsNotNull(importedChild.Parent, "Nested group lost its parent on import.");
+            Assert.AreEqual(PARENT_GROUP, importedChild.Parent.Name, "Child group was attached to the wrong parent.");
+            Assert.AreEqual(2, this.ImportedGroupsCount, "Expected exactly the parent and child group to be recreated.");
+        }
+
+        private static void ExportFavoriteToFile(IFavorite favorite, IPersistence persistence, string fileName)
+        {
+            FavoriteConfigurationElement favoriteElement = ModelConverterV2ToV1.ConvertToFavorite(favorite, persistence, TestConnectionManager.Instance);
+            ExportOptions options = new ExportOptions
+            {
+                ProviderFilter = ImportTerminals.TERMINALS_FILEEXTENSION,
+                Favorites = new List<FavoriteConfigurationElement> { favoriteElement },
+                FileName = fileName,
+                IncludePasswords = false
+            };
+
+            new Exporters(persistence, TestConnectionManager.Instance).Export(options);
+        }
+
+        [TestMethod]
         public void ImportingFromXmlFile_ImportsGroups()
         {
             // strategy doesnt matter
