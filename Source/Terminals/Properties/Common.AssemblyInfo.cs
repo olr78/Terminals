@@ -6,4 +6,4 @@
 [assembly: AssemblyCompany("Robert Chartier")]
 [assembly: AssemblyProduct("Terminals by Robert Chartier")]
 [assembly: AssemblyCopyright("Copyright © by Robert Chartier 2006 - 2013")]
-[assembly: AssemblyVersion("4.0.6.*")]
+[assembly: AssemblyVersion("4.0.7.*")]
