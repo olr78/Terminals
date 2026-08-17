@@ -178,7 +178,6 @@ namespace Terminals.Connections
                 // if next line fails on Protected memory access exception,
                 // some string property is set to null, which leads to this exception
                 this.client.Connect();
-                this.ClearCredentialsFromComObject();
 
                 this.service.CheckForTerminalServer(this.Favorite);
                 return true;
@@ -574,6 +573,10 @@ namespace Terminals.Connections
             this.client.FullScreen = true;
         }
 
+        // Only called from Dispose(). Connect() is asynchronous, so wiping these
+        // right after calling it raced with the ActiveX control's own login handshake,
+        // and Reconnect() reuses this same COM object without resupplying credentials -
+        // clearing any earlier than Dispose broke both the initial logon and reconnects.
         private void ClearCredentialsFromComObject()
         {
             try
