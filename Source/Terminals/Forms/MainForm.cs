@@ -507,6 +507,12 @@ namespace Terminals
         {
             if ((this.tsbGrabInput.Checked || this.FullScreen) && e.KeyCode != Keys.Cancel)
             {
+                // Dont steal focus back to the terminal while the user is typing into another
+                // control (e.g. the favorites search box), otherwise only the first keystroke
+                // reaches it and focus keeps jumping back to the terminal on every key press.
+                if (this.IsEditableControlFocused())
+                    return;
+
                 if (this.CurrentTerminal != null)
                 {
                     this.CurrentTerminal.Focus();
@@ -531,6 +537,24 @@ namespace Terminals
             {
                 this.ShowQuickConnect();
             }
+        }
+
+        /// <summary>
+        /// Walks down the chain of nested ActiveControl to find the control the user is
+        /// actually typing into (e.g. the favorites search box), regardless of how deeply
+        /// it is nested inside panels or user controls.
+        /// </summary>
+        private bool IsEditableControlFocused()
+        {
+            Control active = this.ActiveControl;
+            var container = active as ContainerControl;
+            while (container != null && container.ActiveControl != null)
+            {
+                active = container.ActiveControl;
+                container = active as ContainerControl;
+            }
+
+            return active is TextBoxBase || active is ComboBox;
         }
 
         private void ShowQuickConnect()
