@@ -88,6 +88,9 @@ namespace Terminals.Data.DB
             List<int> rdpFavoriteIds = this.database.GetRdpFavoriteIds();
             this.UpdateFavoriteProtocolPasswords(rdpFavoriteIds);
             this.UpdateFavoriteNotes();
+            this.UpdateFavoriteName();
+            this.UpdateFavoriteServerName();
+            this.UpdateFavoritePort();
         }
 
         /// <summary>
@@ -102,6 +105,46 @@ namespace Terminals.Data.DB
                 {
                     string plainNotes = this.persistenceSecurity.DecryptPersistencePassword(favorite.Notes);
                     favorite.Notes = PasswordFunctions2.EncryptPassword(plainNotes, this.newKeyMaterial);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Name, ServerName and Port are stored encrypted the same way as passwords, so they also
+        /// have to be re-encrypted by the new master password key.
+        /// </summary>
+        private void UpdateFavoriteName()
+        {
+            foreach (DbFavorite favorite in this.database.Favorites)
+            {
+                if (!string.IsNullOrEmpty(favorite.Name))
+                {
+                    string plainName = this.persistenceSecurity.DecryptPersistencePassword(favorite.Name);
+                    favorite.Name = PasswordFunctions2.EncryptPassword(plainName, this.newKeyMaterial);
+                }
+            }
+        }
+
+        private void UpdateFavoriteServerName()
+        {
+            foreach (DbFavorite favorite in this.database.Favorites)
+            {
+                if (!string.IsNullOrEmpty(favorite.ServerName))
+                {
+                    string plainServerName = this.persistenceSecurity.DecryptPersistencePassword(favorite.ServerName);
+                    favorite.ServerName = PasswordFunctions2.EncryptPassword(plainServerName, this.newKeyMaterial);
+                }
+            }
+        }
+
+        private void UpdateFavoritePort()
+        {
+            foreach (DbFavorite favorite in this.database.Favorites)
+            {
+                if (!string.IsNullOrEmpty(favorite.Port))
+                {
+                    string plainPort = this.persistenceSecurity.DecryptPersistencePassword(favorite.Port);
+                    favorite.Port = PasswordFunctions2.EncryptPassword(plainPort, this.newKeyMaterial);
                 }
             }
         }

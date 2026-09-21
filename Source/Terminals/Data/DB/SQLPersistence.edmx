@@ -89,10 +89,10 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="255" />
+          <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Protocol" Type="nvarchar" Nullable="false" MaxLength="10" />
-          <Property Name="Port" Type="int" Nullable="false" />
-          <Property Name="ServerName" Type="nvarchar" Nullable="false" MaxLength="255" />
+          <Property Name="Port" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="ServerName" Type="nvarchar(max)" Nullable="false" />
           <Property Name="NewWindow" Type="bit" Nullable="false" />
           <Property Name="DesktopShare" Type="nvarchar" MaxLength="255" />
           <Property Name="Notes" Type="nvarchar(max)" />
@@ -308,7 +308,7 @@
         <Function Name="InsertFavorite" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Name" Type="nvarchar" Mode="In" />
           <Parameter Name="Protocol" Type="nvarchar" Mode="In" />
-          <Parameter Name="Port" Type="int" Mode="In" />
+          <Parameter Name="Port" Type="nvarchar(max)" Mode="In" />
           <Parameter Name="ServerName" Type="nvarchar" Mode="In" />
           <Parameter Name="NewWindow" Type="bit" Mode="In" />
           <Parameter Name="DesktopShare" Type="nvarchar" Mode="In" />
@@ -368,7 +368,7 @@
           <Parameter Name="Id" Type="int" Mode="In" />
           <Parameter Name="Name" Type="nvarchar" Mode="In" />
           <Parameter Name="Protocol" Type="nvarchar" Mode="In" />
-          <Parameter Name="Port" Type="int" Mode="In" />
+          <Parameter Name="Port" Type="nvarchar(max)" Mode="In" />
           <Parameter Name="ServerName" Type="nvarchar" Mode="In" />
           <Parameter Name="NewWindow" Type="bit" Mode="In" />
           <Parameter Name="DesktopShare" Type="nvarchar" Mode="In" />
@@ -514,10 +514,10 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Type="Int32" Name="Id" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
-          <Property Type="String" Name="Name" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="Protocol" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Type="Int32" Name="Port" Nullable="false" />
-          <Property Type="String" Name="ServerName" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Port" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="ServerName" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Type="Boolean" Name="NewWindow" Nullable="false" />
           <Property Type="String" Name="DesktopShare" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="Notes" MaxLength="Max" FixedLength="false" Unicode="true" />

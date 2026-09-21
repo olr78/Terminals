@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Xml.Serialization;
 using Terminals.Common.Connections;
@@ -31,10 +32,30 @@ namespace Terminals.Data
         /// </summary>
         private IFavoriteGroups groups;
 
+        /// <summary>
+        /// Legacy plaintext name element, kept only to read files created before Name encryption.
+        /// Never written anymore, see <see cref="ShouldSerializeName"/>. Live value is this same field,
+        /// see <see cref="EncryptedName"/> for the persisted at-rest representation.
+        /// </summary>
         public string Name { get; set; }
 
+        public bool ShouldSerializeName()
+        {
+            return false;
+        }
+
         /// <summary>
-        /// Only to identify groups containing this favorite. Manipulating this property 
+        /// Gets or sets the Name property encrypted for xml serialization.
+        /// See <see cref="FavoriteEncryptionContext"/> for how the key is supplied during (de)serialization.
+        /// </summary>
+        public string EncryptedName
+        {
+            get { return FavoriteEncryptionContext.Encrypt(this.Name); }
+            set { this.Name = FavoriteEncryptionContext.Decrypt(value); }
+        }
+
+        /// <summary>
+        /// Only to identify groups containing this favorite. Manipulating this property
         /// has no effect in persistence layer
         /// </summary>
         [XmlIgnore]
@@ -54,6 +75,11 @@ namespace Terminals.Data
         }
 
         private int port = KnownConnectionConstants.RDPPort;
+
+        /// <summary>
+        /// Legacy plaintext port element, kept only to read files created before Port encryption.
+        /// Never written anymore, see <see cref="ShouldSerializePort"/>.
+        /// </summary>
         public Int32 Port
         {
             get { return port; }
@@ -63,7 +89,47 @@ namespace Terminals.Data
             }
         }
 
+        public bool ShouldSerializePort()
+        {
+            return false;
+        }
+
+        /// <summary>
+        /// Gets or sets the Port property encrypted for xml serialization.
+        /// See <see cref="FavoriteEncryptionContext"/> for how the key is supplied during (de)serialization.
+        /// </summary>
+        public string EncryptedPort
+        {
+            get { return FavoriteEncryptionContext.Encrypt(this.port.ToString(CultureInfo.InvariantCulture)); }
+            set
+            {
+                string decrypted = FavoriteEncryptionContext.Decrypt(value);
+                int parsed;
+                if (int.TryParse(decrypted, NumberStyles.Integer, CultureInfo.InvariantCulture, out parsed))
+                    this.port = parsed;
+            }
+        }
+
+        /// <summary>
+        /// Legacy plaintext server name element, kept only to read files created before ServerName encryption.
+        /// Never written anymore, see <see cref="ShouldSerializeServerName"/>.
+        /// </summary>
         public string ServerName { get; set; }
+
+        public bool ShouldSerializeServerName()
+        {
+            return false;
+        }
+
+        /// <summary>
+        /// Gets or sets the ServerName property encrypted for xml serialization.
+        /// See <see cref="FavoriteEncryptionContext"/> for how the key is supplied during (de)serialization.
+        /// </summary>
+        public string EncryptedServerName
+        {
+            get { return FavoriteEncryptionContext.Encrypt(this.ServerName); }
+            set { this.ServerName = FavoriteEncryptionContext.Decrypt(value); }
+        }
 
         private SecurityOptions security = new SecurityOptions();
         /// <summary>
@@ -189,17 +255,17 @@ namespace Terminals.Data
 
         /// <summary>
         /// Gets or sets the notes property encrypted for xml serialization.
-        /// See <see cref="NotesEncryptionContext"/> for how the key is supplied during (de)serialization.
+        /// See <see cref="FavoriteEncryptionContext"/> for how the key is supplied during (de)serialization.
         /// </summary>
         public String EncryptedNotes
         {
             get
             {
-                return NotesEncryptionContext.Encrypt(this.notes);
+                return FavoriteEncryptionContext.Encrypt(this.notes);
             }
             set
             {
-                this.notes = NotesEncryptionContext.Decrypt(value);
+                this.notes = FavoriteEncryptionContext.Decrypt(value);
             }
         }
 

@@ -166,16 +166,16 @@ namespace Terminals.Data
             this.favorites.UpdatePasswordsByNewMasterPassword(newMasterKey);
 
             // at this point this.Security.KeyMaterial still holds the OLD key
-            // (it is updated only after this event handler returns), so Notes
-            // must be (re)encrypted explicitly with the new key for this one save.
-            NotesEncryptionContext.Encryptor = plainText => PasswordFunctions2.EncryptPassword(plainText, newMasterKey);
+            // (it is updated only after this event handler returns), so encrypted
+            // fields must be (re)encrypted explicitly with the new key for this one save.
+            FavoriteEncryptionContext.Encryptor = plainText => PasswordFunctions2.EncryptPassword(plainText, newMasterKey);
             try
             {
                 this.SaveImmediatelyIfRequested();
             }
             finally
             {
-                NotesEncryptionContext.Encryptor = null;
+                FavoriteEncryptionContext.Encryptor = null;
             }
         }
 

@@ -31,7 +31,7 @@ namespace Terminals.Data.FilePersisted
 
         private void Serialize(SerializationContext context, XDocument document)
         {
-            NotesEncryptionContext.Encryptor = this.security.EncryptPersistencePassword;
+            FavoriteEncryptionContext.Encryptor = this.security.EncryptPersistencePassword;
             try
             {
                 using (XmlWriter writer = document.CreateWriter())
@@ -42,7 +42,7 @@ namespace Terminals.Data.FilePersisted
             }
             finally
             {
-                NotesEncryptionContext.Encryptor = null;
+                FavoriteEncryptionContext.Encryptor = null;
             }
         }
 
@@ -61,7 +61,7 @@ namespace Terminals.Data.FilePersisted
             UnknonwPluginElements unknown = document.RemoveUnknownFavorites(availableProtocols);
             XmlSerializer serializer = this.CreateSerializer();
 
-            NotesEncryptionContext.Decryptor = this.security.DecryptPersistencePassword;
+            FavoriteEncryptionContext.Decryptor = this.security.DecryptPersistencePassword;
             FavoritesFile loaded;
             try
             {
@@ -69,7 +69,7 @@ namespace Terminals.Data.FilePersisted
             }
             finally
             {
-                NotesEncryptionContext.Decryptor = null;
+                FavoriteEncryptionContext.Decryptor = null;
             }
 
             if (loaded != null)

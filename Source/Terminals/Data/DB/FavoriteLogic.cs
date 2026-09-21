@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using Terminals.Common.Connections;
 using Terminals.Converters;
@@ -83,6 +84,82 @@ namespace Terminals.Data.DB
         List<IGroup> IFavorite.Groups
         {
             get { return GetInvariantGroups(); }
+        }
+
+        /// <summary>
+        /// Gets or sets the decrypted name. The <see cref="Name"/> property (mapped by EF)
+        /// always holds the encrypted, at rest representation.
+        /// </summary>
+        string IFavorite.Name
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(this.Name))
+                    return string.Empty;
+                // security isn't assigned yet for favorites created outside the normal
+                // Factory/AssignStores flow (e.g. validation-only instances); don't lose the value.
+                if (this.security == null)
+                    return this.Name;
+
+                return this.security.DecryptPersistencePassword(this.Name);
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    this.Name = string.Empty;
+                else if (this.security == null)
+                    this.Name = value;
+                else
+                    this.Name = this.security.EncryptPersistencePassword(value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the decrypted server name. The <see cref="ServerName"/> property (mapped by EF)
+        /// always holds the encrypted, at rest representation.
+        /// </summary>
+        string IFavorite.ServerName
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(this.ServerName))
+                    return string.Empty;
+                if (this.security == null)
+                    return this.ServerName;
+
+                return this.security.DecryptPersistencePassword(this.ServerName);
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    this.ServerName = string.Empty;
+                else if (this.security == null)
+                    this.ServerName = value;
+                else
+                    this.ServerName = this.security.EncryptPersistencePassword(value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the decrypted port. The <see cref="Port"/> property (mapped by EF)
+        /// always holds the encrypted, at rest representation.
+        /// </summary>
+        Int32 IFavorite.Port
+        {
+            get
+            {
+                string decrypted = this.security == null ? this.Port : this.security.DecryptPersistencePassword(this.Port);
+                int parsed;
+                if (int.TryParse(decrypted, NumberStyles.Integer, CultureInfo.InvariantCulture, out parsed))
+                    return parsed;
+
+                return 0;
+            }
+            set
+            {
+                string toStore = value.ToString(CultureInfo.InvariantCulture);
+                this.Port = this.security == null ? toStore : this.security.EncryptPersistencePassword(toStore);
+            }
         }
 
         /// <summary>
@@ -199,7 +276,7 @@ namespace Terminals.Data.DB
         public DbFavorite()
         {
             this.Groups = new HashSet<DbGroup>();
-            this.Port = KnownConnectionConstants.RDPPort;
+            ((IFavorite)this).Port = KnownConnectionConstants.RDPPort;
             this.ChangeProtocol(KnownConnectionConstants.RDP, new EmptyOptions());
             this.Details = new FavoriteDetails(this);
         }

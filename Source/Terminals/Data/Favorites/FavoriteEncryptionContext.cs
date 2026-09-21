@@ -7,8 +7,9 @@ namespace Terminals.Data
     /// serialized or deserialized by <see cref="XmlSerializer"/>, which invokes property
     /// accessors directly and cannot be given extra constructor parameters.
     /// Must be set immediately before, and cleared immediately after, a single (de)serialize call.
+    /// Shared by all encrypted-at-rest favorite fields (Notes, Name, ServerName, Port).
     /// </summary>
-    internal static class NotesEncryptionContext
+    internal static class FavoriteEncryptionContext
     {
         internal static Func<string, string> Encryptor { get; set; }
 

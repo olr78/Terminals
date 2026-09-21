@@ -15,7 +15,7 @@ namespace Terminals.Data.DB
     internal partial class DbFavorite
     {
         public string Name { get; set; }
-        public int Port { get; set; }
+        public string Port { get; set; }
         public string ServerName { get; set; }
         public bool NewWindow { get; set; }
         public string DesktopShare { get; set; }

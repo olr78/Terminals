@@ -67,7 +67,7 @@ namespace Terminals.Data.DB
             {
                 this.EnsureCache();
                 return this.cache.FirstOrDefault(favorite =>
-                            favorite.Name.Equals(favoriteName, StringComparison.CurrentCultureIgnoreCase));
+                            ((IFavorite)favorite).Name.Equals(favoriteName, StringComparison.CurrentCultureIgnoreCase));
             }
         }
 
