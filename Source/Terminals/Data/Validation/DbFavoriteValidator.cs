@@ -21,8 +21,6 @@ namespace Terminals.Data.Validation
             this.RuleFor(g => g.ServerName).Must(g => !CustomValidationRules.IsValidServerNameB(g))
                 .WithMessage(CustomValidationRules.SERVER_NAME_IS_NOT_IN_THE_CORRECT_FORMAT);
 
-            this.RuleFor(g => g.Notes).Length(0, 255).WithMessage("Property maximum lenght is 500 characters.");
-
             this.RuleFor(g => g.Port).InclusiveBetween(0, 65535).WithMessage(Validations.PORT_RANGE);
 
             this.RuleFor(g => g.ExecuteBeforeConnect).SetValidator(new DbBeforeConnectExecuteValidator());
