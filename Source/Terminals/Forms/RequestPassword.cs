@@ -45,8 +45,20 @@ namespace Terminals.Security
 
         internal static AuthenticationPrompt KnowsUserPassword(bool previousTrySuccess)
         {
+            return KnowsUserPassword(previousTrySuccess, null);
+        }
+
+        /// <summary>
+        /// Same as <see cref="KnowsUserPassword(bool)"/>, but lets the caller override the dialog
+        /// title - e.g. to distinguish "confirm your master password" from "set an export password".
+        /// </summary>
+        internal static AuthenticationPrompt KnowsUserPassword(bool previousTrySuccess, string title)
+        {
             using (RequestPassword requestPassword = new RequestPassword())
             {
+                if (!string.IsNullOrEmpty(title))
+                    requestPassword.Text = title;
+
                 if(previousTrySuccess)
                     requestPassword.SetWrongPasswordInfo();
 

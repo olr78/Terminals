@@ -83,7 +83,7 @@ namespace Terminals.Forms
             MessageBox.Show("Enter a password to protect the exported file. You will need to enter it again when importing.",
                 "Terminals export", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-            AuthenticationPrompt first = RequestPassword.KnowsUserPassword(false);
+            AuthenticationPrompt first = RequestPassword.KnowsUserPassword(false, "Terminals Export - Set Password");
             if (first.Canceled)
                 return false;
 
@@ -93,7 +93,7 @@ namespace Terminals.Forms
                 return false;
             }
 
-            AuthenticationPrompt second = RequestPassword.KnowsUserPassword(false);
+            AuthenticationPrompt second = RequestPassword.KnowsUserPassword(false, "Terminals Export - Confirm Password");
             if (second.Canceled)
                 return false;
 

@@ -91,7 +91,7 @@ namespace Terminals.Integration.Import
             bool firstTry = true;
             while (true)
             {
-                AuthenticationPrompt prompt = RequestPassword.KnowsUserPassword(!firstTry);
+                AuthenticationPrompt prompt = RequestPassword.KnowsUserPassword(!firstTry, "Terminals Import - Enter Export Password");
                 if (prompt.Canceled)
                     return null;
 
