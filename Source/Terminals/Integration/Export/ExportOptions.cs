@@ -23,5 +23,18 @@ namespace Terminals.Integration.Export
         /// if set to <c>true</c> includes paswords in not encrypted form into the destination file.
         /// </summary>
         internal bool IncludePasswords { get; set; }
+
+        /// <summary>
+        /// If set to <c>true</c>, the whole destination file content is encrypted with
+        /// <see cref="EncryptionPassword"/> instead of written as plain text.
+        /// </summary>
+        internal bool EncryptFile { get; set; }
+
+        /// <summary>
+        /// Password used to encrypt the destination file when <see cref="EncryptFile"/> is set.
+        /// Not the persistence master password - chosen at export time so the file stays
+        /// portable to another machine/install.
+        /// </summary>
+        internal string EncryptionPassword { get; set; }
     }
 }

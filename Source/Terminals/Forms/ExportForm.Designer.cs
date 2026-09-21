@@ -30,6 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.encryptFileCheckBox = new System.Windows.Forms.CheckBox();
             this.btnExport = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
@@ -37,53 +38,64 @@
             this.label1 = new System.Windows.Forms.Label();
             this.favsTree = new Terminals.Forms.Controls.FavoritesTreeView();
             this.SuspendLayout();
-            // 
+            //
             // checkBox1
-            // 
+            //
             this.checkBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(15, 351);
+            this.checkBox1.Location = new System.Drawing.Point(15, 374);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(115, 17);
-            this.checkBox1.TabIndex = 2;
+            this.checkBox1.TabIndex = 3;
             this.checkBox1.Text = "&Include Passwords";
             this.checkBox1.UseVisualStyleBackColor = true;
-            // 
+            //
+            // encryptFileCheckBox
+            //
+            this.encryptFileCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.encryptFileCheckBox.AutoSize = true;
+            this.encryptFileCheckBox.Location = new System.Drawing.Point(15, 351);
+            this.encryptFileCheckBox.Name = "encryptFileCheckBox";
+            this.encryptFileCheckBox.Size = new System.Drawing.Size(115, 17);
+            this.encryptFileCheckBox.TabIndex = 2;
+            this.encryptFileCheckBox.Text = "Encrypt exported &file with a password";
+            this.encryptFileCheckBox.UseVisualStyleBackColor = true;
+            //
             // btnExport
-            // 
+            //
             this.btnExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnExport.Location = new System.Drawing.Point(224, 347);
+            this.btnExport.Location = new System.Drawing.Point(224, 370);
             this.btnExport.Name = "btnExport";
             this.btnExport.Size = new System.Drawing.Size(75, 23);
-            this.btnExport.TabIndex = 4;
+            this.btnExport.TabIndex = 5;
             this.btnExport.Text = "&Export";
             this.btnExport.UseVisualStyleBackColor = true;
             this.btnExport.Click += new System.EventHandler(this.BtnExport_Click);
-            // 
+            //
             // btnCancel
-            // 
+            //
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(305, 347);
+            this.btnCancel.Location = new System.Drawing.Point(305, 370);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
-            this.btnCancel.TabIndex = 5;
+            this.btnCancel.TabIndex = 6;
             this.btnCancel.Text = "&Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.BtnCancel_Click);
-            // 
+            //
             // saveFileDialog
-            // 
+            //
             this.saveFileDialog.Filter = "Terminals favorites XML *.xml|*.xml";
             this.saveFileDialog.Title = "Save export list as...";
-            // 
+            //
             // btnSelect
-            // 
+            //
             this.btnSelect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSelect.Location = new System.Drawing.Point(143, 347);
+            this.btnSelect.Location = new System.Drawing.Point(143, 370);
             this.btnSelect.Name = "btnSelect";
             this.btnSelect.Size = new System.Drawing.Size(75, 23);
-            this.btnSelect.TabIndex = 3;
+            this.btnSelect.TabIndex = 4;
             this.btnSelect.Text = "&Select all";
             this.btnSelect.UseVisualStyleBackColor = true;
             this.btnSelect.Click += new System.EventHandler(this.BtnSelect_Click);
@@ -121,14 +133,15 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(392, 376);
+            this.ClientSize = new System.Drawing.Size(392, 400);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.favsTree);
             this.Controls.Add(this.btnSelect);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnExport);
+            this.Controls.Add(this.encryptFileCheckBox);
             this.Controls.Add(this.checkBox1);
-            this.MinimumSize = new System.Drawing.Size(398, 397);
+            this.MinimumSize = new System.Drawing.Size(398, 421);
             this.Name = "ExportForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
@@ -143,6 +156,7 @@
         #endregion
 
         private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox encryptFileCheckBox;
         private System.Windows.Forms.Button btnExport;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.SaveFileDialog saveFileDialog;

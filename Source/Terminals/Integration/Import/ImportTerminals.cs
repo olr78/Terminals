@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Xml;
 using Terminals.Data;
+using Terminals.Security;
+using Terminals.Integration;
 
 namespace Terminals.Integration.Import
 {
@@ -49,16 +52,54 @@ namespace Terminals.Integration.Import
 
         private List<FavoriteConfigurationElement> TryImport(string filename)
         {
+            if (EncryptedExportFile.IsEncrypted(filename))
+            {
+                string xml = this.DecryptWithPrompt(filename);
+                if (xml == null)
+                    return new List<FavoriteConfigurationElement>();
+
+                using (var reader = new XmlTextReader(new StringReader(xml)))
+                {
+                    return this.ReadFavorites(reader);
+                }
+            }
+
             using (var reader = new XmlTextReader(filename))
             {
-                var propertyReader = new PropertyReader(reader);
-                var context = new ImportTerminalsContext(propertyReader, this.persistence);
-                while (propertyReader.Read())
-                {
-                    this.ReadProperty(context);
-                }
+                return this.ReadFavorites(reader);
+            }
+        }
 
-                return context.Favorites;
+        private List<FavoriteConfigurationElement> ReadFavorites(XmlTextReader reader)
+        {
+            var propertyReader = new PropertyReader(reader);
+            var context = new ImportTerminalsContext(propertyReader, this.persistence);
+            while (propertyReader.Read())
+            {
+                this.ReadProperty(context);
+            }
+
+            return context.Favorites;
+        }
+
+        /// <summary>
+        /// Prompts for the export password, retrying on mismatch, until it decrypts
+        /// successfully or the user cancels.
+        /// </summary>
+        private string DecryptWithPrompt(string filename)
+        {
+            bool firstTry = true;
+            while (true)
+            {
+                AuthenticationPrompt prompt = RequestPassword.KnowsUserPassword(!firstTry);
+                if (prompt.Canceled)
+                    return null;
+
+                string xml = EncryptedExportFile.TryReadDecrypted(filename, prompt.Password);
+                if (xml != null)
+                    return xml;
+
+                firstTry = false;
             }
         }
 

@@ -538,6 +538,7 @@
     </Compile>
     <Compile Include="Data\DataFileWatcher.cs" />
     <Compile Include="Data\History\HistoryRecordedEventArgs.cs" />
+    <Compile Include="Integration\EncryptedExportFile.cs" />
     <Compile Include="Integration\Exporters.cs" />
     <Compile Include="Integration\Export\ExportOptions.cs" />
     <Compile Include="Integration\Export\ExportRdp.cs" />

@@ -47,18 +47,64 @@ namespace Terminals.Forms
         
         private void BtnExport_Click(object sender, EventArgs e)
         {
+            if (this.checkBox1.Checked && !this.encryptFileCheckBox.Checked)
+            {
+                MessageBox.Show("Passwords can only be exported into an encrypted file. Enable \"Encrypt exported file with a password\" first.",
+                    "Terminals export", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            string encryptionPassword = null;
+            if (this.encryptFileCheckBox.Checked && !this.TryGetNewExportPassword(out encryptionPassword))
+                return;
+
             if (this.saveFileDialog.ShowDialog() == DialogResult.OK)
             {
                 if (this.checkBox1.Checked && !this.ConfirmMasterPassword())
                     return;
 
                 if (this.favsTree.SelectedNode != null)
-                    this.RunExport();
+                    this.RunExport(encryptionPassword);
 
                 string message = "Done exporting, you can find your exported file at " + this.saveFileDialog.FileName;
                 MessageBox.Show(message, "Terminals export");
                 this.Close();
             }
+        }
+
+        /// <summary>
+        /// Asks for a new password to protect the exported file, entered twice to confirm.
+        /// This is independent of the persistence master password, so the export stays
+        /// portable to another machine/install.
+        /// </summary>
+        private bool TryGetNewExportPassword(out string password)
+        {
+            password = null;
+            MessageBox.Show("Enter a password to protect the exported file. You will need to enter it again when importing.",
+                "Terminals export", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            AuthenticationPrompt first = RequestPassword.KnowsUserPassword(false);
+            if (first.Canceled)
+                return false;
+
+            if (string.IsNullOrEmpty(first.Password))
+            {
+                MessageBox.Show("Password can't be empty.", "Terminals export", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            AuthenticationPrompt second = RequestPassword.KnowsUserPassword(false);
+            if (second.Canceled)
+                return false;
+
+            if (first.Password != second.Password)
+            {
+                MessageBox.Show("Passwords didn't match.", "Terminals export", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            password = first.Password;
+            return true;
         }
 
         private bool ConfirmMasterPassword()
@@ -80,7 +126,7 @@ namespace Terminals.Forms
             }
         }
 
-        private void RunExport() 
+        private void RunExport(string encryptionPassword)
         {
             List<FavoriteConfigurationElement> favorites = this.GetFavoritesToExport();
             // filter index is 1 based
@@ -91,7 +137,9 @@ namespace Terminals.Forms
                     ProviderFilter = providerFilter,
                     Favorites = favorites,
                     FileName = this.saveFileDialog.FileName,
-                    IncludePasswords = this.checkBox1.Checked
+                    IncludePasswords = this.checkBox1.Checked,
+                    EncryptFile = this.encryptFileCheckBox.Checked,
+                    EncryptionPassword = encryptionPassword
                 };
             this.exporters.Export(options);
         }

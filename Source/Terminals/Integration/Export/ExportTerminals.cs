@@ -1,10 +1,12 @@
 ﻿using System;
+using System.IO;
 using System.Text;
 using System.Xml;
 using Terminals.Configuration;
 using Terminals.Converters;
 using Terminals.Data;
 using Terminals.Integration.Import;
+using Terminals.Integration;
 
 namespace Terminals.Integration.Export
 {
@@ -37,27 +39,50 @@ namespace Terminals.Integration.Export
         {
             try
             {
-                using (var w = new XmlTextWriter(options.FileName, Encoding.UTF8))
+                if (options.EncryptFile)
                 {
-                    w.Formatting = Formatting.Indented;
-                    w.WriteStartDocument();
-                    w.WriteStartElement("favorites");
-                    foreach (FavoriteConfigurationElement favorite in options.Favorites)
+                    string xml = BuildXml(options);
+                    EncryptedExportFile.WriteEncrypted(xml, options.EncryptionPassword, options.FileName);
+                }
+                else
+                {
+                    using (var w = new XmlTextWriter(options.FileName, Encoding.UTF8))
                     {
-                        var favoriteSecurity = new FavoriteConfigurationSecurity(this.persistence, favorite);
-                        var context = new ExportOptionsContext(w, favoriteSecurity, options.IncludePasswords, favorite);
-                        WriteFavorite(context);
+                        WriteDocument(w, options);
                     }
-                    w.WriteEndElement();
-                    w.WriteEndDocument();
-                    w.Flush();
-                    w.Close();
                 }
             }
             catch (Exception ex)
             {
                 Logging.Error("Export XML Failed", ex);
             }
+        }
+
+        private string BuildXml(ExportOptions options)
+        {
+            var buffer = new StringBuilder();
+            using (var w = new XmlTextWriter(new StringWriter(buffer)))
+            {
+                WriteDocument(w, options);
+            }
+
+            return buffer.ToString();
+        }
+
+        private void WriteDocument(XmlTextWriter w, ExportOptions options)
+        {
+            w.Formatting = Formatting.Indented;
+            w.WriteStartDocument();
+            w.WriteStartElement("favorites");
+            foreach (FavoriteConfigurationElement favorite in options.Favorites)
+            {
+                var favoriteSecurity = new FavoriteConfigurationSecurity(this.persistence, favorite);
+                var context = new ExportOptionsContext(w, favoriteSecurity, options.IncludePasswords, favorite);
+                WriteFavorite(context);
+            }
+            w.WriteEndElement();
+            w.WriteEndDocument();
+            w.Flush();
         }
 
         private void WriteFavorite(ExportOptionsContext context)
