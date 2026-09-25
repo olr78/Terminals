@@ -11,6 +11,10 @@ namespace Terminals.Updates
     {
         private const string USER_AGENT = "Terminals-Updater";
 
+        internal const string DEFAULT_RELEASES_URL = "https://api.github.com/repos/olr78/Terminals/releases";
+
+        private const string UPSTREAM_REPOSITORY = "/repos/Terminals-Origin/";
+
         private readonly Func<string> readReleases;
 
         public UpdateManager() : this(DownloadReleases)
@@ -44,8 +48,22 @@ namespace Terminals.Updates
             {
                 client.Headers.Add("Accept", "application/vnd.github+json");
                 client.Encoding = System.Text.Encoding.UTF8;
-                return client.DownloadString(Settings.Default.ReleasesUrl);
+                return client.DownloadString(ResolveReleasesUrl(Settings.Default.ReleasesUrl));
             }
+        }
+
+        /// <summary>
+        /// The url is stored in Terminals.exe.config, which may come from older version,
+        /// when only the executable was replaced. Older versions pointed to the original upstream repository,
+        /// which isn't released anymore, so the update check would silently never find new release.
+        /// </summary>
+        internal static string ResolveReleasesUrl(string configuredUrl)
+        {
+            if (string.IsNullOrEmpty(configuredUrl) ||
+                configuredUrl.IndexOf(UPSTREAM_REPOSITORY, StringComparison.OrdinalIgnoreCase) >= 0)
+                return DEFAULT_RELEASES_URL;
+
+            return configuredUrl;
         }
 
         /// <summary>

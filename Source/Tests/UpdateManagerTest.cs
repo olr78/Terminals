@@ -106,6 +106,26 @@ namespace Tests
             Assert.IsFalse(checkResult.NewAvailable);
         }
 
+        [TestMethod]
+        public void UpstreamUrlFromOldConfig_ResolveReleasesUrl_ReturnsForkUrl()
+        {
+            string resolved = UpdateManager.ResolveReleasesUrl("https://api.github.com/repos/Terminals-Origin/Terminals/releases");
+            Assert.AreEqual(UpdateManager.DEFAULT_RELEASES_URL, resolved);
+        }
+
+        [TestMethod]
+        public void EmptyUrl_ResolveReleasesUrl_ReturnsForkUrl()
+        {
+            Assert.AreEqual(UpdateManager.DEFAULT_RELEASES_URL, UpdateManager.ResolveReleasesUrl(string.Empty));
+        }
+
+        [TestMethod]
+        public void CustomUrl_ResolveReleasesUrl_KeepsConfiguredUrl()
+        {
+            const string custom = "https://api.github.com/repos/someone/Terminals/releases";
+            Assert.AreEqual(custom, UpdateManager.ResolveReleasesUrl(custom));
+        }
+
         private const string GitHubReleases = @"
 [
 { ""tag_name"": ""v4.0.16"", ""draft"": true, ""prerelease"": false, ""published_at"": ""2026-09-26T10:00:00Z"" },
