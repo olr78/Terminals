@@ -38,6 +38,14 @@ namespace Terminals.Connections
 
         public bool IsTerminalServer { get { return this.service.IsTerminalServer; } }
 
+        /// <summary>
+        /// Blocking call, loads the terminal server sessions using WTS API (SMB/RPC).
+        /// </summary>
+        internal void LoadTerminalServer()
+        {
+            this.service.LoadServer(this.Favorite.ServerName);
+        }
+
         public IConnectionSettings Settings { get; set; }
 
         public bool GrabInput { get; set; }
@@ -178,8 +186,6 @@ namespace Terminals.Connections
                 // if next line fails on Protected memory access exception,
                 // some string property is set to null, which leads to this exception
                 this.client.Connect();
-
-                this.service.CheckForTerminalServer(this.Favorite);
                 return true;
             }
             catch (Exception exc)

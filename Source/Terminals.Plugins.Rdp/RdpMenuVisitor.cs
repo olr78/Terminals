@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.Threading;
 using System.Windows.Forms;
 using Terminals.Plugins.Rdp.Properties;
 using Terminals.TerminalServices;
@@ -13,6 +14,11 @@ namespace Terminals.Connections
         private readonly ICurrenctConnectionProvider connectionProvider;
 
         private ToolStripDropDownButton TerminalServerMenuButton;
+
+        /// <summary>
+        /// Connection, for which the terminal server info is just loaded on background.
+        /// </summary>
+        private volatile RDPConnection loadingConnection;
 
         public RdpMenuVisitor(ICurrenctConnectionProvider connectionProvider)
         {
@@ -50,7 +56,65 @@ namespace Terminals.Connections
         {
             TerminalServerMenuButton.DropDownItems.Clear();
             var currentConnection = this.connectionProvider.CurrentConnection as RDPConnection;
-            if (currentConnection != null && currentConnection.IsTerminalServer)
+            if (currentConnection == null)
+                return;
+
+            this.AddDisabledItem("Loading...");
+            if (this.loadingConnection == currentConnection)
+                return;
+
+            this.loadingConnection = currentConnection;
+            ThreadPool.QueueUserWorkItem(this.LoadTerminalServer, currentConnection);
+        }
+
+        private void LoadTerminalServer(object state)
+        {
+            var connection = (RDPConnection)state;
+            try
+            {
+                connection.LoadTerminalServer();
+                Control owner = this.TerminalServerMenuButton.Owner;
+                if (owner != null && !owner.IsDisposed)
+                    owner.BeginInvoke(new Action<RDPConnection>(this.OnTerminalServerLoaded), connection);
+            }
+            catch (Exception exception)
+            {
+                // any exception on the thread pool thread would terminate the application
+                Logging.Error("Unable to load terminal server menu", exception);
+            }
+            finally
+            {
+                this.loadingConnection = null;
+            }
+        }
+
+        private void OnTerminalServerLoaded(RDPConnection connection)
+        {
+            try
+            {
+                // user may already switch to another tab or close the menu
+                if (this.connectionProvider.CurrentConnection != connection || !this.TerminalServerMenuButton.DropDown.Visible)
+                    return;
+
+                this.TerminalServerMenuButton.DropDownItems.Clear();
+                this.FillTerminalServerMenu(connection);
+            }
+            catch (Exception exception)
+            {
+                Logging.Error("Unable to fill terminal server menu", exception);
+            }
+        }
+
+        private void AddDisabledItem(string text)
+        {
+            var item = new ToolStripMenuItem(text);
+            item.Enabled = false;
+            this.TerminalServerMenuButton.DropDownItems.Add(item);
+        }
+
+        private void FillTerminalServerMenu(RDPConnection currentConnection)
+        {
+            if (currentConnection.IsTerminalServer)
             {
                 var sessions = new ToolStripMenuItem(Resources.Sessions);
                 sessions.Tag = currentConnection.Server;
@@ -99,7 +163,7 @@ namespace Terminals.Connections
             }
             else
             {
-                TerminalServerMenuButton.Visible = false;
+                this.AddDisabledItem("Terminal server info is not available (SMB/RPC not reachable)");
             }
         }
 
