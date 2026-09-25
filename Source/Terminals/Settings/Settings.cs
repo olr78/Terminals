@@ -42,6 +42,23 @@ namespace Terminals.Configuration
             }
         }
 
+        /// <summary>
+        /// Gets or sets the release version, which the user doesn't want to be notified about.
+        /// </summary>
+        public string SkippedUpdateVersion
+        {
+            get
+            {
+                return GetSection().SkippedUpdateVersion;
+            }
+
+            set
+            {
+                GetSection().SkippedUpdateVersion = value;
+                SaveImmediatelyIfRequested();
+            }
+        }
+
         public bool ShowUserNameInTitle
         {
             get

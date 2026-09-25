@@ -213,6 +213,7 @@
     <Compile Include="UserInterface\TreeViewDragDropTests.cs" />
     <Compile Include="Validation\NameValidatorTestLab.cs" />
     <Compile Include="Validation\ValidationTests.cs" />
+    <Compile Include="UpdateInstallerTest.cs" />
     <Compile Include="UpdateManagerTest.cs" />
   </ItemGroup>
   <ItemGroup>

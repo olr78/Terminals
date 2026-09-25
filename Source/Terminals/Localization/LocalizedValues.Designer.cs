@@ -755,7 +755,7 @@ namespace Terminals.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://github.com/terminals-Origin/Terminals.
+        ///   Looks up a localized string similar to https://github.com/olr78/Terminals/releases.
         /// </summary>
         internal static string TerminalsURL {
             get {

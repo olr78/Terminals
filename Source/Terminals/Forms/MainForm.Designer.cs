@@ -101,6 +101,7 @@ namespace Terminals
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.updateToolStripItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.checkForUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsRemoteToolbar = new System.Windows.Forms.ToolStrip();
             this.tsbCMD = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
@@ -786,6 +787,7 @@ namespace Terminals
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.aboutToolStripMenuItem,
+            this.checkForUpdatesToolStripMenuItem,
             this.updateToolStripItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
@@ -808,6 +810,14 @@ namespace Terminals
             this.updateToolStripItem.ToolTipText = "Check if New Release is Available";
             this.updateToolStripItem.Visible = false;
             this.updateToolStripItem.Click += new System.EventHandler(this.UpdateToolStripItem_Click);
+            //
+            // checkForUpdatesToolStripMenuItem
+            //
+            this.checkForUpdatesToolStripMenuItem.Name = "checkForUpdatesToolStripMenuItem";
+            this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.checkForUpdatesToolStripMenuItem.Text = "Check for &Updates...";
+            this.checkForUpdatesToolStripMenuItem.ToolTipText = "Check if New Release is Available on GitHub";
+            this.checkForUpdatesToolStripMenuItem.Click += new System.EventHandler(this.CheckForUpdatesToolStripMenuItem_Click);
             // 
             // tsRemoteToolbar
             // 
@@ -1237,6 +1247,7 @@ namespace Terminals
         private System.Windows.Forms.ToolStripMenuItem shortcutsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem lockToolbarsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem updateToolStripItem;
+        private System.Windows.Forms.ToolStripMenuItem checkForUpdatesToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton toolStripButton5;
         private System.Windows.Forms.ToolStripMenuItem rebuildTagsIndexToolStripMenuItem;
         private TabControl.TabControlItem tabControlItem2;

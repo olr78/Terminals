@@ -36,6 +36,7 @@ namespace Terminals
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.lblVersion = new System.Windows.Forms.Label();
             this.linkLabel4 = new System.Windows.Forms.LinkLabel();
+            this.hmaraLinkLabel = new System.Windows.Forms.LinkLabel();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -113,7 +114,7 @@ namespace Terminals
             // 
             this.linkLabel4.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
             this.linkLabel4.LinkColor = System.Drawing.Color.Blue;
-            this.linkLabel4.Location = new System.Drawing.Point(201, 278);
+            this.linkLabel4.Location = new System.Drawing.Point(150, 278);
             this.linkLabel4.Name = "linkLabel4";
             this.linkLabel4.Size = new System.Drawing.Size(85, 17);
             this.linkLabel4.TabIndex = 10;
@@ -122,6 +123,20 @@ namespace Terminals
             this.linkLabel4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.linkLabel4.VisitedLinkColor = System.Drawing.Color.Blue;
             this.linkLabel4.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel4_LinkClicked);
+            //
+            // hmaraLinkLabel
+            //
+            this.hmaraLinkLabel.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
+            this.hmaraLinkLabel.LinkColor = System.Drawing.Color.Blue;
+            this.hmaraLinkLabel.Location = new System.Drawing.Point(251, 278);
+            this.hmaraLinkLabel.Name = "hmaraLinkLabel";
+            this.hmaraLinkLabel.Size = new System.Drawing.Size(85, 17);
+            this.hmaraLinkLabel.TabIndex = 13;
+            this.hmaraLinkLabel.TabStop = true;
+            this.hmaraLinkLabel.Text = "Hmara.eu";
+            this.hmaraLinkLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.hmaraLinkLabel.VisitedLinkColor = System.Drawing.Color.Blue;
+            this.hmaraLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.HmaraLinkLabel_LinkClicked);
             // 
             // textBox1
             // 
@@ -158,6 +173,7 @@ namespace Terminals
             this.Controls.Add(this.label2);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.linkLabel4);
+            this.Controls.Add(this.hmaraLinkLabel);
             this.Controls.Add(this.lblVersion);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.btnClose);
@@ -183,6 +199,7 @@ namespace Terminals
 
         private System.Windows.Forms.Label titleLabel;
         private System.Windows.Forms.LinkLabel lblTerminals;
+        private System.Windows.Forms.LinkLabel hmaraLinkLabel;
         private System.Windows.Forms.Button btnClose;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.PictureBox pictureBox1;

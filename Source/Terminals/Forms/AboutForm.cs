@@ -30,6 +30,11 @@ namespace Terminals
             ExternalLinks.OpenAuthorPage();
         }
 
+        private void HmaraLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            ExternalLinks.OpenPath("https://hmara.eu");
+        }
+
         private void AboutForm_Load(object sender, EventArgs e)
         {
             this.titleLabel.Text += string.Format("({0})", Program.Info.Description);

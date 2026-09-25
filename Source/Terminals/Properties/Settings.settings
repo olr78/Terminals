@@ -9,7 +9,7 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="ReleasesUrl" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">https://api.github.com/repos/Terminals-Origin/Terminals/releases</Value>
+      <Value Profile="(Default)">https://api.github.com/repos/olr78/Terminals/releases</Value>
     </Setting>
   </Settings>
 </SettingsFile>

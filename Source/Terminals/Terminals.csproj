@@ -809,6 +809,7 @@
     <Compile Include="Updates\PasswordsV2Update.cs" />
     <Compile Include="Updates\Release.cs" />
     <Compile Include="Updates\ReleaseInfo.cs" />
+    <Compile Include="Updates\ReleaseAsset.cs" />
     <Compile Include="Updates\TerminalsUpdates.cs">
       <DependentUpon>TerminalsUpdates.xsd</DependentUpon>
     </Compile>
@@ -820,6 +821,10 @@
     <Compile Include="Updates\UpdateChecksFile.cs" />
     <Compile Include="Updates\UpdateManager.cs" />
     <Compile Include="Updates\UpdateConfig.cs" />
+    <Compile Include="Updates\UpdateForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Updates\UpdateInstaller.cs" />
     <Compile Include="Updates\V20Upgrade.cs" />
     <Compile Include="Updates\V401ContentUpgrade.cs" />
     <Compile Include="Updates\V40XElementExtensions.cs" />

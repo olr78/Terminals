@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -27,6 +28,11 @@ namespace Terminals
         private readonly IPersistence persistence;
 
         private readonly Settings settings = Settings.Instance;
+
+        /// <summary>
+        /// The newest release found by the last update check. Null, if no newer release is available.
+        /// </summary>
+        private Release availableRelease;
 
         #region Declarations
 
@@ -480,10 +486,82 @@ namespace Terminals
         private void CheckForNewRelease(Task<ReleaseInfo> downloadTask)
         {
             ReleaseInfo downloaded = downloadTask.Result;
-            if (downloaded.NewAvailable && !settings.NeverShowTerminalsWindow)
-                ExternalLinks.AskIfShowReleasePage(this.settings, downloaded);
-
             this.UpdateReleaseToolStripItem(downloaded);
+
+            bool skipped = downloaded.Version == settings.SkippedUpdateVersion;
+            if (downloaded.NewAvailable && !settings.NeverShowTerminalsWindow && !skipped)
+                this.ShowUpdateForm(downloaded.Release);
+        }
+
+        private void CheckForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.checkForUpdatesToolStripMenuItem.Enabled = false;
+            var updateManager = new UpdateManager();
+            Task<ReleaseInfo> downloadTask = updateManager.CheckForUpdates(true);
+            downloadTask.ContinueWith(this.CheckForUpdatesFinished, TaskScheduler.FromCurrentSynchronizationContext());
+        }
+
+        private void CheckForUpdatesFinished(Task<ReleaseInfo> downloadTask)
+        {
+            this.checkForUpdatesToolStripMenuItem.Enabled = true;
+            ReleaseInfo downloaded = downloadTask.Result;
+            this.UpdateReleaseToolStripItem(downloaded);
+
+            if (downloaded.CheckFailed)
+                MessageBox.Show(this, "Unable to check for updates. See the log file for details.", "Terminals Update",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            else if (!downloaded.NewAvailable)
+                MessageBox.Show(this, string.Format("You are using the latest version {0}.", Program.Info.Version),
+                    "Terminals Update", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            else
+                this.ShowUpdateForm(downloaded.Release);
+        }
+
+        private void ShowUpdateForm(Release release)
+        {
+            var installer = new UpdateInstaller();
+            using (var updateForm = new UpdateForm(release, installer))
+            {
+                DialogResult result = updateForm.ShowDialog(this);
+                if (result == DialogResult.Ignore)
+                    settings.SkippedUpdateVersion = release.Version.ToString();
+                else if (result == DialogResult.OK)
+                    this.ApplyUpdate(installer, updateForm.PackagePath);
+            }
+        }
+
+        private void ApplyUpdate(UpdateInstaller installer, string packagePath)
+        {
+            Process updateScript;
+            try
+            {
+                updateScript = installer.Apply(packagePath);
+            }
+            catch (Exception exception)
+            {
+                Logging.Error("Unable to apply the update", exception);
+                MessageBox.Show(this, "Unable to apply the update: " + exception.Message, "Terminals Update",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // the script waits until this process exits, than replaces the files and starts Terminals again
+            this.Close();
+            if (this.IsDisposed)
+                return;
+
+            // the user canceled the close (e.g. in the save connections dialog)
+            try
+            {
+                updateScript.Kill();
+            }
+            catch (Exception exception)
+            {
+                Logging.Info("Unable to stop update script", exception);
+            }
+
+            MessageBox.Show(this, "The update was canceled, because Terminals wasn't closed.", "Terminals Update",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         #endregion
@@ -1269,14 +1347,11 @@ namespace Terminals
 
         private void UpdateReleaseToolStripItem(ReleaseInfo downloaded)
         {
-            if (this.updateToolStripItem != null && !this.updateToolStripItem.Visible)
+            if (this.updateToolStripItem != null && downloaded.NewAvailable)
             {
-                if (downloaded.NewAvailable)
-                {
-                    this.updateToolStripItem.Visible = true;
-                    string newText = String.Format("{0} - {1}", this.updateToolStripItem.Text, downloaded.Version);
-                    this.updateToolStripItem.Text = newText;
-                }
+                this.availableRelease = downloaded.Release;
+                this.updateToolStripItem.Visible = true;
+                this.updateToolStripItem.Text = String.Format("New Release Available - {0}", downloaded.Version);
             }
         }
 
@@ -1409,7 +1484,10 @@ namespace Terminals
 
         private void UpdateToolStripItem_Click(object sender, EventArgs e)
         {
-            ExternalLinks.ShowReleasePage();
+            if (this.availableRelease != null)
+                this.ShowUpdateForm(this.availableRelease);
+            else
+                ExternalLinks.ShowReleasePage();
         }
 
         private void ClearHistoryToolStripMenuItem_Click(object sender, EventArgs e)

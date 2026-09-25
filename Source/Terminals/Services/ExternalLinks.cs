@@ -6,7 +6,6 @@ using Terminals.Configuration;
 using Terminals.Connections;
 using Terminals.Data;
 using Terminals.Forms;
-using Terminals.Updates;
 
 namespace Terminals.Services
 {
@@ -24,18 +23,6 @@ namespace Terminals.Services
             {
                 OpenPath("http://www.winpcap.org/install/default.htm");
             }
-        }
-
-        internal static void AskIfShowReleasePage(Settings settings, ReleaseInfo releaseInfo)
-        {
-            string message = string.Format("Version:{0}\r\nPublished:{1}\r\nDo you want to show the Terminals home page?",
-                                            releaseInfo.Version, releaseInfo.Published);
-            YesNoDisableResult answer = YesNoDisableForm.ShowDialog("New release is available", message);
-            if (answer.Result == DialogResult.Yes)
-                ShowReleasePage();
-
-            if (answer.Disable)
-                settings.NeverShowTerminalsWindow = true;
         }
 
         internal static void ShowReleasePage()

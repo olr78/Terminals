@@ -39,6 +39,20 @@ namespace Terminals
                 this["NeverShowTerminalsWindow"] = value;
             }
         }
+
+        [ConfigurationProperty("skippedUpdateVersion", DefaultValue = "")]
+        public string SkippedUpdateVersion
+        {
+            get
+            {
+                return (string)this["skippedUpdateVersion"];
+            }
+            set
+            {
+                this["skippedUpdateVersion"] = value;
+            }
+        }
+
         [ConfigurationProperty("showUserNameInTitle")]
         public bool ShowUserNameInTitle
         {

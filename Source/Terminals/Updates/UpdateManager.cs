@@ -9,6 +9,8 @@ namespace Terminals.Updates
 {
     internal class UpdateManager
     {
+        private const string USER_AGENT = "Terminals-Updater";
+
         private readonly Func<string> readReleases;
 
         public UpdateManager() : this(DownloadReleases)
@@ -20,68 +22,68 @@ namespace Terminals.Updates
             this.readReleases = readReleases;
         }
 
+        /// <summary>
+        /// GitHub accepts TLS 1.2 only. Enabled for whole application, because the downloads run asynchronously.
+        /// </summary>
+        internal static void EnableTls12()
+        {
+            ServicePointManager.SecurityProtocol |= (SecurityProtocolType)3072; // 3072 = System.Net.SecurityProtocolType.Tls12
+        }
+
+        internal static WebClient CreateWebClient()
+        {
+            EnableTls12();
+            var client = new WebClient();
+            client.Headers.Add("User-Agent", USER_AGENT);
+            return client;
+        }
+
         private static string DownloadReleases()
         {
-            using (var client = new WebClient())
+            using (WebClient client = CreateWebClient())
             {
-                // Try to enable TLS1.2. If the operating system does not support, then we won't be able to connect to Github which requires it.
-                var oldValue = ServicePointManager.SecurityProtocol;
-                ServicePointManager.SecurityProtocol = oldValue | (SecurityProtocolType)3072; // 3072 = System.Net.SecurityProtocolType.Tls12
-
-                const string agent = "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; WOW64; Trident / 6.0)";
-                client.Headers.Add("Accept", "application/json");
-                client.Headers.Add("User-Agent", agent);
-                var releases = client.DownloadString(Settings.Default.ReleasesUrl);
-
-                ServicePointManager.SecurityProtocol = oldValue;
-                return releases;
+                client.Headers.Add("Accept", "application/vnd.github+json");
+                client.Encoding = System.Text.Encoding.UTF8;
+                return client.DownloadString(Settings.Default.ReleasesUrl);
             }
         }
 
         /// <summary>
         /// Check for available application updates.
         /// </summary>
-        internal Task<ReleaseInfo> CheckForUpdates(bool automaticallyUpdate)
+        /// <param name="forceCheck">If true, the check is performed even it was already done today.</param>
+        internal Task<ReleaseInfo> CheckForUpdates(bool forceCheck)
         {
-            return Task<ReleaseInfo>.Factory.StartNew(autoUpdate => this.PerformCheck((bool)autoUpdate), automaticallyUpdate);
-        }
-
-        private ReleaseInfo PerformCheck(bool automaticallyUpdate)
-        {
-            ReleaseInfo downLoaded = this.CheckForPublishedRelease(Program.Info.Version);
-
-            // todo the automatic updates point to wrong URL this feature is not working
-            bool autoUpdate = automaticallyUpdate; // obtain from command line arguments
-            if (autoUpdate)
-            {
-                // DownloadLatestRelease();
-            }
-
-            return downLoaded;
+            return Task<ReleaseInfo>.Factory.StartNew(force => this.CheckForPublishedRelease(Program.Info.Version, (bool)force), forceCheck);
         }
 
         internal ReleaseInfo CheckForPublishedRelease(Version currentVersion)
         {
+            return this.CheckForPublishedRelease(currentVersion, false);
+        }
+
+        internal ReleaseInfo CheckForPublishedRelease(Version currentVersion, bool forceCheck)
+        {
             try
             {
-                return this.TryCheckForPublishedRelease(currentVersion);
+                return this.TryCheckForPublishedRelease(currentVersion, forceCheck);
             }
             catch (Exception exception)
             {
                 Logging.Error("Failed during Check for release.", exception);
-                return ReleaseInfo.NotAvailable;
+                return ReleaseInfo.Failed;
             }
         }
 
         /// <summary>
-        /// check codeplex's rss feed to see if we have a new release available.
+        /// Check GitHub releases to see if we have a new release available.
         /// Returns not null info about obtained current release.
         /// ReleaseInfo.NotAvailable in a case, new version was not checked or current version is the latest.
         /// </summary>
-        private ReleaseInfo TryCheckForPublishedRelease(Version currentVersion)
+        private ReleaseInfo TryCheckForPublishedRelease(Version currentVersion, bool forceCheck)
         {
             var checksFile = new UpdateChecksFile();
-            if (!checksFile.ShouldCheckForUpdate)
+            if (!forceCheck && !checksFile.ShouldCheckForUpdate)
                 return ReleaseInfo.NotAvailable;
 
             ReleaseInfo downLoaded = this.DownLoadLatestReleaseInfo(currentVersion);
@@ -96,17 +98,18 @@ namespace Terminals.Updates
 
             if (feed != null)
             {
-                Release newvestRssItem = SelectNewvestRssItem(feed, currentVersion);
-                if (newvestRssItem != null)
-                    return new ReleaseInfo(newvestRssItem.Published, newvestRssItem.Version.ToString());
+                Release newestRelease = SelectNewestRelease(feed, currentVersion);
+                if (newestRelease != null)
+                    return new ReleaseInfo(newestRelease);
             }
 
             return ReleaseInfo.NotAvailable;
         }
 
-        private static Release SelectNewvestRssItem(Release[] feed, Version currentVersion)
+        private static Release SelectNewestRelease(Release[] feed, Version currentVersion)
         {
-            return feed.Where(item => item.Version > currentVersion)
+            Version current = Release.Normalize(currentVersion);
+            return feed.Where(item => !item.Draft && !item.Prerelease && item.Version != null && item.Version > current)
                        .OrderByDescending(selected => selected.Version)
                        .FirstOrDefault();
         }

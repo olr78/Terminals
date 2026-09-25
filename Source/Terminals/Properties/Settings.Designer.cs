@@ -46,7 +46,7 @@ namespace Terminals.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://api.github.com/repos/Terminals-Origin/Terminals/releases")]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://api.github.com/repos/olr78/Terminals/releases")]
         public string ReleasesUrl {
             get {
                 return ((string)(this["ReleasesUrl"]));
