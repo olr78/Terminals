@@ -6,6 +6,7 @@ using Terminals.Configuration;
 using Terminals.Connections;
 using Terminals.Data;
 using Terminals.Forms;
+using Terminals.Localization;
 
 namespace Terminals
 {
@@ -168,7 +169,7 @@ namespace Terminals
         {
             this.InitMruAndButtons();
             this.EditedId = favorite.Id;
-            this.Text = "Edit Connection";
+            this.Text = Translator.T("Edit Connection");
             this.favoritePropertiesControl1.LoadFrom(favorite);
         }
 
@@ -314,7 +315,7 @@ namespace Terminals
             if (target == null)
                 return;
 
-            this.errorProvider.SetError(target, message);
+            this.errorProvider.SetError(target, Translator.T(message));
         }
 
         private void SetOkButtonState()

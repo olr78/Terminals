@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Windows.Forms;
+using Terminals.Localization;
 using Terminals.Properties;
 
 namespace Terminals.Forms.Controls
@@ -59,6 +60,10 @@ namespace Terminals.Forms.Controls
         public SearchTextBox()
         {
             this.InitializeComponent();
+            // the initial text is only a hint, it is cleared on first focus, don't start the search
+            this.changingState = true;
+            this.valueTextBox.Text = Translator.T(this.valueTextBox.Text);
+            this.changingState = false;
 
             this.ConfigureAutoComplete();
             this.timer = new System.Threading.Timer(c => this.StartSearch(), null, Timeout.Infinite, Timeout.Infinite);

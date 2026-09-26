@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Management;
 using System.Windows.Forms;
+using Terminals.Localization;
 
 namespace Terminals.Network
 {
@@ -17,7 +18,7 @@ namespace Terminals.Network
             try
             {
                 this.connectButton.Enabled = false;
-                this.connectButton.Text = "Connecting...";
+                this.connectButton.Text = Translator.T("Connecting...");
                 this.dataGridView1.DataSource = TryLoadShares(username, password, computer);
             }
             catch
@@ -28,7 +29,7 @@ namespace Terminals.Network
             finally
             {
                 this.connectButton.Enabled = true;
-                this.connectButton.Text = "Connect";
+                this.connectButton.Text = Translator.T("Connect");
             }
         }
 

@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using Terminals.Data;
 using Terminals.Forms.Controls;
+using Terminals.Localization;
 
 namespace Terminals.Forms
 {
@@ -99,12 +100,12 @@ namespace Terminals.Forms
             {
                 if (this.PasswordsMatch)
                 {
-                    this.lblPasswordsMatch.Text = "Passwords match";
+                    this.lblPasswordsMatch.Text = Translator.T("Passwords match");
                     this.lblPasswordsMatch.ForeColor = SystemColors.ControlText;
                 }
                 else
                 {
-                    this.lblPasswordsMatch.Text = "Passwords do not match";
+                    this.lblPasswordsMatch.Text = Translator.T("Passwords do not match");
                     this.lblPasswordsMatch.ForeColor = Color.Red;
                 }
             }

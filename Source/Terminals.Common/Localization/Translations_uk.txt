@@ -1,0 +1,867 @@
+﻿# Ukrainian translation of Terminals user interface.
+# Format: english source text [TAB] translation. Escapes: 
+ new line, 	 tab, \ backslash.
+# Placeholders {0}, {1}... match the values of formatted texts.
+&File	&Файл
+&View	&Вигляд
+&Tools	&Інструменти
+&Help	&Довідка
+&Terminal	&Термінал
+&Groups	&Групи
+F&avorites	&Обране
+Fa&vorites	О&бране
+S&hortcuts	&Ярлики
+&About	&Про програму
+&Add Current Connection To	&Додати поточне з’єднання до
+Add Current Connection To	Додати поточне з’єднання до
+&Capture Terminal Screen	&Знімок екрана термінала
+Capture Terminal Screen	Знімок екрана термінала
+&Create Group From Active Connections	&Створити групу з активних з’єднань
+Create Group From Active Connections	Створити групу з активних з’єднань
+&Disconnect	&Відключитися
+&Export connections	&Експорт з’єднань
+&Full Screen	&Повний екран
+&Grab Input	&Захопити введення
+&Import connections	&Імпорт з’єднань
+&Lock Toolbars	За&блокувати панелі інструментів
+&Menubar	&Рядок меню
+&Networking Tools	&Мережеві інструменти
+&New Favorite	&Нове з’єднання
+&Organize Favorites	&Упорядкувати обране
+&Organize Groups	Упорядкувати &групи
+&Screen Capture Manager	&Менеджер знімків екрана
+&Standard Toolbar	&Стандартна панель інструментів
+&View in new Window	Відкрити в &новому вікні
+C&redential Management	Керування &обліковими даними
+Check for &Updates...	Перевірити &оновлення...
+O&rganize Favorites Toolbar	Упорядкувати панель &обраного
+Or&ganize Shortcuts	Упорядкувати я&рлики
+Sh&ow In Multi Screens	Показати на &кількох екранах
+E&xit	В&ихід
+&Options	&Параметри
+Rebuild Groups Index	Перебудувати індекс груп
+Rebuild Shortcuts	Перебудувати ярлики
+Rebuild Toolbars	Перебудувати панелі інструментів
+Clear History	Очистити історію
+Open Log Folder	Відкрити теку журналів
+Open SSH Agent	Відкрити SSH-агент
+Open SSH Keygen	Відкрити генератор SSH-ключів
+Connect To:	Підключитися до:
+Connect To	Підключитися до
+Connect To All	Підключитися до всіх
+Connect To Console	Підключитися до консолі
+Connect To Server	Підключитися до сервера
+Disconnect From Server	Відключитися від сервера
+Networking Tools	Мережеві інструменти
+New Release Available	Доступна нова версія
+New Release Available - {0}	Доступна нова версія - {0}
+Organize Favorites	Упорядкувати обране
+Organize Groups	Упорядкувати групи
+Organize Shortcuts	Упорядкувати ярлики
+Organize Favorites Toolbar	Упорядкувати панель обраного
+Screen Capture Manager	Менеджер знімків екрана
+Credential Management	Керування обліковими даними
+Grab input	Захопити введення
+Show In Multi Screens	Показати на кількох екранах
+Show in Single Screen	Показати на одному екрані
+Show in single screens	Показати на одному екрані
+You only have one screen	У вас лише один екран
+TabControl Page 3	Сторінка 3
+TabControl Page 4	Сторінка 4
+Capture Terminal Screen. This feature has to be enabled in application options first.  (Ctrl+F12)	Знімок екрана термінала. Спершу цю функцію треба ввімкнути в параметрах програми.  (Ctrl+F12)
+Capture Terminal Screen. This feature has to be enabled in application options first. (Ctrl+F12)	Знімок екрана термінала. Спершу цю функцію треба ввімкнути в параметрах програми. (Ctrl+F12)
+Check if New Release is Available	Перевірити, чи доступна нова версія
+Check if New Release is Available on GitHub	Перевірити, чи є нова версія на GitHub
+Click to Show or Hide Terminals Main Window	Клацніть, щоб показати або сховати головне вікно Terminals
+Creates a new favorite	Створює нове з’єднання
+Full Screen (F11)	Повний екран (F11)
+Grab Input (Ctrl+G)	Захопити введення (Ctrl+G)
+Lock all toolbars	Заблокувати всі панелі інструментів
+New Favorite (Ctrl+N)	Нове з’єднання (Ctrl+N)
+Open About Window	Відкрити вікно «Про програму»
+Open Credential Management	Відкрити керування обліковими даними
+Open Options	Відкрити параметри
+Opens export dialog to select connections to export into a xml file.	Відкриває діалог вибору з’єднань для експорту у файл XML.
+Organize your favorite connections	Упорядкувати ваші з’єднання в обраному
+Organize your favorite connections in toolbar	Упорядкувати з’єднання на панелі обраного
+Recreates Shortcuts list to default state.	Відновлює стандартний список ярликів.
+Recreates connection "Groups" list used by all connections.\nRemoves all unused groups.	Перебудовує список «Груп», який використовують усі з’єднання.\nВидаляє всі невикористані групи.
+Restores last saved position of all Toolbars in main window	Відновлює останнє збережене розташування всіх панелей інструментів у головному вікні
+Set Terminals full screen	Розгорнути Terminals на весь екран
+Show Terminals in all screen you have connected	Показати Terminals на всіх підключених екранах
+Show terminals in a new window	Показати термінали в новому вікні
+Show/Hide Groups pane	Показати/сховати панель груп
+Show/Hide Shourtcutes	Показати/сховати ярлики
+Show/Hide favorite toolbar	Показати/сховати панель обраного
+Show/Hide favorits pane	Показати/сховати панель обраного
+Show/Hide standard toolbar	Показати/сховати стандартну панель інструментів
+Type here the stored connection favorite name and press Enter to quickly connect to\nor type server name or IP address and press Enter to create new Favorite\nor press Tab and then Enter to immediately connect to.\nShort cut key  (F4)	Введіть назву збереженого з’єднання й натисніть Enter, щоб швидко підключитися,\nабо введіть ім’я сервера чи IP-адресу й натисніть Enter, щоб створити нове з’єднання,\nабо натисніть Tab, а потім Enter, щоб одразу підключитися.\nКлавіша швидкого доступу  (F4)
+About	Про програму
+Alphabetical	За абеткою
+Are you sure that you want to disconnect from the active terminal?	Ви дійсно бажаєте відключитися від активного термінала?
+Capture Manager	Менеджер знімків
+Delete Multiple Items	Видалення кількох елементів
+Delete Item	Видалення елемента
+Are you sure you want to delete these {0} files?	Ви дійсно бажаєте видалити ці файли ({0})?
+Are you sure you want to delete this file?	Ви дійсно бажаєте видалити цей файл?
+Are you sure you want to delete this folder?	Ви дійсно бажаєте видалити цю теку?
+Connection Information	Відомості про з’єднання
+Control Panel	Панель керування
+Credentials Manager	Менеджер облікових даних
+Exit Terminals	Вийти з Terminals
+File	Файл
+Full Screen	Повний екран
+Grab Input	Захопити введення
+Help	Довідка
+&Hide / Show	&Сховати / показати
+In order to change the toolbars, you must first unlock them.	Щоб змінити панелі інструментів, спершу розблокуйте їх.
+Lock Toolbars	Заблокувати панелі інструментів
+Manage Toolbar	Керування панеллю інструментів
+Management	Керування
+Minimize	Згорнути
+Organize Shortucts	Упорядкувати ярлики
+Other	Інше
+Quick Connect	Швидке підключення
+Rebuild Tags Index	Перебудувати індекс груп
+Restore Screen	Відновити екран
+Restore	Відновити
+Shortcuts	Ярлики
+Show/Hide Menu	Показати/сховати меню
+Sorry, Terminals was unable to connect to the remote machine.  Try again, or check the log for more information.	На жаль, Terminals не вдалося підключитися до віддаленого комп’ютера.  Спробуйте ще раз або перегляньте журнал.
+Special Commands	Спеціальні команди
+Standard Toolbar	Стандартна панель інструментів
+Tags	Групи
+Terminal	Термінал
+Terminals News	Новини Terminals
+Tools	Інструменти
+UnTagged	Без групи
+Terminals was not able to shutdown the machine remotely.	Terminals не вдалося віддалено вимкнути комп’ютер.
+User	Користувач
+View	Вигляд
+View in new Window	Відкрити в новому вікні
+Confirmation	Підтвердження
+Atleast one protocol needs to be selected.	Потрібно вибрати принаймні один протокол.
+Message from your Administrator	Повідомлення від адміністратора
+Please enter the message to send:	Введіть повідомлення для надсилання:
+Today	Сьогодні
+Yesterday	Учора
+Less than 1 Week	Менше тижня
+Less than 2 Weeks	Менше 2 тижнів
+Less than 1 Month	Менше місяця
+Over 1 Month	Понад місяць
+Over 6 Months	Понад 6 місяців
+Over 1 Year	Понад рік
+Adds new group as child of selected group	Додає нову групу як дочірню до вибраної
+Clear history	Очистити історію
+Collapse	Згорнути
+Collapse all	Згорнути все
+Collapse favorites tree	Згорнути дерево обраного
+Computer Management (MMC)	Керування комп’ютером (MMC)
+Connect to All	Підключитися до всіх
+Connect to All with...	Підключитися до всіх з...
+Creates copy of first selected favorite including its group assignment	Створює копію першого вибраного з’єднання разом із його групами
+Creates new favorite adding it to the selected group	Створює нове з’єднання й додає його до вибраної групи
+DNS	DNS
+Delete Group	Видалити групу
+Delete all Favorites in Group...	Видалити всі з’єднання групи...
+Delete favorite	Видалити з’єднання
+Deletes all favorites listed in this group.\nThe favorites disapear from all groups.	Видаляє всі з’єднання цієї групи.\nЗ’єднання зникнуть з усіх груп.
+Disconnect	Відключитися
+Duplicate	Дублювати
+Edit this favorite properties	Змінити властивості цього з’єднання
+Enable RDP	Увімкнути RDP
+Enable RDP service on target computer.\nRequires admin access to the computer (used favorite credentials).\nThe computer also needs to have enabled remote access to the registry.	Вмикає службу RDP на цільовому комп’ютері.\nПотрібен доступ адміністратора (використовуються облікові дані з’єднання).\nНа комп’ютері також має бути ввімкнено віддалений доступ до реєстру.
+Favorites	Обране
+Favorites tree menu	Меню дерева обраного
+Forces reboot of the computer. Forces all users to log off.\nRequires admin access (used favorite credentials).\nRemote management has to be enabled on the target machine.\n	Примусово перезавантажує комп’ютер. Усіх користувачів буде примусово виведено із системи.\nПотрібен доступ адміністратора (використовуються облікові дані з’єднання).\nНа цільовому комп’ютері має бути ввімкнено віддалене керування.\n
+Forces shutdown of the computer. Forces all users to log off.\nRequires admin access (used favorite credentials).\nRemote management has to be enabled on the target machine.	Примусово вимикає комп’ютер. Усіх користувачів буде примусово виведено із системи.\nПотрібен доступ адміністратора (використовуються облікові дані з’єднання).\nНа цільовому комп’ютері має бути ввімкнено віддалене керування.
+History	Історія
+History tree menu	Меню дерева історії
+New Favorite	Нове з’єднання
+New Group	Нова група
+Opens networking tool and starts PING the target machine.	Відкриває мережеві інструменти й запускає PING цільового комп’ютера.
+Opens networking tool and starts TRACE the target machine.	Відкриває мережеві інструменти й запускає трасування до цільового комп’ютера.
+Opens networking tool and tries to resolve DNS name of the target machine.	Відкриває мережеві інструменти й намагається визначити DNS-ім’я цільового комп’ютера.
+Ping	Ping
+Properties	Властивості
+Reboot	Перезавантажити
+Reconnect	Перепідключитися
+Removes selected group. Favorites aren't deleted	Видаляє вибрану групу. З’єднання не видаляються
+Rename	Перейменувати
+Set Credential to all in Group...	Задати облікові дані для всіх у групі...
+Set Domain to all in Group...	Задати домен для всіх у групі...
+Set Password to all in Group...	Задати пароль для всіх у групі...
+Set Username to all in Group...	Задати ім’я користувача для всіх у групі...
+Shutdown	Вимкнути
+System Information	Відомості про систему
+TS Admin	Адміністрування TS
+Trace Route	Трасування маршруту
+Tries to open the Terminals services configuration of the target machine.\nRequires admin privileges on the target machine.	Намагається відкрити налаштування служб терміналів цільового комп’ютера.\nПотрібні права адміністратора на цільовому комп’ютері.
+Search ...	Пошук...
+Change {0} - {1}	Зміна: {0} - {1}
+Set {0} by group Complete.	Значення «{0}» для групи задано.
+This will replace the {0} for all Favorites within this group.\nUse at your own risk!\n\nEnter new {0}:	Буде замінено «{0}» для всіх з’єднань у цій групі.\nВикористовуйте на власний ризик!\n\nВведіть нове значення «{0}»:
+Domain name	Ім’я домену
+User name	Ім’я користувача
+Password	Пароль
+Credential	Облікові дані
+Delete all Favorites by group Complete.	Усі з’єднання групи видалено.
+Group name is not valid	Неприпустима назва групи
+RDP is already enabled.	RDP уже ввімкнено.
+Reboot Required	Потрібне перезавантаження
+Remote action result	Результат віддаленої дії
+Terminals was not able to enable RDP remotely.	Terminals не вдалося віддалено ввімкнути RDP.
+The credential you specified does not exist.	Вказаних облікових даних не існує.
+Are you sure you want to {0} this machine: {1}\nOperation requires administrator priviledges and can take a while.	Ви дійсно бажаєте виконати дію «{0}» для комп’ютера {1}?\nОперація потребує прав адміністратора й може тривати деякий час.
+Terminals enabled the RDP on the remote machine, would you like to reboot that machine for the change to take effect?	Terminals увімкнув RDP на віддаленому комп’ютері. Перезавантажити його, щоб зміни набули чинності?
+This will DELETE all Favorites within this group.\nDo you realy want to delete them?	Буде ВИДАЛЕНО всі з’єднання цієї групи.\nВи дійсно бажаєте їх видалити?
+Credential:	Облікові дані:
+&Execute before connect	&Виконати перед підключенням
+&Wait for exit	&Чекати завершення
+Arguments	Аргументи
+Command:	Команда:
+Initial Directory:	Початкова тека:
+Execute before connect	Виконати перед підключенням
+General	Загальні
+Groups	Групи
+Notes	Нотатки
+Protocol Options	Параметри протоколу
+{0} Options	Параметри {0}
+&Computer:	&Комп’ютер:
+&Open in New Window	&Відкривати в новому вікні
+&Protocol:	&Протокол:
+Add to &Toolbar	Додати на &панель інструментів
+Connection na&me:	&Назва з’єднання:
+Port:	Порт:
+S&ave password	З&берегти пароль
+Computer:	Комп’ютер:
+Url:	URL:
+Select Custom Terminal Image .	Виберіть власне зображення термінала
+You have chosen an invalid image. Try again.	Вибрано неприпустиме зображення. Спробуйте ще раз.
+All available groups:	Усі доступні групи:
+Assigned groups:	Призначені групи:
+New Group:	Нова група:
+Black	Чорний
+Defaults	Типові
+Font:	Шрифт:
+New Connection	Нове з’єднання
+Edit Connection	Зміна з’єднання
+Remove Saved Defaults	Видалити збережені типові
+Save && Close	Зберегти й закрити
+Save && Connect	Зберегти й підключитися
+Save && Copy	Зберегти й копіювати
+Save && New	Зберегти й створити
+Save Current Settings as Default	Зберегти поточні налаштування як типові
+Validation error '{0}': {1}	Помилка перевірки «{0}»: {1}
+Server name is required and has to be valid computer name or IP address.	Ім’я сервера обов’язкове й має бути правильним ім’ям комп’ютера або IP-адресою.
+Name cant be empty.	Ім’я не може бути порожнім.
+UserName cant be empty.	Ім’я користувача не може бути порожнім.
+Server name is not in the correct format.	Ім’я сервера має неправильний формат.
+Favorite with the same name already exists	З’єднання з такою назвою вже існує
+Group with the same name already exists	Група з такою назвою вже існує
+Port has to be a number in range 0-65535.	Порт має бути числом у діапазоні 0-65535.
+Property maximum lenght is 255 characters.	Максимальна довжина значення - 255 символів.
+Protocol is unknown	Невідомий протокол
+There was an issue with decrypting your password.\n\nPlease provide a new password and save the favorite.	Не вдалося розшифрувати ваш пароль.\n\nВведіть новий пароль і збережіть з’єднання.
+&Domain:	&Домен:
+&Password:	&Пароль:
+&User name:	&Ім’я користувача:
+Display	Дисплей
+Extended settings	Розширені налаштування
+Local resources	Локальні ресурси
+Security	Безпека
+TS Gateway	Шлюз TS
+Disk Drives	Диски
+Plug and Play Devices	Пристрої Plug and Play
+Redirect Devices	Перенаправлення пристроїв
+&Desktop size:	&Розмір робочого столу:
+Allow Desktop Composition	Дозволити композицію робочого столу
+Allow Font Smoothing	Дозволити згладжування шрифтів
+Co&lors:	&Кольори:
+Disable Cursor Blinking	Вимкнути блимання курсора
+Disable Cursor Shadow	Вимкнути тінь курсора
+Disable Desktop Wallpaper	Вимкнути шпалери робочого столу
+Disable Full-Window drag	Вимкнути перетягування вікна з вмістом
+Disable Menu Animations	Вимкнути анімацію меню
+Disable Theming	Вимкнути теми оформлення
+Height:	Висота:
+Width:	Ширина:
+Allow Background Input	Дозволити фонове введення
+Detect Double Clicks	Розпізнавати подвійні клацання
+Disable Control Alt Delete	Вимкнути Ctrl+Alt+Delete
+Disable Windows Key	Вимкнути клавішу Windows
+Display Connection Bar	Показувати панель підключення
+Enable Bitmap Persistence	Увімкнути постійне кешування растрових зображень
+Enable Compression	Увімкнути стиснення
+Enable Keyboard Accelerator Passthrough 	Передавати клавіші швидкого доступу
+Grab Focus on Connect	Захоплювати фокус під час підключення
+Idle Timeout:	Тайм-аут бездіяльності:
+Load Balance Info:	Дані балансування навантаження:
+Note: These are experimental settings.	Увага: це експериментальні налаштування.
+Overall Timeout:	Загальний тайм-аут:
+Shutdown Timeout:	Тайм-аут завершення:
+Single Timeout:	Тайм-аут одної спроби:
+&Disk Drives && Plug and Play Devices...	&Диски та пристрої Plug and Play...
+&Printers	&Принтери
+Automatically connect to these local devices :	Автоматично підключати ці локальні пристрої :
+Desktop S&hare:	Спільна &тека:
+Redirect &Clipboard	Перенаправляти &буфер обміну
+Redirect Smart ca&rds	Перенаправляти смарт-&картки
+Remote &sounds:	Віддалені &звуки:
+Seria&l ports	&Послідовні порти
+Select Desktop Share:	Виберіть спільну теку:
+Co&nnect to Console	Підключитися до &консолі
+Enable NLA Authentication	Увімкнути автентифікацію NLA
+Enable TLS Authentication	Увімкнути автентифікацію TLS
+Enabled Program execution	Запускати програму
+Start Full Screen	Запускати на весь екран
+Start Program:	Програма:
+Working Folder:	Робоча тека:
+Bypass TS Gateway for local addresses	Не використовувати шлюз TS для локальних адрес
+Do not use TS Gateway	Не використовувати шлюз TS
+Login Settings	Параметри входу
+Logon Method:	Спосіб входу:
+Server Name:	Ім’я сервера:
+Terminal Server Gateway Settings	Параметри шлюзу сервера терміналів
+Use Separate Login Credentials	Використовувати окремі облікові дані
+Use the following TS Gateway settings:	Використовувати такі параметри шлюзу TS:
+Close	Закрити
+Connection to the server was lost.\nDetecting connection state...	З’єднання з сервером втрачено.\nПеревірка стану з’єднання...
+Don't show me again	Більше не показувати
+Reconnect when ready	Перепідключитися, коли сервер буде доступний
+Terminal Server	Сервер терміналів
+Sessions	Сеанси
+Logoff	Вийти із сеансу
+Send Message	Надіслати повідомлення
+Are you sure you want to log this session off?	Ви дійсно бажаєте завершити цей сеанс?
+Are you sure you want to reboot this machine?	Ви дійсно бажаєте перезавантажити цей комп’ютер?
+Are you sure you want to shut this machine off?	Ви дійсно бажаєте вимкнути цей комп’ютер?
+Error connecting to {0}\n\n{1}	Помилка підключення до {0}\n\n{1}
+There was a fatal error returned from the RDP Connection, details:\n\nError Code:{0}\n\nError Description:{1}	RDP-з’єднання повернуло критичну помилку:\n\nКод помилки: {0}\n\nОпис помилки: {1}
+There was a logon error returned from the RDP Connection, details:\n\nLogon Code:{0}\n\nLogon Description:{1}	RDP-з’єднання повернуло помилку входу:\n\nКод входу: {0}\n\nОпис: {1}
+There was a warning returned from the RDP Connection, details:\n\nWarning Code:{0}\n\nWarning Description:{1}	RDP-з’єднання повернуло попередження:\n\nКод попередження: {0}\n\nОпис: {1}
+A Desktop Share was not defined for this connection.\nPlease define a share in the connection properties window (under the Local Resources tab).	Для цього з’єднання не задано спільну теку.\nЗадайте її у властивостях з’єднання (вкладка «Локальні ресурси»).
+Application Path:	Шлях до програми:
+Application Working Folder:	Робоча тека програми:
+Client INI:	INI клієнта:
+Enable Encryption	Увімкнути шифрування
+Name:	Ім’я:
+Server INI:	INI сервера:
+Edit	Змінити
+Putty session:	Сеанс PuTTY:
+Verbose	Докладний вивід
+Open putty to edit sessions	Відкрити PuTTY для редагування сеансів
+Enable Pagent Authentication	Увімкнути автентифікацію через Pageant
+Enable Pagent Forwarding	Увімкнути переадресацію Pageant
+Enable compression	Увімкнути стиснення
+Manage Keys	Керування ключами
+SSH Version	Версія SSH
+X11 forwarding	Переадресація X11
+The pageant tool is already running, open its window from system tray.	Pageant уже запущено, відкрийте його вікно із системного лотка.
+Terminals was unable to start pageant tool.	Terminals не вдалося запустити Pageant.
+Administrator Mode	Режим адміністратора
+Reduced Colors	Зменшена кількість кольорів
+VMRC: Switch to Administrator View	VMRC: перейти в режим адміністратора
+VMRC: View Only Mode	VMRC: лише перегляд
+Auto Scale Desktop	Автомасштабування робочого столу
+Display Number:	Номер дисплея:
+View Only	Лише перегляд
+VNC actions	Дії VNC
+Send ALT Key	Надіслати клавішу Alt
+Send ALT-F4 Keys	Надіслати Alt+F4
+Send CTRL ESC Keys	Надіслати Ctrl+Esc
+Send CTRL Key	Надіслати клавішу Ctrl
+Sent CTRL ALT DEL Keys	Надіслати Ctrl+Alt+Del
+Back	Назад
+Forward	Уперед
+Home	Домашня сторінка
+OK	OK
+Ok	OK
+&OK	&OK
+Cancel	Скасувати
+&Cancel	&Скасувати
+C&ancel	&Скасувати
+&Close	&Закрити
+C&lose	&Закрити
+Yes	Так
+No	Ні
+&Add	&Додати
+&Delete	&Видалити
+Delete	Видалити
+&Edit	&Змінити
+&New	&Створити
+New	Створити
+&Rename	&Перейменувати
+&Duplicate	&Дублювати
+&Save	З&берегти
+S&ave	З&берегти
+Save	Зберегти
+&Connect	&Підключитися
+C&onnect	&Підключитися
+Connect	Підключитися
+Connect...	Підключитися...
+Connecting...	Підключення...
+Browse...	Огляд...
+Next >	Далі >
+Finished!	Готово!
+Prompt	Запит
+Name	Ім’я
+Domain	Домен
+Domain:	Домен:
+User Name:	Ім’я користувача:
+User name:	Ім’я користувача:
+Username:	Ім’я користувача:
+Password:	Пароль:
+Confirm:	Підтвердження:
+Server:	Сервер:
+Computer	Комп’ютер
+Port	Порт
+Protocol	Протокол
+Url	URL
+Telnet	Telnet
+Colors	Кольори
+Sounds	Звуки
+Connections:	З’єднання:
+Connections	З’єднання
+Select All	Вибрати все
+Select None	Зняти вибір
+&Select all	&Вибрати все
+Start	Почати
+&Start	&Почати
+St&art	&Запустити
+Stop	Зупинити
+&Stop	З&упинити
+Sto&p	З&упинити
+Stop!	Зупинити!
+&Pause	При&зупинити
+Send	Надіслати
+Update	Оновити
+Test	Перевірити
+Backup	Резервна копія
+About Terminals	Про Terminals
+Terminals (RDP, VNC, VMRC, RAS, ICA Citrix, Telnet and SSH Supported)	Terminals (підтримка RDP, VNC, VMRC, RAS, ICA Citrix, Telnet і SSH)
+Terminals Home Page	Домашня сторінка Terminals
+Terminals also handles a variety of networking operations such as: Ping, Trace Route, WMI Explorer, TCP Connections, Network Interfaces, Whois, DNS Lookups, Shares List, Time Syncronization	Terminals також виконує різноманітні мережеві операції: Ping, трасування маршруту, оглядач WMI, TCP-з’єднання, мережеві інтерфейси, Whois, запити DNS, список спільних ресурсів, синхронізація часу
+Terminals is a multi tab terminal services/remote desktop client.\n	Terminals - багатовкладковий клієнт служб терміналів і віддаленого робочого столу.\n
+Terminals is maintained and developed by:	Terminals супроводжують і розробляють:
+{0}\nThis version of terminals was build for you on {1} at {2}\n\nVersion: {3}\nOSVersion: {4}\nProcessorCount: {5}\nFramework Version: {6}\nWorkingSet: {7}\nIs 64bit OS: {8}\nIs 64bit Proces: {9}\n\n	{0}\nЦю версію Terminals зібрано {1} о {2}\n\nВерсія: {3}\nВерсія ОС: {4}\nКількість процесорів: {5}\nВерсія .NET Framework: {6}\nРобочий набір: {7}\n64-розрядна ОС: {8}\n64-розрядний процес: {9}\n\n
+Connect As...	Підключитися як...
+Connect to Console	Підключитися до консолі
+Credentials:	Облікові дані:
+Open in new window	Відкрити в новому вікні
+Terminals - Credential Manager	Terminals - менеджер облікових даних
+Terminals - Manage Credential	Terminals - облікові дані
+An alias for the credential.\nThis is a required field.	Псевдонім облікових даних.\nОбов’язкове поле.
+Are you sure you want to delete credential {0}?	Ви дійсно бажаєте видалити облікові дані {0}?
+Credential manager	Менеджер облікових даних
+The Credential Name you entered already exists.\nDo you want to overwrite it?	Облікові дані з таким іменем уже існують.\nПерезаписати їх?
+Select favorites to add	Виберіть з’єднання для додавання
+Confirm new password:	Підтвердження нового пароля:
+New password:	Новий пароль:
+Old password:	Старий пароль:
+Set database password	Встановити пароль бази даних
+Database password change	Зміна пароля бази даних
+New password doesn't match	Новий пароль не збігається
+Group Name:	Назва групи:
+New Group name is not valid	Неприпустима назва нової групи
+Favorite name is not valid	Неприпустима назва з’єднання
+A connection named "{0}" already exists\nDo you want to overwrite it?	З’єднання з назвою «{0}» уже існує\nПерезаписати його?
+Quick Connect...	Швидке підключення...
+Invalid Password.	Неправильний пароль.
+Terminals Password	Пароль Terminals
+Terminals Export - Set Password	Експорт Terminals - встановлення пароля
+Terminals Export - Confirm Password	Експорт Terminals - підтвердження пароля
+Terminals Import - Enter Export Password	Імпорт Terminals - пароль експортованого файла
+Do not show this dialog again	Більше не показувати це вікно
+Do you want to close all connections?	Закрити всі з’єднання?
+Open connections next time I run Terminals	Відкрити ці з’єднання під час наступного запуску Terminals
+Save Active Connections	Збереження активних з’єднань
+More...	Більше...
+Less...	Менше...
+Advanced Sql Connection string properties	Додаткові властивості рядка підключення SQL
+Terminals - problem occurred	Terminals - виникла проблема
+Terminals has encountered a problem and needs to close.\nFor more details see log files.	У роботі Terminals виникла проблема, програму буде закрито.\nПодробиці див. у файлах журналу.
+Exit	Вийти
+Problem occurred, when Terminals tried to work with data.\n- Try again to repeat the operation\n- Exit to close all opened connections and exit the application\n\nDetail:	Під час роботи з даними виникла проблема.\n- «Спробувати ще раз» - повторити операцію\n- «Вийти» - закрити всі з’єднання й вийти з програми\n\nПодробиці:
+Terminals - data problem occurred	Terminals - проблема з даними
+Try again	Спробувати ще раз
+Attach to main window	Приєднати до головного вікна
+Capture screen	Знімок екрана
+Full screen	Повний екран
+Terminal Window	Вікно термінала
+&Export	&Експорт
+&Include Passwords	&Включити паролі
+Connection list:	Список з’єднань:
+Encrypt exported &file with a password	Зашифрувати експортований &файл паролем
+Save export list as...	Зберегти список експорту як...
+Terminals - Export	Terminals - експорт
+Terminals export	Експорт Terminals
+Enter a password to protect the exported file. You will need to enter it again when importing.	Введіть пароль для захисту експортованого файла. Його доведеться ввести ще раз під час імпорту.
+Password can't be empty.	Пароль не може бути порожнім.
+Passwords can only be exported into an encrypted file. Enable "Encrypt exported file with a password" first.	Паролі можна експортувати лише в зашифрований файл. Спершу ввімкніть «Зашифрувати експортований файл паролем».
+Passwords didn't match.	Паролі не збігаються.
+Terminals - conflict found in import	Terminals - конфлікт під час імпорту
+Terminals import result	Результат імпорту Terminals
+There are {0} connections to import, which already exist.	Серед імпортованих є з’єднання, які вже існують: {0}.
+{0} items were added to your favorites.	До обраного додано елементів: {0}.
+Couldnt import invalid favorite: '{0}' because:\n{1}	Не вдалося імпортувати неприпустиме з’єднання «{0}», причина:\n{1}
+&Edit Connection	&Змінити з’єднання
+&Export To A File	&Експорт у файл
+&Import From A File	&Імпорт із файла
+(0 selected)	(вибрано 0)
+({0} selected)	(вибрано {0})
+Import favorites from...	Імпортувати з’єднання з...
+Scan &Active Directory	Сканувати &Active Directory
+Scan &Network	Сканувати &мережу
+Scan &Registry	Сканувати &реєстр
+Terminals - Organize Favorites	Terminals - упорядкування обраного
+Terminals - Delete	Terminals - видалення
+Do your realy want to delete selected {0}?	Ви дійсно бажаєте видалити вибране: {0}?
+Move Down	Перемістити вниз
+Move To First	Перемістити на початок
+Move To Last	Перемістити в кінець
+Move Up	Перемістити вгору
+Add new Group	Додати нову групу
+Group Favorites	З’єднання групи
+Group name	Назва групи
+Remove selected favorites from selected group	Вилучити вибрані з’єднання з вибраної групи
+Select favorites for selected group	Вибрати з’єднання для вибраної групи
+Arguments:	Аргументи:
+Executable:	Виконуваний файл:
+Icon Picker:	Вибір значка:
+Icon:	Значок:
+Shortcut:	Ярлик:
+Working directory:	Робоча тека:
+Browse for executable...	Вибір виконуваного файла...
+Closes this edit form without saving changes. You have to save your changes firs.	Закриває форму без збереження змін. Спершу збережіть зміни.
+Deletes an item from Shortcuts list	Видаляє елемент зі списку ярликів
+Saves existing or adds new shortcut to the Shortcuts list	Зберігає наявний або додає новий ярлик до списку
+Select an icon for the shortcut	Виберіть значок для ярлика
+Selected shortcut icon	Значок вибраного ярлика
+Show dialog to select a shortcut executable	Показати вікно вибору виконуваного файла ярлика
+Type full path to the executable	Введіть повний шлях до виконуваного файла
+Type full path to the executable working directory	Введіть повний шлях до робочої теки
+Type here the executable startup command line parameters	Введіть параметри командного рядка
+Type new shortcut here or select one from list to change	Введіть новий ярлик або виберіть наявний зі списку для зміни
+Could not Launch the shortcut application: '{0}'	Не вдалося запустити програму ярлика: «{0}»
+Options	Параметри
+Option Title	Заголовок параметра
+Startup & Shutdown	Запуск і завершення
+Startup	Запуск
+Interface	Інтерфейс
+Master Password	Головний пароль
+Master Pwd	Головний пароль
+Default Password	Типовий пароль
+Default Pwd	Типовий пароль
+Amazon	Amazon
+Before Connect	Перед підключенням
+Execute Before Connect	Виконати перед підключенням
+Proxy	Проксі
+Flickr	Flickr
+Capture	Знімки
+Screen Capture	Знімки екрана
+Data store	Сховище даних
+Plugins	Плагіни
+More options coming soon to a version near you.\nHave a suggestion? submit a feature request \nthrough the Terminals website:\n	Нові параметри з’являться в наступних версіях.\nМаєте пропозицію? Надішліть запит на функцію\nчерез сайт Terminals:\n
+Error saving settings.\n{0}	Помилка збереження налаштувань.\n{0}
+Backup Favorites to Amazons S3 Service	Резервне копіювання обраного в Amazon S3
+Bucket Name	Назва кошика (bucket)
+Your Access Key ID:	Ідентифікатор ключа доступу:
+Your Secret Access Key:	Секретний ключ доступу:
+The backup was a success!	Резервну копію створено!
+The restore was a success!	Відновлення виконано!
+Are you sure you want to restore your current configuration?	Ви дійсно бажаєте відновити поточну конфігурацію?
+Are you sure you want to upload your current configuration?	Ви дійсно бажаєте вивантажити поточну конфігурацію?
+Auto switch to manager on capture	Відкривати менеджер знімків після знімка
+Enable screen capture to clipboard	Копіювати знімок екрана в буфер обміну
+Enable screen capture to folder	Зберігати знімок екрана в теку
+Screen capture root folder:	Коренева тека знімків:
+Select the screen capture folder	Виберіть теку для знімків екрана
+Enable execute before connect	Виконувати команду перед підключенням
+Wait for exit	Чекати завершення
+Ask to reconnect when connection is lost due Shutdown or reboot (RDP only)	Пропонувати перепідключення, якщо з’єднання втрачено через вимкнення або перезавантаження (лише RDP)
+Automatically restore main window when the last connection is closed	Автоматично відновлювати головне вікно після закриття останнього з’єднання
+Default Desktop Share (Use %SERVER% and %USER%):	Типова спільна тека (можна використовувати %SERVER% і %USER%):
+Evaluated Desktop Share (according to selected connection tab):	Обчислена спільна тека (для вибраної вкладки з’єднання):
+Port Scanner Timeout (0-60 seconds):	Тайм-аут сканера портів (0-60 секунд):
+RDP Desktop Share	Спільна тека RDP
+Show confirm dialog on close or warn on disconnect	Запитувати підтвердження під час закриття й відключення
+Validate Server Names	Перевіряти імена серверів
+Auto Expand (show) Favorites Panel, when hidden	Автоматично розгортати (показувати) приховану панель обраного
+Auto-Case Favorite Groups	Автоматичний регістр назв груп
+Connection Name	Назва з’єднання
+Enable Favorites Panel	Показувати панель обраного
+Favorites Sort	Сортування обраного
+None	Немає
+Server Name	Ім’я сервера
+Authorize...	Авторизувати...
+Complete...	Завершити...
+First you must first Authorize Terminals with your Flickr account. Press the Authorize button now, login to your Flickr Account and allow Terminals limited access to your account.	Спершу авторизуйте Terminals у вашому обліковому записі Flickr. Натисніть «Авторизувати», увійдіть у Flickr і надайте Terminals обмежений доступ до облікового запису.
+Second you must click the Complete button to finish the process. Only do this AFTER you have accepted Terminals access to your account on the Flickr Web Site.	Потім натисніть «Завершити», щоб закінчити процес. Робіть це лише ПІСЛЯ того, як надасте Terminals доступ на сайті Flickr.
+Use Flickr as storage place for screen captures.	Використовувати Flickr як сховище знімків екрана.
+User authenticated successfully	Користувача успішно автентифіковано
+User authenticated successfully. Authentication token is {0}. User id is {1}, username is {2}	Користувача успішно автентифіковано. Токен: {0}. Ідентифікатор користувача: {1}, ім’я: {2}
+User did not authenticate you{0}	Користувач вас не автентифікував {0}
+Enable Groups Menu	Показувати меню груп
+Information	Відомості
+Minimize To Tray	Згортати в системний лоток
+Normal	Звичайна
+Office Black	Office чорна
+Office Blue	Office синя
+Show  user name in tab title	Показувати ім’я користувача в заголовку вкладки
+Show connection information in tool tips	Показувати відомості про з’єднання в підказках
+Show full information	Показувати повні відомості
+System Tray	Системний лоток
+Theme	Тема
+Language	Мова
+Automatic (Windows language)	Автоматично (мова Windows)
+The change is applied after restart.	Зміни набудуть чинності після перезапуску.
+Password Protect	Захист паролем
+Passwords do not match	Паролі не збігаються
+Passwords match	Паролі збігаються
+Passwords do not match!	Паролі не збігаються!
+Passwords match!	Паролі збігаються!
+Advanced	Додатково
+Authentication:	Автентифікація:
+Create new DB	Створити нову БД
+Database password:	Пароль бази даних:
+Database:	База даних:
+Files in local profile	Файли в локальному профілі
+Microsoft SQL database server:	Сервер бази даних Microsoft SQL:
+Querying...	Запит...
+Select where to store application data	Виберіть, де зберігати дані програми
+Set password	Встановити пароль
+Test connection	Перевірити з’єднання
+Testing...	Перевірка...
+To apply this options you have to restart the application!	Щоб застосувати ці параметри, перезапустіть програму!
+Test connection succeeded.	Перевірка з’єднання пройшла успішно.
+Test connection succeeded. (Version: {0})	Перевірка з’єднання пройшла успішно. (Версія: {0})
+Test database failed.\nReason:{0}	Перевірка бази даних не вдалася.\nПричина: {0}
+There was an error, when setting new password:\n{0}	Помилка під час встановлення нового пароля:\n{0}
+Password was applied successfuly.	Пароль успішно застосовано.
+Set new database password	Встановлення нового пароля бази даних
+Terminals - Sql connection test	Terminals - перевірка підключення до SQL
+Select plugins you want to use.\nYou need to select atleast one of them.\nTo apply you need restart the application.\nAfter disable and enable some plugin some data may be lost.	Виберіть плагіни, які бажаєте використовувати.\nПотрібно вибрати принаймні один.\nЗміни набудуть чинності після перезапуску програми.\nПісля вимкнення й повторного ввімкнення плагіна частину даних може бути втрачено.
+Address:	Адреса:
+Automatically Detect Proxy	Автоматично визначати проксі
+Use the following Proxy Server:	Використовувати такий проксі-сервер:
+Allow a single instance of the application (needs restart)	Дозволити лише один екземпляр програми (потрібен перезапуск)
+Do not keep me up-to-date on Terminals project	Не повідомляти про нові версії Terminals
+Save connections on close	Зберігати з’єднання під час закриття
+Show close confirmation dialog	Запитувати підтвердження під час закриття
+Many times you may find that you are accesing terminals within a Domain, or just use the same credentials for many connections. In this option you can set the default credentials which Terminals will use to initiate connections where no credentials are supplied.\n\nHere you can set the default user, domain and password.	Часто термінали доступні в межах домену або для багатьох з’єднань використовуються ті самі облікові дані. Тут можна задати типові облікові дані, які Terminals використовуватиме для з’єднань без власних облікових даних.\n\nЗадайте типового користувача, домен і пароль.
+Comments:	Коментарі:
+Copy Image path to clipboard	Копіювати шлях до зображення
+Copy Image to clipboard	Копіювати зображення
+Delete Folder	Видалити теку
+New Folder	Нова тека
+Selected picture:	Вибране зображення:
+View:	Вигляд:
+Zoom:	Масштаб:
+Post selected images to Flickr	Опублікувати вибрані зображення у Flickr
+Change the size of image thumbnails	Змінити розмір мініатюр
+Delete the iamge comments from disk	Видалити коментарі зображення з диска
+Save image comments to the disk	Зберегти коментарі зображення на диск
+Select image list view mode	Виберіть режим перегляду списку зображень
+Selected picture preview	Попередній перегляд вибраного зображення
+Write you comments here.\nThey will be stored in the \nimage folder.	Введіть коментарі.\nВони зберігатимуться в \nтеці зображень.
+Are you sure you want to post {0} images to your Flickr account?	Ви дійсно бажаєте опублікувати зображення ({0}) у своєму обліковому записі Flickr?
+All images have been uploaded to Flickr.	Усі зображення вивантажено у Flickr.
+All items have been queued for upload to Flickr.  Once the upload has been completed you will be notified.	Усі елементи поставлено в чергу на вивантаження у Flickr.  Після завершення ви отримаєте сповіщення.
+Confirmation Required	Потрібне підтвердження
+There was an error uploading your screen shots to Flickr:\n{0}	Помилка вивантаження знімків екрана у Flickr:\n{0}
+You must first select a screen capture to upload.	Спершу виберіть знімок екрана для вивантаження.
+Capture failed	Не вдалося зробити знімок
+The folder "{0}" contains {1} directories.	Тека «{0}» містить підтек: {1}.
+The folder "{0}" contains {1} files.	Тека «{0}» містить файлів: {1}.
+Import selected	Імпортувати вибрані
+&Import selected	&Імпортувати вибрані
+LDAP Filter:	Фільтр LDAP:
+Progress...	Перебіг...
+Search root:	Корінь пошуку:
+Terminals - Active Directory Tool	Terminals - інструмент Active Directory
+This dialog allows you to import Computers from your Active Directory Domain directly into Terminals.	Це вікно дає змогу імпортувати комп’ютери з вашого домену Active Directory безпосередньо в Terminals.
+Scan	Сканувати
+&Scan	&Сканувати
+Scan canceled.	Сканування скасовано.
+Canceling scan...	Скасування сканування...
+Contacting domain...	Зв’язок із доменом...
+Scan complete, {0} computers found.	Сканування завершено, знайдено комп’ютерів: {0}.
+Scaning... {0} computers found.	Сканування... знайдено комп’ютерів: {0}.
+Domain name to contact. Doesnt have to be fully qualified domain name.	Ім’я домену для підключення. Не обов’язково повне доменне ім’я.
+LDAP search filter to use. Use default value to obtain all computers only.	Фільтр пошуку LDAP. Типове значення повертає всі комп’ютери.
+Set Filter, Domain and Maximum results to default values.\n	Повернути типові значення фільтра, домену й максимальної кількості результатів.\n
+Start or interupt the scan	Запустити або перервати сканування
+All protocols	Усі протоколи
+Client	Клієнт
+Connect to Server	Підключитися до сервера
+Direct Connection	Пряме з’єднання
+From:	Від:
+To:	До:
+Groups...	Групи...
+Host name	Ім’я вузла
+IP Address:	IP-адреса:
+IP address	IP-адреса
+IP address range:	Діапазон IP-адрес:
+Modify the IP Range, and hit Scan	Змініть діапазон IP-адрес і натисніть «Сканувати»
+Optional Groups:	Додаткові групи:
+Port Scanner	Сканер портів
+Server	Сервер
+Server is OFFLINE.	Сервер ВИМКНЕНО.
+Server is OFFLINE	Сервер ВИМКНЕНО
+Server is ONLINE	Сервер УВІМКНЕНО
+Service	Служба
+Start Server	Запустити сервер
+Stop Server	Зупинити сервер
+Step 1: Start the "Server" by hitting the "Start Server" button below.	Крок 1: запустіть «сервер» кнопкою «Запустити сервер» нижче.
+Step 2: On the machine which you would like to share your connections with, place your IP address in the "IP Address" box on the right, and then it the "Connect to Server" button.	Крок 2: на комп’ютері, з яким бажаєте поділитися з’єднаннями, введіть свою IP-адресу в поле «IP-адреса» праворуч і натисніть «Підключитися до сервера».
+Terminals - Network Scanner	Terminals - сканер мережі
+You can use this form to establish a direct connection with another machine on the network in order to share connections.	Ця форма дає змогу встановити пряме з’єднання з іншим комп’ютером у мережі, щоб поділитися з’єднаннями.
+Scan Stopped.	Сканування зупинено.
+Initiating Scan...	Запуск сканування...
+Pending items:{0}	Очікує: {0}
+Completed scan, found: {0} items.	Сканування завершено, знайдено: {0}.
+Could not connect to the remote server.  Make sure the server is online.	Не вдалося підключитися до віддаленого сервера.  Переконайтеся, що сервер увімкнено.
+Logoff Session	Завершити сеанс
+Reboot Server	Перезавантажити сервер
+Shutdown Server	Вимкнути сервер
+Terminal Server:	Сервер терміналів:
+Are you sure you want to log off the selected session?	Ви дійсно бажаєте завершити вибраний сеанс?
+Are you sure you want to reboot this server?	Ви дійсно бажаєте перезавантажити цей сервер?
+Are you sure you want to shutdown this server?	Ви дійсно бажаєте вимкнути цей сервер?
+This machine does not appear to be a Terminal Server	Схоже, цей комп’ютер не є сервером терміналів
+Host:	Вузол:
+Lookup	Пошук
+Nameserver:	DNS-сервер:
+Could not resolve host.	Не вдалося визначити вузол.
+Time Server:	Сервер часу:
+Device:	Пристрій:
+Dump to File	Записувати у файл
+Filter:	Фільтр:
+Filtering Help	Довідка з фільтрів
+Header	Заголовок
+Hex View	Шістнадцятковий вигляд
+Promiscuous	Нерозбірливий режим
+Start Capture	Почати захоплення
+Stop Capture	Зупинити захоплення
+Text View	Текстовий вигляд
+Failed to set the filter: {0}	Не вдалося встановити фільтр: {0}
+Terminals Packet Capture is not configured to work with this system (Bad Image Format Exception)	Захоплення пакетів Terminals не налаштовано для цієї системи (Bad Image Format Exception)
+Packets	Пакети
+Packet Capture is either not install or not supported on this version of windows.	Захоплення пакетів не встановлено або воно не підтримується цією версією Windows.
+It appears that WinPcap is not installed.  In order to use this feature within Terminals you must first install that product.  Do you wish to visit the download location right now?	Схоже, WinPcap не встановлено.  Щоб використовувати цю функцію Terminals, спершу встановіть WinPcap.  Перейти на сторінку завантаження?
+Download WinPcap?	Завантажити WinPcap?
+Open dump file in notepad?	Відкрити файл дампа в Блокноті?
+Delay:	Затримка:
+Graph	Графік
+Raw Results	Необроблені результати
+Ping results	Результати ping
+Ping results for {0}	Результати ping для {0}
+Counter	Лічильник
+Time, Milliseconds	Час, мілісекунди
+Ping Error	Помилка ping
+An error occured trying to ping {0}	Помилка під час ping {0}
+Could not resolve address: {0}	Не вдалося визначити адресу: {0}
+Hostname or IP-Address is invalid: {0}	Неправильне ім’я вузла або IP-адреса: {0}
+Addresses:	Адреси:
+Copy Remote Address	Копіювати віддалену адресу
+Ports:	Порти:
+Outsanding Requests:{0}	Незавершені запити: {0}
+Port scanner requires administrative priviledges to run!	Для роботи сканера портів потрібні права адміністратора!
+Terminals - port scanner	Terminals - сканер портів
+DNS Lookup	Запит DNS
+Interfaces	Інтерфейси
+Services	Служби
+Shares	Спільні ресурси
+System	Система
+Time	Час
+Wake on Lan	Wake on LAN
+Whois	Whois
+&Whois	&Whois
+Resolve Host Names	Визначати імена вузлів
+Trace Route results	Результати трасування
+Trace Route results for {0}	Результати трасування для {0}
+MAC Address:	MAC-адреса:
+There was an error sending the Magic Packet{0}	Помилка надсилання Magic Packet {0}
+{0} bytes sent to {1}	Надіслано байтів: {0} на {1}
+Loading shares	Завантаження спільних ресурсів
+Unable to loads shares for remote compuer.	Не вдалося завантажити спільні ресурси віддаленого комп’ютера.
+&Login	&Увійти
+Login...	Вхід...
+Machine Name:	Ім’я комп’ютера:
+&Clear	&Очистити
+&History	&Історія
+&Query	&Запит
+L&oad	&Завантажити
+Load Static Class Tree	Завантажити дерево статичних класів
+Locate History File...	Знайти файл історії...
+Error Thrown:{0}	Виникла помилка: {0}
+History Cleared.	Історію очищено.
+History Saved.	Історію збережено.
+Automatic Discovery is running.  To stop this, just hit cancel below.	Триває автоматичне виявлення.  Щоб зупинити його, натисніть «Скасувати» нижче.
+Discovered Connections:	Виявлені з’єднання:
+Pending Requests:	Незавершені запити:
+Please wait while Automatic Discovery is running.  Once this is complete this window will close automatically.	Зачекайте, доки триває автоматичне виявлення.  Після завершення це вікно закриється автоматично.
+Welcome to Terminals	Ласкаво просимо до Terminals
+Welcome to Terminals...	Ласкаво просимо до Terminals...
+Allow a single instance of the application	Дозволити лише один екземпляр програми
+Automatically switch to Capture Manager	Автоматично відкривати менеджер знімків
+Below are a few of the more common options which you should take time now to tweak according to your needs.	Нижче наведено кілька поширених параметрів, які варто одразу налаштувати під себе.
+Import RDP Connections from registry	Імпортувати RDP-з’єднання з реєстру
+Load default shortcuts	Завантажити типові ярлики
+Minimize to tray	Згортати в системний лоток
+Warn on disconnect	Попереджати під час відключення
+Confirmation:	Підтвердження:
+Enable Master Password	Увімкнути головний пароль
+Master Password:	Головний пароль:
+Strength:	Надійність:
+Terminals is a multi tab terminal services/remote desktop client.  It also includes the ability to connect to VNC, VMRC, Telnet, SSH, RAS, and ICA Citrix connections.	Terminals - багатовкладковий клієнт служб терміналів і віддаленого робочого столу.  Він також уміє підключатися через VNC, VMRC, Telnet, SSH, RAS і ICA Citrix.
+This wizard is intended to help you get started with the tool.  If, at any time, you want to skip this just hit cancel.	Цей майстер допоможе почати роботу з програмою.  Щоб пропустити його, будь-коли натисніть «Скасувати».
+By setting your Master Password allows Terminals to store your connection information in a much more secure manner.  Although it is not required, it is highly recommended that you do set it now.	Головний пароль дає змогу Terminals зберігати відомості про з’єднання значно надійніше.  Він не обов’язковий, але його наполегливо рекомендується встановити зараз.
+Many times you may find that you are accesing terminals within a Domain, or just use the same credentials for many connections.  In this form you can set the default credentials which Terminals will use to initiate connections where no credentials are supplied.\n\nThis is not a required step.	Часто термінали доступні в межах домену або для багатьох з’єднань використовуються ті самі облікові дані.  Тут можна задати типові облікові дані, які Terminals використовуватиме для з’єднань без власних облікових даних.\n\nЦей крок не обов’язковий.
+Terminals Confirmation	Підтвердження Terminals
+Automatic Discovery was able to find {0} connections.\n	Автоматичне виявлення знайшло з’єднань: {0}.\n
+Discovered Connections	Виявлені з’єднання
+Terminals	Terminals
+Unable to open path:\n'{0}'	Не вдалося відкрити шлях:\n«{0}»
+Write Access is denied to:\n{0}\n	Немає доступу на запис до:\n{0}\n
+Terminals was able to automatically upgrade your existing connections.	Terminals автоматично оновив ваші наявні з’єднання.
+Terminals was NOT able to automatically upgrade your existing connections.\nError:{0}	Terminals НЕ вдалося автоматично оновити ваші наявні з’єднання.\nПомилка: {0}
+Terminals database connection failed	Не вдалося підключитися до бази даних Terminals
+Do you wan't to start with local files store?\nYes - start with files store (You will be able to fix the configuration.)\nNo - Exit application	Запустити програму з локальним файловим сховищем?\nТак - запустити з файловим сховищем (конфігурацію можна буде виправити)\nНі - вийти з програми
+Application was not able to upgrade your passwords to version 2, because your master password isn't valid.	Програмі не вдалося оновити паролі до версії 2, бо головний пароль неправильний.
+Terminals was unable to save your toolstrip settings.	Terminals не вдалося зберегти налаштування панелей інструментів.
+Could not connect to the server. Reason:{0}	Не вдалося підключитися до сервера. Причина: {0}
+Unable to apply {0} to favorites	Не вдалося застосувати {0} до з’єднань
+Terminals Update	Оновлення Terminals
+&Update now	&Оновити зараз
+&Release page	Сторінка &випуску
+&Skip this version	&Пропустити цю версію
+&Later	&Пізніше
+Terminals {0} is available (you have {1}).\nPublished {2:d}	Доступна версія Terminals {0} (у вас {1}).\nОпубліковано {2:d}
+No release notes.	Немає опису випуску.
+Update downloads {0} ({1}), Terminals will be restarted.	Буде завантажено {0} ({1}), Terminals буде перезапущено.
+installer	інсталятор
+portable package	портативний пакет
+Automatic update isn't possible, application directory is read only. Download the release manually.	Автоматичне оновлення неможливе: тека програми доступна лише для читання. Завантажте випуск вручну.
+The release doesn't contain package for this installation type. Download the release manually.	Випуск не містить пакета для цього типу встановлення. Завантажте випуск вручну.
+Downloading {0}...	Завантаження {0}...
+Download was cancelled.	Завантаження скасовано.
+Verifying the downloaded package...	Перевірка завантаженого пакета...
+Unable to start the download: {0}	Не вдалося почати завантаження: {0}
+Download failed: {0}	Помилка завантаження: {0}
+Downloaded package is not valid: {0}	Завантажений пакет пошкоджено: {0}
+Unable to start the download	Не вдалося почати завантаження
+Download failed	Помилка завантаження
+Downloaded package is not valid	Завантажений пакет пошкоджено
+Unable to check for updates. See the log file for details.	Не вдалося перевірити оновлення. Подробиці див. у файлі журналу.
+You are using the latest version {0}.	У вас остання версія {0}.
+Unable to apply the update: {0}	Не вдалося застосувати оновлення: {0}
+The update was canceled, because Terminals wasn't closed.	Оновлення скасовано, бо Terminals не було закрито.
+# ---------- Grid columns ----------
+UserName	Ім’я користувача
+ComputerName	Ім’я комп’ютера
+OperatingSystem	Операційна система
+HostName	Ім’я вузла
+IPAddress	IP-адреса
+ServiceName	Служба

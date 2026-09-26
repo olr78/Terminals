@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using ZedGraph;
+using Terminals.Localization;
 
 namespace Terminals.Network
 {
@@ -329,9 +330,9 @@ namespace Terminals.Network
         {
             myPane = this.ZGraph.GraphPane;
             // Set the titles and axis labels
-            myPane.Title.Text = "Ping results";
-            myPane.XAxis.Title.Text = "Counter";
-            myPane.YAxis.Title.Text = "Time, Milliseconds";
+            myPane.Title.Text = Translator.T("Ping results");
+            myPane.XAxis.Title.Text = Translator.T("Counter");
+            myPane.YAxis.Title.Text = Translator.T("Time, Milliseconds");
 
             // Show the x axis grid
             myPane.XAxis.MajorGrid.IsVisible = true;
@@ -396,7 +397,7 @@ namespace Terminals.Network
                 x++;
             }
 
-            myPane.Title.Text = String.Format("Ping results for {0}", this.TextHost.Text);
+            myPane.Title.Text = Translator.Format("Ping results for {0}", this.TextHost.Text);
 
             // Manually set the axis range
             myPane.YAxis.Scale.Min = 0;

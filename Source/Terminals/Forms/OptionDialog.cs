@@ -6,6 +6,7 @@ using System.Linq;
 using Terminals.Configuration;
 using Terminals.Connections;
 using Terminals.Data;
+using Terminals.Localization;
 
 namespace Terminals.Forms
 {
@@ -19,6 +20,7 @@ namespace Terminals.Forms
             this.ApplySystemFont();
 
             InitializeComponent();
+            UiTranslator.TranslateNodes(this.OptionsTreeView.Nodes, true);
 
             this.panelMasterPassword.Security = persistence.Security;
             MovePanelsFromTabsIntoControls();
@@ -113,7 +115,7 @@ namespace Terminals.Forms
                 SelectNewPanel();
                 UpdatePanelPosition();
                 this.currentPanel.Show();
-                this.OptionTitelLabel.Text = this.OptionsTreeView.SelectedNode.Name.Replace("&", "&&");
+                this.OptionTitelLabel.Text = Translator.T(this.OptionsTreeView.SelectedNode.Name).Replace("&", "&&");
                 UpdateTreeNodeState(e);
             }
             catch (Exception ex)

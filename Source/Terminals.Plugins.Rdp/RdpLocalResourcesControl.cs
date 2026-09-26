@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using Terminals.Data;
+using Terminals.Localization;
 
 namespace Terminals.Forms.EditFavorite
 {
@@ -26,7 +27,7 @@ namespace Terminals.Forms.EditFavorite
         {
             using (FolderBrowserDialog dialog = new FolderBrowserDialog())
             {
-                dialog.Description = "Select Desktop Share:";
+                dialog.Description = Translator.T("Select Desktop Share:");
                 dialog.ShowNewFolderButton = false;
                 dialog.SelectedPath = @"\\" + this.serverName;
                 if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)

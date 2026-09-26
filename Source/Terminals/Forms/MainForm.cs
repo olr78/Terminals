@@ -19,6 +19,7 @@ using Terminals.Credentials;
 using Terminals.Native;
 using Terminals.Services;
 using Terminals.Updates;
+using Terminals.Localization;
 using Settings = Terminals.Configuration.Settings;
 
 namespace Terminals
@@ -346,12 +347,12 @@ namespace Terminals
                 if (w > 2)
                 {
                     this.allScreens = true;
-                    this.showInDualScreensToolStripMenuItem.Text = "Show in single screens";
+                    this.showInDualScreensToolStripMenuItem.Text = Translator.T("Show in single screens");
                 }
             }
             else
             {
-                this.showInDualScreensToolStripMenuItem.ToolTipText = "You only have one screen";
+                this.showInDualScreensToolStripMenuItem.ToolTipText = Translator.T("You only have one screen");
                 this.showInDualScreensToolStripMenuItem.Enabled = false;
             }
         }
@@ -1351,7 +1352,7 @@ namespace Terminals
             {
                 this.availableRelease = downloaded.Release;
                 this.updateToolStripItem.Visible = true;
-                this.updateToolStripItem.Text = String.Format("New Release Available - {0}", downloaded.Version);
+                this.updateToolStripItem.Text = Translator.Format("New Release Available - {0}", downloaded.Version);
             }
         }
 
@@ -1466,13 +1467,13 @@ namespace Terminals
                     with += screen.Bounds.Width;
                 }
 
-                this.showInDualScreensToolStripMenuItem.Text = "Show in Single Screen";
+                this.showInDualScreensToolStripMenuItem.Text = Translator.T("Show in Single Screen");
                 this.BringToFront();
             }
             else
             {
                 with = Screen.PrimaryScreen.Bounds.Width;
-                this.showInDualScreensToolStripMenuItem.Text = "Show In Multi Screens";
+                this.showInDualScreensToolStripMenuItem.Text = Translator.T("Show In Multi Screens");
             }
 
             this.Top = 0;

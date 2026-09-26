@@ -7,6 +7,7 @@ using Terminals.Connections;
 using Terminals.Data;
 using Terminals.Forms.Controls;
 using Terminals.Wizard;
+using Terminals.Localization;
 
 namespace Terminals
 {
@@ -99,7 +100,7 @@ namespace Terminals
             if (this.co.ImportRDPConnections)
             {
                 this.nextButton.Enabled = false;
-                this.nextButton.Text = "Finished!";
+                this.nextButton.Text = Translator.T("Finished!");
                 this.panel1.Controls.Clear();
                 this.rdp.Dock = DockStyle.Fill;
                 this.panel1.Controls.Add(this.rdp);

@@ -1,5 +1,6 @@
 using System;
 using System.Windows.Forms;
+using Terminals.Localization;
 
 namespace Terminals
 {
@@ -15,12 +16,12 @@ namespace Terminals
         {
             if (Height == 160)
             {
-                MoreButton.Text = "Less...";
+                MoreButton.Text = Translator.T("Less...");
                 Height = 230;
             }
             else
             {
-                MoreButton.Text = "More...";
+                MoreButton.Text = Translator.T("More...");
                 Height = 160;
             }
         }

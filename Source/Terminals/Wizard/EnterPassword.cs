@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using Terminals.Data;
+using Terminals.Localization;
 
 namespace Terminals.Wizard
 {
@@ -39,9 +40,9 @@ namespace Terminals.Wizard
         private void ConfirmTextBox_TextChanged(object sender, EventArgs e)
         {
             if(masterPasswordTextbox.Text != confirmTextBox.Text)
-                ErrorLabel.Text = "Passwords do not match!";
+                ErrorLabel.Text = Translator.T("Passwords do not match!");
             else
-                ErrorLabel.Text = "Passwords match!";
+                ErrorLabel.Text = Translator.T("Passwords match!");
 
             this.progressBar1.Value = PasswordStrength.Strength(this.masterPasswordTextbox.Text);
             if(this.progressBar1.Value <= 10)

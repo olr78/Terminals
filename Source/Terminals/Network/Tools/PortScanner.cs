@@ -4,6 +4,7 @@ using System.Net;
 using System.Threading;
 using System.Windows.Forms;
 using Metro.Scanning;
+using Terminals.Localization;
 
 namespace Terminals.Network
 {
@@ -193,7 +194,7 @@ namespace Terminals.Network
                 this.StartButton.Enabled = true;
                 this.counter = 0;
             }
-            this.ScanResultsLabel.Text = string.Format("Outsanding Requests:{0}", this.counter);
+            this.ScanResultsLabel.Text = Translator.Format("Outsanding Requests:{0}", this.counter);
         }
 
         private void StopButton_Click(object sender, EventArgs e)

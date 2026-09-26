@@ -6,6 +6,7 @@ using Amazon;
 using Amazon.S3;
 using Amazon.S3.Model;
 using Terminals.Configuration;
+using Terminals.Localization;
 
 namespace Terminals.Forms
 {
@@ -176,7 +177,7 @@ namespace Terminals.Forms
                 client.PutObject(request);
 
                 this.ErrorLabel.ForeColor = Color.Black;
-                this.ErrorLabel.Text = "The backup was a success!";
+                this.ErrorLabel.Text = Translator.T("The backup was a success!");
             }
             catch (Exception exception)
             {
@@ -200,7 +201,7 @@ namespace Terminals.Forms
                 }
 
                 this.ErrorLabel.ForeColor = Color.Black;
-                this.ErrorLabel.Text = "The restore was a success!";
+                this.ErrorLabel.Text = Translator.T("The restore was a success!");
             }
             catch (Exception exc)
             {

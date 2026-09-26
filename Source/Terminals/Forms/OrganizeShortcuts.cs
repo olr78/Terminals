@@ -3,6 +3,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using Terminals.Configuration;
+using Terminals.Localization;
 
 namespace Terminals
 {
@@ -155,7 +156,7 @@ namespace Terminals
             ofd.Filter = "Executable Files|*.exe";
             ofd.Multiselect = false;
             ofd.ShowReadOnly = true;
-            ofd.Title = "Browse for executable...";
+            ofd.Title = Translator.T("Browse for executable...");
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 this.executableTextBox.Text = ofd.FileName;                

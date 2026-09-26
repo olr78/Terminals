@@ -10,6 +10,7 @@ using Terminals.Configuration;
 using Terminals.Connections;
 using Terminals.Data;
 using Terminals.Data.Validation;
+using Terminals.Localization;
 
 namespace Terminals.Forms.EditFavorite
 {
@@ -113,7 +114,7 @@ namespace Terminals.Forms.EditFavorite
             openFileDialog.InitialDirectory = FileLocations.ThumbsDirectoryFullPath;
             openFileDialog.Filter = "PNG Files (*.png)|*.png|JPG Files (*.jpg)|*.jpg|All files (*.*)|*.*";
             openFileDialog.Multiselect = false;
-            openFileDialog.Title = "Select Custom Terminal Image .";
+            openFileDialog.Title = Translator.T("Select Custom Terminal Image .");
             return openFileDialog;
         }
 
@@ -210,7 +211,7 @@ namespace Terminals.Forms.EditFavorite
 
         private void SetControlsForWeb()
         {
-            this.lblServerName.Text = "Url:";
+            this.lblServerName.Text = Translator.T("Url:");
             this.cmbServers.Enabled = false;
             this.txtPort.Enabled = false;
             this.httpUrlTextBox.Enabled = true;
@@ -219,7 +220,7 @@ namespace Terminals.Forms.EditFavorite
 
         private void SetControlsProtocolIndependent()
         {
-            this.lblServerName.Text = "Computer:";
+            this.lblServerName.Text = Translator.T("Computer:");
             this.cmbServers.Enabled = true;
             this.txtPort.Enabled = true;
             this.httpUrlTextBox.Enabled = false;

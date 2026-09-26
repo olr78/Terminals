@@ -5,6 +5,7 @@ using Terminals.Configuration;
 using Terminals.Connections;
 using Terminals.Data;
 using Terminals.Forms.Controls;
+using Terminals.Localization;
 
 namespace Terminals.Network
 {
@@ -60,20 +61,20 @@ namespace Terminals.Network
                 var searchParams = new ActiveDirectorySearchParams(this.domainTextbox.Text,
                     this.ldapFilterTextbox.Text, this.searchbaseTextbox.Text);
                 adClient.FindComputers(searchParams);
-                this.lblProgressStatus.Text = "Contacting domain...";
+                this.lblProgressStatus.Text = Translator.T("Contacting domain...");
                 this.SwitchToRunningMode();
             }
             else
             {
                 adClient.Stop();
-                this.lblProgressStatus.Text = "Canceling scan...";
+                this.lblProgressStatus.Text = Translator.T("Canceling scan...");
             }
         }
 
         private void SwitchToRunningMode()
         {
             this.progressBar1.Visible = true;
-            this.ButtonScanAD.Text = "Stop";
+            this.ButtonScanAD.Text = Translator.T("Stop");
             this.btnSelectAll.Enabled = false;
             this.btnSelectNone.Enabled = false;
             this.ButtonImport.Enabled = false;
@@ -82,7 +83,7 @@ namespace Terminals.Network
         private void SwitchToStoppedMode()
         {
             this.progressBar1.Visible = false;
-            this.ButtonScanAD.Text = "Scan";
+            this.ButtonScanAD.Text = Translator.T("Scan");
             this.btnSelectAll.Enabled = true;
             this.btnSelectNone.Enabled = true;
             this.ButtonImport.Enabled = true;
@@ -97,7 +98,7 @@ namespace Terminals.Network
             else
             {
                 this.bsComputers.Add(computer);
-                this.lblProgressStatus.Text = String.Format("Scaning... {0} computers found.", this.bsComputers.Count);
+                this.lblProgressStatus.Text = Translator.Format("Scaning... {0} computers found.", this.bsComputers.Count);
                 this.gridComputers.Refresh();
             }
         }
@@ -112,11 +113,11 @@ namespace Terminals.Network
             {
                 if (success)
                 {
-                    this.lblProgressStatus.Text = String.Format("Scan complete, {0} computers found.", this.bsComputers.Count);
+                    this.lblProgressStatus.Text = Translator.Format("Scan complete, {0} computers found.", this.bsComputers.Count);
                 }
                 else
                 {
-                    this.lblProgressStatus.Text = "Scan canceled.";
+                    this.lblProgressStatus.Text = Translator.T("Scan canceled.");
                 }
 
                 SwitchToStoppedMode();

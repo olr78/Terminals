@@ -5,6 +5,7 @@ using Terminals.Configuration;
 using Terminals.Data;
 using Terminals.Data.Credentials;
 using Terminals.Data.Interfaces;
+using Terminals.Localization;
 
 namespace Terminals.Credentials
 {
@@ -66,7 +67,7 @@ namespace Terminals.Credentials
             ICredentialSet prototype = this.CreateNewCredential();
             var results = this.validator.Validate(prototype);
             string nameErrorMessage = results["Name"];
-            this.errorProvider.SetError(this.NameTextbox, nameErrorMessage);
+            this.errorProvider.SetError(this.NameTextbox, Translator.T(nameErrorMessage));
             // the validated object contains only encrypted properties.
             string userNameErrorMessage = results["EncryptedUserName"];
             this.credentialsPanel1.SetUserNameError(this.errorProvider, userNameErrorMessage);

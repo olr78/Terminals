@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using Terminals.Plugins.Vmrc.Properties;
+using Terminals.Localization;
 
 namespace Terminals.Connections
 {
@@ -45,7 +46,7 @@ namespace Terminals.Connections
             this.adminSwitchButton.ImageTransparentColor = Color.Magenta;
             this.adminSwitchButton.Name = VMRCADMINSWITCHBUTTON;
             this.adminSwitchButton.Size = new Size(23, 22);
-            this.adminSwitchButton.Text = "VMRC: Switch to Administrator View";
+            this.adminSwitchButton.Text = Translator.T("VMRC: Switch to Administrator View");
             this.adminSwitchButton.Click += new EventHandler(this.AdminSwitchButton_Click);
             standardToolbar.Items.Add(this.adminSwitchButton);
         }
@@ -58,7 +59,7 @@ namespace Terminals.Connections
             this.viewOnlyButton.ImageTransparentColor = Color.White;
             this.viewOnlyButton.Name = VMRCVIEWONLYBUTTON;
             this.viewOnlyButton.Size = new Size(23, 22);
-            this.viewOnlyButton.Text = "VMRC: View Only Mode";
+            this.viewOnlyButton.Text = Translator.T("VMRC: View Only Mode");
             this.viewOnlyButton.Click += new EventHandler(this.ViewOnlyButton_Click);
             standardToolbar.Items.Add(this.viewOnlyButton);
         }

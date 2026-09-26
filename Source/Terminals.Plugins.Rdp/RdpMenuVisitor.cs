@@ -4,6 +4,7 @@ using System.Threading;
 using System.Windows.Forms;
 using Terminals.Plugins.Rdp.Properties;
 using Terminals.TerminalServices;
+using Terminals.Localization;
 
 namespace Terminals.Connections
 {
@@ -47,7 +48,7 @@ namespace Terminals.Connections
             this.TerminalServerMenuButton.ImageTransparentColor = Color.Magenta;
             this.TerminalServerMenuButton.Name = TERMINAL_SERVER_MENU_BUTTON_NAME;
             this.TerminalServerMenuButton.Size = new Size(29, 22);
-            this.TerminalServerMenuButton.Text = "Terminal Server";
+            this.TerminalServerMenuButton.Text = Translator.T("Terminal Server");
             this.TerminalServerMenuButton.DropDownOpening += new EventHandler(this.TerminalServerMenuButton_DropDownOpening);
             standardToolbar.Items.Add(this.TerminalServerMenuButton);
         }

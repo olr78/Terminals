@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using Terminals.Common.Connections;
 using Terminals.Connections;
 using Terminals.Properties;
+using Terminals.Localization;
 using Settings = Terminals.Configuration.Settings;
 
 namespace Terminals.Forms.OptionPanels
@@ -55,7 +56,7 @@ namespace Terminals.Forms.OptionPanels
             if (e.Cancel)
                 errorMessage = Resources.PluginSelectionErrorMessage;
 
-            this.errorProvider.SetError(this.pluginsListbox, errorMessage);
+            this.errorProvider.SetError(this.pluginsListbox, Translator.T(errorMessage));
         }
 
         private List<SelectedPlugin> GetPluginsFromUI()

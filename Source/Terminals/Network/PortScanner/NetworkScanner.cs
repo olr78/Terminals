@@ -9,6 +9,7 @@ using Terminals.Data;
 using Terminals.Forms.Controls;
 using Terminals.Network;
 using Terminals.Scanner;
+using Terminals.Localization;
 
 namespace Terminals
 {
@@ -62,7 +63,7 @@ namespace Terminals
         {
             scanProgressBar.Value = 0;
 
-            if (ScanButton.Text == "&Scan")
+            if (ScanButton.Text == Translator.T("&Scan"))
             {
                 this.StartScan();
             }
@@ -75,15 +76,15 @@ namespace Terminals
         private void StopScan()
         {
             this.manager.StopScan();
-            this.ScanStatusLabel.Text = "Scan Stopped.";
-            this.ScanButton.Text = "&Scan";
+            this.ScanStatusLabel.Text = Translator.T("Scan Stopped.");
+            this.ScanButton.Text = Translator.T("&Scan");
         }
 
         private void StartScan()
         {
             this.bsScanResults.Clear();
-            ScanStatusLabel.Text = "Initiating Scan...";
-            ScanButton.Text = "Stop";
+            ScanStatusLabel.Text = Translator.T("Initiating Scan...");
+            ScanButton.Text = Translator.T("Stop");
             List<int> ports = GetSelectedPorts();
             this.manager.StartScan(this.ATextbox.Text, this.BTextbox.Text, this.CTextbox.Text,
                                    this.DTextbox.Text, this.ETextbox.Text, ports);
@@ -114,14 +115,14 @@ namespace Terminals
                             this.manager.ScanIsRunning, pendingAddresses);
 
 
-            ScanStatusLabel.Text = String.Format("Pending items:{0}", pendingAddresses);
+            ScanStatusLabel.Text = Translator.Format("Pending items:{0}", pendingAddresses);
             if (scanProgressBar.Value >= scanProgressBar.Maximum)
                 scanProgressBar.Value = 0;
 
             if (pendingAddresses == 0)
             {
-                this.ScanButton.Text = "&Scan";
-                ScanStatusLabel.Text = String.Format("Completed scan, found: {0} items.", this.bsScanResults.Count);
+                this.ScanButton.Text = Translator.T("&Scan");
+                ScanStatusLabel.Text = Translator.Format("Completed scan, found: {0} items.", this.bsScanResults.Count);
                 scanProgressBar.Value = 0;
             }
         }
@@ -190,21 +191,21 @@ namespace Terminals
         {
             if (this.server.ServerOnline)
             {
-                this.button1.Text = "Start Server";
+                this.button1.Text = Translator.T("Start Server");
                 this.server.Stop();
             }
             else
             {
-                this.button1.Text = "Stop Server";
+                this.button1.Text = Translator.T("Stop Server");
                 this.server.Start();
             }
             if (this.server.ServerOnline)
             {
-                this.ServerStatusLabel.Text = "Server is ONLINE";
+                this.ServerStatusLabel.Text = Translator.T("Server is ONLINE");
             }
             else
             {
-                this.ServerStatusLabel.Text = "Server is OFFLINE";
+                this.ServerStatusLabel.Text = Translator.T("Server is OFFLINE");
             }
         }
 

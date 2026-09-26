@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using System.Data;
 using System.Management;
+using Terminals.Localization;
 
 namespace WMITestClient
 {
@@ -235,7 +236,7 @@ namespace WMITestClient
             this.QueryButton.Name = "QueryButton";
             this.QueryButton.Size = new System.Drawing.Size(67, 24);
             this.QueryButton.TabIndex = 1;
-            this.QueryButton.Text = "&Query";
+            this.QueryButton.Text = Translator.T("&Query");
             this.QueryButton.Click += new System.EventHandler(this.QueryButton_Click);
             // 
             // progressBar1
@@ -254,7 +255,7 @@ namespace WMITestClient
             this.StopButton.Name = "StopButton";
             this.StopButton.Size = new System.Drawing.Size(67, 24);
             this.StopButton.TabIndex = 2;
-            this.StopButton.Text = "Stop!";
+            this.StopButton.Text = Translator.T("Stop!");
             this.StopButton.Click += new System.EventHandler(this.button1_Click);
             // 
             // QueryTextBox
@@ -280,12 +281,12 @@ namespace WMITestClient
             this.menuItem2,
             this.BasicTreemenuItem,
             this.ExitmenuItem});
-            this.menuItem1.Text = "&Options";
+            this.menuItem1.Text = Translator.T("&Options");
             // 
             // LoginMenuItem
             // 
             this.LoginMenuItem.Index = 0;
-            this.LoginMenuItem.Text = "&Login";
+            this.LoginMenuItem.Text = Translator.T("&Login");
             this.LoginMenuItem.Click += new System.EventHandler(this.LoginMenuItem_Click);
             // 
             // menuItem2
@@ -295,36 +296,36 @@ namespace WMITestClient
             this.SavemenuItem,
             this.LoadmenuItem,
             this.ClearmenuItem});
-            this.menuItem2.Text = "&History";
+            this.menuItem2.Text = Translator.T("&History");
             // 
             // SavemenuItem
             // 
             this.SavemenuItem.Index = 0;
-            this.SavemenuItem.Text = "&Save";
+            this.SavemenuItem.Text = Translator.T("&Save");
             this.SavemenuItem.Click += new System.EventHandler(this.SavemenuItem_Click);
             // 
             // LoadmenuItem
             // 
             this.LoadmenuItem.Index = 1;
-            this.LoadmenuItem.Text = "L&oad";
+            this.LoadmenuItem.Text = Translator.T("L&oad");
             this.LoadmenuItem.Click += new System.EventHandler(this.LoadmenuItem_Click);
             // 
             // ClearmenuItem
             // 
             this.ClearmenuItem.Index = 2;
-            this.ClearmenuItem.Text = "&Clear";
+            this.ClearmenuItem.Text = Translator.T("&Clear");
             this.ClearmenuItem.Click += new System.EventHandler(this.ClearmenuItem_Click);
             // 
             // BasicTreemenuItem
             // 
             this.BasicTreemenuItem.Index = 2;
-            this.BasicTreemenuItem.Text = "Load Static Class Tree";
+            this.BasicTreemenuItem.Text = Translator.T("Load Static Class Tree");
             this.BasicTreemenuItem.Click += new System.EventHandler(this.BasicTreemenuItem_Click);
             // 
             // ExitmenuItem
             // 
             this.ExitmenuItem.Index = 3;
-            this.ExitmenuItem.Text = "E&xit";
+            this.ExitmenuItem.Text = Translator.T("E&xit");
             this.ExitmenuItem.Click += new System.EventHandler(this.ExitmenuItem_Click);
             // 
             // treeView1
@@ -356,7 +357,7 @@ namespace WMITestClient
             this.ConnectButton.Name = "ConnectButton";
             this.ConnectButton.Size = new System.Drawing.Size(67, 24);
             this.ConnectButton.TabIndex = 3;
-            this.ConnectButton.Text = "Connect...";
+            this.ConnectButton.Text = Translator.T("Connect...");
             this.ConnectButton.UseVisualStyleBackColor = true;
             this.ConnectButton.Click += new System.EventHandler(this.ConnectButton_Click);
             // 
@@ -765,7 +766,7 @@ namespace WMITestClient
             this.openFileDialog1.DefaultExt = "*.txt";
             this.openFileDialog1.InitialDirectory = Application.StartupPath;
             this.openFileDialog1.Multiselect = false;
-            this.openFileDialog1.Title = "Locate History File...";
+            this.openFileDialog1.Title = Translator.T("Locate History File...");
             System.Windows.Forms.DialogResult result = this.openFileDialog1.ShowDialog();
 
             if (result == System.Windows.Forms.DialogResult.OK)

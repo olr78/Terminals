@@ -7,6 +7,7 @@ using System.Threading;
 using System.Windows.Forms;
 using Terminals.Configuration;
 using Terminals.Forms;
+using Terminals.Localization;
 
 namespace Terminals.CaptureManager
 {
@@ -23,7 +24,7 @@ namespace Terminals.CaptureManager
         
         private void CaptureManagerLayout_Load(object sender, EventArgs e)
         {
-            this.flickrMenuItem = new ToolStripMenuItem("Post selected images to Flickr");
+            this.flickrMenuItem = new ToolStripMenuItem(Translator.T("Post selected images to Flickr"));
             this.flickrMenuItem.Click += new EventHandler(this.flickrMenuItem_Click);
             this.LoadRoot();
             this.viewComboBox.SelectedIndex = 0;

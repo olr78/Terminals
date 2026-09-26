@@ -3,6 +3,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Terminals.Data;
 using Terminals.History;
+using Terminals.Localization;
 
 namespace Terminals.Forms.Controls
 {
@@ -69,6 +70,7 @@ namespace Terminals.Forms.Controls
         {
             IGroup virtualGroup = this.persistence.Factory.CreateGroup(name);
             var groupNode = new GroupTreeNode(virtualGroup, imageKey);
+            groupNode.Text = Translator.T(name);
             this.Nodes.Add(groupNode);
         }
 

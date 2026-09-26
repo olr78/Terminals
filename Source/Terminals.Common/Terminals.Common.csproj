@@ -57,6 +57,10 @@
       <Link>Properties\Common.AssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Configuration\AuthMethod.cs" />
+    <Compile Include="Localization\LocalizationHooks.cs" />
+    <Compile Include="Localization\TranslatingResourceManager.cs" />
+    <Compile Include="Localization\Translator.cs" />
+    <Compile Include="Localization\UiTranslator.cs" />
     <Compile Include="Configuration\KeysSection.cs" />
     <Compile Include="Connections\IFocusable.cs" />
     <Compile Include="Connections\IHandleKeyboardInput.cs" />
@@ -150,6 +154,7 @@
     <Compile Include="TerminalsServices\TerminalServicesAPI.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Localization\Translations_uk.txt" />
     <EmbeddedResource Include="Connections\Connection.resx">
       <DependentUpon>Connection.cs</DependentUpon>
     </EmbeddedResource>

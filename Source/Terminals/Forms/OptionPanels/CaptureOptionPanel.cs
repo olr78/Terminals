@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using Terminals.Configuration;
+using Terminals.Localization;
 
 namespace Terminals.Forms
 {
@@ -36,7 +37,7 @@ namespace Terminals.Forms
         {
             using (FolderBrowserDialog dlg = new FolderBrowserDialog())
             {
-                dlg.Description = "Select the screen capture folder";
+                dlg.Description = Translator.T("Select the screen capture folder");
                 dlg.RootFolder = Environment.SpecialFolder.MyComputer;
                 String currentFld = this.txtScreenCaptureFolder.Text;
                 if (!currentFld.Equals(String.Empty))

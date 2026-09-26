@@ -6,6 +6,7 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Terminals.Services;
+using Terminals.Localization;
 
 namespace Terminals.Updates
 {
@@ -81,19 +82,19 @@ namespace Terminals.Updates
             this.progressBar.Height = 18;
             this.progressBar.Visible = false;
 
-            this.updateButton.Text = "&Update now";
+            this.updateButton.Text = Translator.T("&Update now");
             this.updateButton.AutoSize = true;
             this.updateButton.Click += this.UpdateButton_Click;
 
-            this.releasePageButton.Text = "&Release page";
+            this.releasePageButton.Text = Translator.T("&Release page");
             this.releasePageButton.AutoSize = true;
             this.releasePageButton.Click += this.ReleasePageButton_Click;
 
-            this.skipButton.Text = "&Skip this version";
+            this.skipButton.Text = Translator.T("&Skip this version");
             this.skipButton.AutoSize = true;
             this.skipButton.Click += this.SkipButton_Click;
 
-            this.laterButton.Text = "&Later";
+            this.laterButton.Text = Translator.T("&Later");
             this.laterButton.AutoSize = true;
             this.laterButton.Click += this.LaterButton_Click;
 
@@ -112,7 +113,7 @@ namespace Terminals.Updates
             this.Controls.Add(this.statusLabel);
             this.Controls.Add(buttonsPanel);
 
-            this.Text = "Terminals Update";
+            this.Text = Translator.T("Terminals Update");
             this.ClientSize = new Size(560, 400);
             this.MinimumSize = new Size(420, 300);
             this.Padding = new Padding(10);
@@ -128,24 +129,24 @@ namespace Terminals.Updates
 
         private void FillReleaseInfo()
         {
-            this.headerLabel.Text = string.Format("Terminals {0} is available (you have {1}).\r\nPublished {2:d}",
+            this.headerLabel.Text = Translator.Format("Terminals {0} is available (you have {1}).\r\nPublished {2:d}",
                 this.release.Version, Release.Normalize(Program.Info.Version), this.release.Published.ToLocalTime());
 
-            string notes = string.IsNullOrEmpty(this.release.Notes) ? "No release notes." : this.release.Notes;
+            string notes = string.IsNullOrEmpty(this.release.Notes) ? Translator.T("No release notes.") : this.release.Notes;
             this.notesTextBox.Text = notes.Replace("\r\n", "\n").Replace("\n", "\r\n");
 
             if (this.asset != null)
             {
-                string type = this.installer.InstallationType == InstallationType.Msi ? "installer" : "portable package";
-                this.statusLabel.Text = string.Format("Update downloads {0} ({1}), Terminals will be restarted.", type, this.asset.Name);
+                string type = Translator.T(this.installer.InstallationType == InstallationType.Msi ? "installer" : "portable package");
+                this.statusLabel.Text = Translator.Format("Update downloads {0} ({1}), Terminals will be restarted.", type, this.asset.Name);
                 return;
             }
 
             this.updateButton.Enabled = false;
             this.AcceptButton = this.releasePageButton;
-            this.statusLabel.Text = this.installer.InstallationType == InstallationType.NotSupported
+            this.statusLabel.Text = Translator.T(this.installer.InstallationType == InstallationType.NotSupported
                 ? "Automatic update isn't possible, application directory is read only. Download the release manually."
-                : "The release doesn't contain package for this installation type. Download the release manually.";
+                : "The release doesn't contain package for this installation type. Download the release manually.");
         }
 
         private void UpdateButton_Click(object sender, EventArgs e)
@@ -166,7 +167,7 @@ namespace Terminals.Updates
             string packagePath = Path.Combine(directory, Path.GetFileName(this.asset.Name));
 
             this.SetDownloadingState(true);
-            this.statusLabel.Text = string.Format("Downloading {0}...", this.asset.Name);
+            this.statusLabel.Text = Translator.Format("Downloading {0}...", this.asset.Name);
             this.client = UpdateManager.CreateWebClient();
             this.client.DownloadProgressChanged += this.Client_DownloadProgressChanged;
             this.client.DownloadFileCompleted += (s, args) => this.Client_DownloadFileCompleted(args, packagePath);
@@ -189,7 +190,7 @@ namespace Terminals.Updates
             if (args.Cancelled)
             {
                 this.SetDownloadingState(false);
-                this.statusLabel.Text = "Download was cancelled.";
+                this.statusLabel.Text = Translator.T("Download was cancelled.");
                 return;
             }
 
@@ -199,7 +200,7 @@ namespace Terminals.Updates
                 return;
             }
 
-            this.statusLabel.Text = "Verifying the downloaded package...";
+            this.statusLabel.Text = Translator.T("Verifying the downloaded package...");
             Task.Factory.StartNew(() => UpdateInstaller.VerifyChecksum(packagePath, this.asset))
                 .ContinueWith(task => this.OnPackageVerified(task, packagePath), TaskScheduler.FromCurrentSynchronizationContext());
         }
@@ -223,7 +224,7 @@ namespace Terminals.Updates
         {
             Logging.Error(message, exception);
             this.SetDownloadingState(false);
-            this.statusLabel.Text = string.Format("{0}: {1}", message, exception.Message);
+            this.statusLabel.Text = string.Format("{0}: {1}", Translator.T(message), exception.Message);
         }
 
         private void SetDownloadingState(bool downloading)

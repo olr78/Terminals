@@ -8,6 +8,7 @@ using Terminals.Configuration;
 using Terminals.Connections;
 using Terminals.Data;
 using Terminals.Forms;
+using Terminals.Localization;
 using Terminals.Updates;
 using System.Runtime.ExceptionServices;
 using System.Security;
@@ -16,7 +17,7 @@ namespace Terminals
 {
     internal static partial class Program
     {
-        public static ResourceManager Resources = new ResourceManager("Terminals.Localization.LocalizedValues",
+        public static ResourceManager Resources = new TranslatingResourceManager("Terminals.Localization.LocalizedValues",
             typeof(MainForm).Assembly);
 
         /// <summary>
@@ -42,6 +43,10 @@ namespace Terminals
             var settings = Settings.Instance;
             CommandLineArgs commandLine = ParseCommandline(settings);
             Logging.Info("Start state 4 Complete: Parse command line");
+
+            // settings are available only after the file locations were resolved from command line
+            LocalizationHooks.Install(settings.Language);
+            Logging.Info("Start state 4.1 Complete: Localization " + Translator.Language);
 
             if (!EnsureDataAreWriteAble())
                 return;

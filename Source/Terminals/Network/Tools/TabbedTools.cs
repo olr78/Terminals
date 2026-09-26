@@ -1,6 +1,7 @@
 using System;
 using System.Windows.Forms;
 using Terminals.Data;
+using Terminals.Localization;
 
 namespace Terminals.Connections
 {
@@ -27,7 +28,7 @@ namespace Terminals.Connections
                 this.PcapTabPage.Padding = new Padding(3);
                 this.PcapTabPage.Size = new System.Drawing.Size(886, 309);
                 this.PcapTabPage.TabIndex = 15;
-                this.PcapTabPage.Text = "Packets";
+                this.PcapTabPage.Text = Translator.T("Packets");
                 this.PcapTabPage.UseVisualStyleBackColor = true;
                 // 
                 // packetCapture1
@@ -43,7 +44,7 @@ namespace Terminals.Connections
                 this.PcapTabPage.Controls.Clear();
                 Label l = new Label();
                 this.PcapTabPage.Controls.Add(l);
-                l.Text = "Packet Capture is either not install or not supported on this version of windows.";
+                l.Text = Translator.T("Packet Capture is either not install or not supported on this version of windows.");
                 l.Dock = DockStyle.Top;
                 Logging.Info(l.Text, e);
             }

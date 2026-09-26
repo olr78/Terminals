@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using Terminals.Configuration;
+using Terminals.Localization;
 
 namespace Terminals.Forms
 {
@@ -8,9 +9,17 @@ namespace Terminals.Forms
     {
         private readonly Settings settings = Settings.Instance;
 
+        /// <summary>
+        /// Language codes in the same order as the items of the language combo box.
+        /// </summary>
+        private static readonly string[] languages = new[] { Translator.AUTOMATIC, Translator.ENGLISH, Translator.UKRAINIAN };
+
         public InterfaceOptionPanel()
         {
             InitializeComponent();
+
+            // language names are always shown in their own language
+            this.cmbLanguage.Items.AddRange(new object[] { Translator.T("Automatic (Windows language)"), "English", "Українська" });
         }
 
         public void LoadSettings()
@@ -20,6 +29,7 @@ namespace Terminals.Forms
             this.chkShowUserNameInTitle.Checked = settings.ShowUserNameInTitle;
             this.chkShowInformationToolTips.Checked = settings.ShowInformationToolTips;
             this.chkShowFullInfo.Checked = settings.ShowFullInformationToolTips;
+            this.cmbLanguage.SelectedIndex = Math.Max(0, Array.IndexOf(languages, settings.Language ?? string.Empty));
 
             if (settings.Office2007BlueFeel)
                 this.RenderBlueRadio.Checked = true;
@@ -36,6 +46,7 @@ namespace Terminals.Forms
             settings.ShowUserNameInTitle = this.chkShowUserNameInTitle.Checked;
             settings.ShowInformationToolTips = this.chkShowInformationToolTips.Checked;
             settings.ShowFullInformationToolTips = this.chkShowFullInfo.Checked;
+            settings.Language = languages[Math.Max(0, this.cmbLanguage.SelectedIndex)];
 
             settings.Office2007BlackFeel = false;
             settings.Office2007BlueFeel = false;

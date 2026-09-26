@@ -44,7 +44,11 @@ namespace Terminals.Forms
             this.chkShowUserNameInTitle = new System.Windows.Forms.CheckBox();
             this.chkShowInformationToolTips = new System.Windows.Forms.CheckBox();
             this.chkShowFullInfo = new System.Windows.Forms.CheckBox();
+            this.groupBoxLanguage = new System.Windows.Forms.GroupBox();
+            this.cmbLanguage = new System.Windows.Forms.ComboBox();
+            this.lblLanguageRestart = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
+            this.groupBoxLanguage.SuspendLayout();
             this.groupBox10.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox7.SuspendLayout();
@@ -53,6 +57,7 @@ namespace Terminals.Forms
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.groupBoxLanguage);
             this.panel1.Controls.Add(this.groupBox10);
             this.panel1.Controls.Add(this.groupBox1);
             this.panel1.Controls.Add(this.groupBox7);
@@ -92,7 +97,7 @@ namespace Terminals.Forms
             this.groupBox1.Controls.Add(this.RenderNormalRadio);
             this.groupBox1.Location = new System.Drawing.Point(6, 196);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(500, 90);
+            this.groupBox1.Size = new System.Drawing.Size(500, 44);
             this.groupBox1.TabIndex = 25;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Theme";
@@ -100,7 +105,7 @@ namespace Terminals.Forms
             // RenderBlackRadio
             // 
             this.RenderBlackRadio.AutoSize = true;
-            this.RenderBlackRadio.Location = new System.Drawing.Point(6, 66);
+            this.RenderBlackRadio.Location = new System.Drawing.Point(246, 20);
             this.RenderBlackRadio.Name = "RenderBlackRadio";
             this.RenderBlackRadio.Size = new System.Drawing.Size(83, 17);
             this.RenderBlackRadio.TabIndex = 2;
@@ -111,7 +116,7 @@ namespace Terminals.Forms
             // RenderBlueRadio
             // 
             this.RenderBlueRadio.AutoSize = true;
-            this.RenderBlueRadio.Location = new System.Drawing.Point(6, 43);
+            this.RenderBlueRadio.Location = new System.Drawing.Point(126, 20);
             this.RenderBlueRadio.Name = "RenderBlueRadio";
             this.RenderBlueRadio.Size = new System.Drawing.Size(77, 17);
             this.RenderBlueRadio.TabIndex = 1;
@@ -199,6 +204,35 @@ namespace Terminals.Forms
             this.chkShowFullInfo.Text = "Show full information";
             this.chkShowFullInfo.UseVisualStyleBackColor = true;
             // 
+            // groupBoxLanguage
+            //
+            this.groupBoxLanguage.Controls.Add(this.lblLanguageRestart);
+            this.groupBoxLanguage.Controls.Add(this.cmbLanguage);
+            this.groupBoxLanguage.Location = new System.Drawing.Point(6, 246);
+            this.groupBoxLanguage.Name = "groupBoxLanguage";
+            this.groupBoxLanguage.Size = new System.Drawing.Size(500, 50);
+            this.groupBoxLanguage.TabIndex = 27;
+            this.groupBoxLanguage.TabStop = false;
+            this.groupBoxLanguage.Text = "Language";
+            //
+            // cmbLanguage
+            //
+            this.cmbLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbLanguage.FormattingEnabled = true;
+            this.cmbLanguage.Location = new System.Drawing.Point(6, 19);
+            this.cmbLanguage.Name = "cmbLanguage";
+            this.cmbLanguage.Size = new System.Drawing.Size(220, 21);
+            this.cmbLanguage.TabIndex = 0;
+            //
+            // lblLanguageRestart
+            //
+            this.lblLanguageRestart.AutoSize = true;
+            this.lblLanguageRestart.Location = new System.Drawing.Point(236, 23);
+            this.lblLanguageRestart.Name = "lblLanguageRestart";
+            this.lblLanguageRestart.Size = new System.Drawing.Size(180, 13);
+            this.lblLanguageRestart.TabIndex = 1;
+            this.lblLanguageRestart.Text = "The change is applied after restart.";
+            //
             // InterfacePanel
             // 
             this.Controls.Add(this.panel1);
@@ -213,6 +247,8 @@ namespace Terminals.Forms
             this.groupBox7.PerformLayout();
             this.groupBoxInformation.ResumeLayout(false);
             this.groupBoxInformation.PerformLayout();
+            this.groupBoxLanguage.ResumeLayout(false);
+            this.groupBoxLanguage.PerformLayout();
             this.ResumeLayout(false);
         }
 
@@ -231,5 +267,8 @@ namespace Terminals.Forms
         private CheckBox chkShowUserNameInTitle;
         private CheckBox chkShowInformationToolTips;
         private CheckBox chkShowFullInfo;
+        private GroupBox groupBoxLanguage;
+        private ComboBox cmbLanguage;
+        private Label lblLanguageRestart;
     }
 }

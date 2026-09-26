@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using Terminals.Plugins.Vnc.Properties;
+using Terminals.Localization;
 
 namespace Terminals.Connections
 {
@@ -68,7 +69,7 @@ namespace Terminals.Connections
             this.vncActionButton.ImageTransparentColor = Color.Magenta;
             this.vncActionButton.Name = VNC_ACTION_BUTTON_NAME;
             this.vncActionButton.Size = new Size(29, 22);
-            this.vncActionButton.Text = "VNC actions";
+            this.vncActionButton.Text = Translator.T("VNC actions");
             this.vncActionButton.Visible = false;
         }
 
@@ -77,7 +78,7 @@ namespace Terminals.Connections
             this.sendALTKeyToolStripMenuItem = new ToolStripMenuItem();
             this.sendALTKeyToolStripMenuItem.Name = "sendALTKeyToolStripMenuItem";
             this.sendALTKeyToolStripMenuItem.Size = new Size(202, 22);
-            this.sendALTKeyToolStripMenuItem.Text = "Send ALT Key";
+            this.sendALTKeyToolStripMenuItem.Text = Translator.T("Send ALT Key");
             this.sendALTKeyToolStripMenuItem.Click += new EventHandler(this.SendAltKeyToolStripMenuItem_Click);
         }
 
@@ -86,7 +87,7 @@ namespace Terminals.Connections
             this.sendALTF4KeyToolStripMenuItem = new ToolStripMenuItem();
             this.sendALTF4KeyToolStripMenuItem.Name = "sendALTF4KeyToolStripMenuItem";
             this.sendALTF4KeyToolStripMenuItem.Size = new Size(202, 22);
-            this.sendALTF4KeyToolStripMenuItem.Text = "Send ALT-F4 Keys";
+            this.sendALTF4KeyToolStripMenuItem.Text = Translator.T("Send ALT-F4 Keys");
             this.sendALTF4KeyToolStripMenuItem.Click += new EventHandler(this.SendAltKeyToolStripMenuItem_Click);
         }
 
@@ -95,7 +96,7 @@ namespace Terminals.Connections
             this.sendCTRLKeyToolStripMenuItem = new ToolStripMenuItem();
             this.sendCTRLKeyToolStripMenuItem.Name = "sendCTRLKeyToolStripMenuItem";
             this.sendCTRLKeyToolStripMenuItem.Size = new Size(202, 22);
-            this.sendCTRLKeyToolStripMenuItem.Text = "Send CTRL Key";
+            this.sendCTRLKeyToolStripMenuItem.Text = Translator.T("Send CTRL Key");
             this.sendCTRLKeyToolStripMenuItem.Click += new EventHandler(this.SendAltKeyToolStripMenuItem_Click);
         }
 
@@ -104,7 +105,7 @@ namespace Terminals.Connections
             this.sendCTRLESCKeysToolStripMenuItem = new ToolStripMenuItem();
             this.sendCTRLESCKeysToolStripMenuItem.Name = "sendCTRLESCKeysToolStripMenuItem";
             this.sendCTRLESCKeysToolStripMenuItem.Size = new Size(202, 22);
-            this.sendCTRLESCKeysToolStripMenuItem.Text = "Send CTRL ESC Keys";
+            this.sendCTRLESCKeysToolStripMenuItem.Text = Translator.T("Send CTRL ESC Keys");
             this.sendCTRLESCKeysToolStripMenuItem.Click += new EventHandler(this.SendAltKeyToolStripMenuItem_Click);
         }
 
@@ -113,7 +114,7 @@ namespace Terminals.Connections
             this.sentCTRLALTDELETEKeysToolStripMenuItem = new ToolStripMenuItem();
             this.sentCTRLALTDELETEKeysToolStripMenuItem.Name = "sentCTRLALTDELETEKeysToolStripMenuItem";
             this.sentCTRLALTDELETEKeysToolStripMenuItem.Size = new Size(202, 22);
-            this.sentCTRLALTDELETEKeysToolStripMenuItem.Text = "Sent CTRL ALT DEL Keys";
+            this.sentCTRLALTDELETEKeysToolStripMenuItem.Text = Translator.T("Sent CTRL ALT DEL Keys");
             this.sentCTRLALTDELETEKeysToolStripMenuItem.Click += new EventHandler(this.SendAltKeyToolStripMenuItem_Click);
         }
 

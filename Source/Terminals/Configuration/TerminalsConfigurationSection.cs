@@ -40,6 +40,19 @@ namespace Terminals
             }
         }
 
+        [ConfigurationProperty("language", DefaultValue = "")]
+        public string Language
+        {
+            get
+            {
+                return (string)this["language"];
+            }
+            set
+            {
+                this["language"] = value;
+            }
+        }
+
         [ConfigurationProperty("skippedUpdateVersion", DefaultValue = "")]
         public string SkippedUpdateVersion
         {

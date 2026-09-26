@@ -43,6 +43,24 @@ namespace Terminals.Configuration
         }
 
         /// <summary>
+        /// Gets or sets the user interface language code. Empty means automatic selection by Windows language.
+        /// The change is applied after the application restart.
+        /// </summary>
+        public string Language
+        {
+            get
+            {
+                return GetSection().Language;
+            }
+
+            set
+            {
+                GetSection().Language = value;
+                SaveImmediatelyIfRequested();
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the release version, which the user doesn't want to be notified about.
         /// </summary>
         public string SkippedUpdateVersion

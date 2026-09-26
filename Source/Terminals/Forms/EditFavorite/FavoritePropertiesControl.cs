@@ -6,6 +6,7 @@ using Terminals.Connections;
 using Terminals.Data;
 using Terminals.Data.Credentials;
 using Terminals.Forms.Controls;
+using Terminals.Localization;
 
 namespace Terminals.Forms.EditFavorite
 {
@@ -47,6 +48,7 @@ namespace Terminals.Forms.EditFavorite
         public FavoritePropertiesControl()
         {
             this.InitializeComponent();
+            UiTranslator.TranslateNodes(this.treeView.Nodes, false);
 
             this.generalPanel1.AssignRasControl(this.rasControl1);
         }
@@ -78,7 +80,7 @@ namespace Terminals.Forms.EditFavorite
 
         private void GenearalPanel1ProtocolChanged(string newProtocol)
         {
-            this.ProtocolOptionsNode.Text = string.Format("{0} Options", newProtocol);
+            this.ProtocolOptionsNode.Text = Translator.Format("{0} Options", newProtocol);
             Control[] newControls = this.connectionManager.CreateControls(newProtocol);
             this.protocolOptionsPanel1.ReloadControls(newControls);
             this.UpdateProtocolOptionsNodeIcons(newProtocol);
@@ -113,7 +115,8 @@ namespace Terminals.Forms.EditFavorite
 
         private TreeNode CreateChildNode(Control pluginUserControl)
         {
-            var newNode = new TreeNode(pluginUserControl.Name);
+            // the control name identifies the panel, the text is only translated for display
+            var newNode = new TreeNode(Translator.T(pluginUserControl.Name)) { Tag = pluginUserControl.Name };
             UpdateNodeIcon(newNode, this.ProtocolOptionsNode.ImageKey);
             return newNode;
         }
@@ -144,11 +147,11 @@ namespace Terminals.Forms.EditFavorite
 
         private string ResolveProtocolPanelTitle(TreeNode node)
         {
-            Control childControl = this.protocolOptionsPanel1.ResolveChildByNameOrFirst(node.Text);
+            Control childControl = this.protocolOptionsPanel1.ResolveChildByNameOrFirst(GetPanelName(node));
             if (childControl == null)
                 return this.ProtocolOptionsNode.Text;
 
-            return string.Format("{0} - {1}", this.ProtocolOptionsNode.Text, childControl.Name);
+            return string.Format("{0} - {1}", this.ProtocolOptionsNode.Text, Translator.T(childControl.Name));
         }
 
         private PanelSwitch ResolveSwitch(TreeNode newNode)
@@ -173,7 +176,12 @@ namespace Terminals.Forms.EditFavorite
         private void FocusProtocolOptionsChild(TreeNode newNode)
         {
             this.protocolOptionsPanel1.Show();
-            this.protocolOptionsPanel1.FocusControl(newNode.Text);
+            this.protocolOptionsPanel1.FocusControl(GetPanelName(newNode));
+        }
+
+        private static string GetPanelName(TreeNode node)
+        {
+            return node.Tag as string ?? node.Text;
         }
 
         internal void RegisterValidations(NewTerminalFormValidator validator)
