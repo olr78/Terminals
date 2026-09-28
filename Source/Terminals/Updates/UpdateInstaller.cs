@@ -261,10 +261,13 @@ namespace Terminals.Updates
         private string CreateMsiScript(string msiPath)
         {
             string msiLog = Path.Combine(Path.GetDirectoryName(msiPath), "msi.log");
+            // the upgrade has to keep the installation folder and type, otherwise the installer uses its defaults
+            // (Program Files, data in user profile) and the current folder is removed together with the old version
+            string installType = Properties.Settings.Default.Portable ? "0" : "1";
             string update = string.Format(
-                "msiexec /i {0} /passive /norestart /l*v {1}\r\n" +
+                "msiexec /i {0} /passive /norestart /l*v {1} INSTALLFOLDER={2} INSTALLTYPE={3}\r\n" +
                 "echo msiexec exit code %ERRORLEVEL% >> \"%LOG%\"\r\n",
-                QuotePath(msiPath), QuotePath(msiLog));
+                QuotePath(msiPath), QuotePath(msiLog), QuotePath(this.applicationDirectory), installType);
             return this.CreateScript(update);
         }
 

@@ -7,7 +7,13 @@
     <MajorUpgrade Schedule="afterInstallInitialize" DowngradeErrorMessage="A newer version of Terminals is already installed." />
     
       <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
-    <Property Id="INSTALLTYPE" Secure="yes" Value="1"></Property>
+    <!-- the installation folder and type are remembered, so upgrades install to the same place -->
+    <Property Id="INSTALLFOLDER" Secure="yes">
+      <RegistrySearch Id="InstallFolderSearch" Root="HKLM" Key="Software\Terminals" Name="InstallFolder" Type="raw" />
+    </Property>
+    <Property Id="INSTALLTYPE" Secure="yes" Value="1">
+      <RegistrySearch Id="InstallTypeSearch" Root="HKLM" Key="Software\Terminals" Name="InstallType" Type="raw" />
+    </Property>
     <Icon Id="TerminalsSetupIcon" SourceFile="..\Terminals\terminalsicon.ico"/>
     <Property Id="ARPPRODUCTICON" Value="TerminalsSetupIcon" />
 
@@ -26,6 +32,7 @@
       <ComponentGroupRef Id="WebComponents" />
       <ComponentGroupRef Id="PuttyComponents" />
       <ComponentRef Id="ApplicationShortcut" />
+      <ComponentRef Id="InstallationRegistry" />
     </Feature>
 
     <CustomAction Id="FinalizeCustomActionSetProperty" Return="check" Property="FinalizeCustomAction"
@@ -60,6 +67,15 @@
         <Directory Id="TerminalsProgramsFolder" Name="Terminals"/>
       </Directory>
     </Directory>
+  </Fragment>
+
+  <Fragment>
+    <DirectoryRef Id="INSTALLFOLDER">
+      <Component Id="InstallationRegistry" Guid="4E9DB65B-E5E1-4134-855B-C1EB3C5677AF">
+        <RegistryValue Root="HKLM" Key="Software\Terminals" Name="InstallFolder" Type="string" Value="[INSTALLFOLDER]" KeyPath="yes"/>
+        <RegistryValue Root="HKLM" Key="Software\Terminals" Name="InstallType" Type="string" Value="[INSTALLTYPE]"/>
+      </Component>
+    </DirectoryRef>
   </Fragment>
 
   <Fragment>
