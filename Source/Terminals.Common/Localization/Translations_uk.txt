@@ -865,3 +865,11 @@ OperatingSystem	Операційна система
 HostName	Ім’я вузла
 IPAddress	IP-адреса
 ServiceName	Служба
+# ---------- RDP password typing ----------
+Enter the saved password, when the connection asks for it	Вводити збережений пароль, коли з’єднання його запитує
+Delay after connect (seconds):	Затримка після підключення (секунди):
+For servers, which always ask for the password. Fills the Windows Security prompt, or types the password on the server logon screen, if the server didn't log in automatically. Use the key button on the toolbar to type it again, e.g. on the lock screen.	Для серверів, які завжди запитують пароль. Заповнює вікно «Безпека Windows» або вводить пароль на екрані входу сервера, якщо сервер не виконав вхід автоматично. Щоб ввести пароль ще раз (наприклад, на екрані блокування), скористайтеся кнопкою з ключем на панелі інструментів.
+Type saved password	Ввести збережений пароль
+Type the saved password into the remote session (logon or lock screen)	Ввести збережений пароль у віддалений сеанс (екран входу або блокування)
+The connection doesn't have a saved password.	Для цього з’єднання не збережено пароль.
+The saved password contains characters, which can't be typed using the keyboard layout of the session.	Збережений пароль містить символи, які неможливо ввести з розкладкою клавіатури сеансу.

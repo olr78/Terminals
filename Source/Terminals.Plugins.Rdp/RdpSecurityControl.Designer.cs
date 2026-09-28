@@ -39,7 +39,12 @@
             this.EnableNLAAuthenticationCheckbox = new System.Windows.Forms.CheckBox();
             this.EnableTLSAuthenticationCheckbox = new System.Windows.Forms.CheckBox();
             this.EnableEncryptionCheckbox = new System.Windows.Forms.CheckBox();
+            this.chkAutoTypePassword = new System.Windows.Forms.CheckBox();
+            this.lblAutoTypeDelay = new System.Windows.Forms.Label();
+            this.numAutoTypeDelay = new System.Windows.Forms.NumericUpDown();
+            this.lblAutoTypeHint = new System.Windows.Forms.Label();
             this.panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numAutoTypeDelay)).BeginInit();
             this.SuspendLayout();
             // 
             // panel2
@@ -151,11 +156,55 @@
             this.EnableEncryptionCheckbox.TabIndex = 35;
             this.EnableEncryptionCheckbox.Text = "Enable Encryption";
             this.EnableEncryptionCheckbox.UseVisualStyleBackColor = true;
+            //
+            // chkAutoTypePassword
+            //
+            this.chkAutoTypePassword.AutoSize = true;
+            this.chkAutoTypePassword.Location = new System.Drawing.Point(9, 222);
+            this.chkAutoTypePassword.Name = "chkAutoTypePassword";
+            this.chkAutoTypePassword.Size = new System.Drawing.Size(279, 17);
+            this.chkAutoTypePassword.TabIndex = 36;
+            this.chkAutoTypePassword.Text = "Enter the saved password, when the connection asks for it";
+            this.chkAutoTypePassword.UseVisualStyleBackColor = true;
+            this.chkAutoTypePassword.CheckedChanged += new System.EventHandler(this.AutoTypePassword_CheckedChanged);
+            //
+            // lblAutoTypeDelay
+            //
+            this.lblAutoTypeDelay.AutoSize = true;
+            this.lblAutoTypeDelay.Location = new System.Drawing.Point(26, 247);
+            this.lblAutoTypeDelay.Name = "lblAutoTypeDelay";
+            this.lblAutoTypeDelay.Size = new System.Drawing.Size(140, 13);
+            this.lblAutoTypeDelay.TabIndex = 37;
+            this.lblAutoTypeDelay.Text = "Delay after connect (seconds):";
+            //
+            // numAutoTypeDelay
+            //
+            this.numAutoTypeDelay.Location = new System.Drawing.Point(230, 245);
+            this.numAutoTypeDelay.Maximum = new decimal(new int[] { 60, 0, 0, 0 });
+            this.numAutoTypeDelay.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            this.numAutoTypeDelay.Name = "numAutoTypeDelay";
+            this.numAutoTypeDelay.Size = new System.Drawing.Size(50, 20);
+            this.numAutoTypeDelay.TabIndex = 38;
+            this.numAutoTypeDelay.Value = new decimal(new int[] { 3, 0, 0, 0 });
+            //
+            // lblAutoTypeHint
+            //
+            this.lblAutoTypeHint.Location = new System.Drawing.Point(26, 271);
+            this.lblAutoTypeHint.Name = "lblAutoTypeHint";
+            this.lblAutoTypeHint.Size = new System.Drawing.Size(540, 64);
+            this.lblAutoTypeHint.TabIndex = 39;
+            this.lblAutoTypeHint.Text = "For servers, which always ask for the password. Fills the Windows Security prompt, or types the password on the server logon screen, " +
+                "if the server didn't log in automatically. Use the key button on the toolbar to type it again, " +
+                "e.g. on the lock screen.";
             // 
             // RdpSecurityControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.lblAutoTypeHint);
+            this.Controls.Add(this.numAutoTypeDelay);
+            this.Controls.Add(this.lblAutoTypeDelay);
+            this.Controls.Add(this.chkAutoTypePassword);
             this.Controls.Add(this.EnableEncryptionCheckbox);
             this.Controls.Add(this.EnableNLAAuthenticationCheckbox);
             this.Controls.Add(this.EnableTLSAuthenticationCheckbox);
@@ -166,6 +215,7 @@
             this.Size = new System.Drawing.Size(590, 365);
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numAutoTypeDelay)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -184,5 +234,9 @@
         private System.Windows.Forms.CheckBox EnableNLAAuthenticationCheckbox;
         private System.Windows.Forms.CheckBox EnableTLSAuthenticationCheckbox;
         private System.Windows.Forms.CheckBox EnableEncryptionCheckbox;
+        private System.Windows.Forms.CheckBox chkAutoTypePassword;
+        private System.Windows.Forms.Label lblAutoTypeDelay;
+        private System.Windows.Forms.NumericUpDown numAutoTypeDelay;
+        private System.Windows.Forms.Label lblAutoTypeHint;
     }
 }

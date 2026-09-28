@@ -12,9 +12,13 @@ namespace Terminals.Connections
     {
         internal const string TERMINAL_SERVER_MENU_BUTTON_NAME = "TerminalServerMenuButton";
 
+        internal const string TYPE_PASSWORD_BUTTON_NAME = "RdpTypePasswordButton";
+
         private readonly ICurrenctConnectionProvider connectionProvider;
 
         private ToolStripDropDownButton TerminalServerMenuButton;
+
+        private ToolStripButton typePasswordButton;
 
         /// <summary>
         /// Connection, for which the terminal server info is just loaded on background.
@@ -32,12 +36,64 @@ namespace Terminals.Connections
 
             bool commandsAvailable = this.connectionProvider.CurrentConnection is RDPConnection;
             this.TerminalServerMenuButton.Visible = commandsAvailable;
+            this.typePasswordButton.Visible = commandsAvailable;
         }
 
         private void EnusereMenuCreated(ToolStrip standardToolbar)
         {
             if (standardToolbar.Items[TERMINAL_SERVER_MENU_BUTTON_NAME] == null)
                 this.CreateAdminSwitchButton(standardToolbar);
+
+            var existing = standardToolbar.Items[TYPE_PASSWORD_BUTTON_NAME] as ToolStripButton;
+            if (existing == null)
+                this.CreateTypePasswordButton(standardToolbar);
+            else
+                this.typePasswordButton = existing;
+        }
+
+        private void CreateTypePasswordButton(ToolStrip standardToolbar)
+        {
+            this.typePasswordButton = new ToolStripButton();
+            this.typePasswordButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            this.typePasswordButton.Image = CreateKeyImage();
+            this.typePasswordButton.Name = TYPE_PASSWORD_BUTTON_NAME;
+            this.typePasswordButton.Size = new Size(23, 22);
+            this.typePasswordButton.Text = Translator.T("Type saved password");
+            this.typePasswordButton.ToolTipText = Translator.T("Type the saved password into the remote session (logon or lock screen)");
+            this.typePasswordButton.Click += this.TypePasswordButton_Click;
+            standardToolbar.Items.Add(this.typePasswordButton);
+        }
+
+        private void TypePasswordButton_Click(object sender, EventArgs e)
+        {
+            var currentConnection = this.connectionProvider.CurrentConnection as RDPConnection;
+            if (currentConnection != null)
+                currentConnection.TypeSavedPassword();
+        }
+
+        /// <summary>
+        /// Simple key icon, the plugin resources don't contain one.
+        /// </summary>
+        private static Image CreateKeyImage()
+        {
+            var image = new Bitmap(16, 16);
+            using (Graphics graphics = Graphics.FromImage(image))
+            using (var fill = new SolidBrush(Color.FromArgb(230, 180, 40)))
+            using (var border = new Pen(Color.FromArgb(140, 100, 0)))
+            {
+                graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                // ring
+                graphics.FillEllipse(fill, 1, 4, 8, 8);
+                graphics.DrawEllipse(border, 1, 4, 8, 8);
+                graphics.FillEllipse(Brushes.White, 3.5f, 6.5f, 3, 3);
+                // shaft and teeth
+                graphics.FillRectangle(fill, 8, 7, 7, 2);
+                graphics.DrawRectangle(border, 8, 7, 7, 2);
+                graphics.FillRectangle(fill, 12, 9, 2, 3);
+                graphics.DrawRectangle(border, 12, 9, 2, 3);
+            }
+
+            return image;
         }
 
         private void CreateAdminSwitchButton(ToolStrip standardToolbar)

@@ -9,6 +9,7 @@ using Terminals.Data;
 using Terminals.Forms.Controls;
 using System.Text;
 using MSTSCLib;
+using Terminals.Localization;
 using Terminals.TerminalServices;
 using IMsTscAxEvents_OnDisconnectedEventHandler = AxMSTSCLib.IMsTscAxEvents_OnDisconnectedEventHandler;
 using IMsTscAxEvents_OnFatalErrorEventHandler = AxMSTSCLib.IMsTscAxEvents_OnFatalErrorEventHandler;
@@ -33,6 +34,29 @@ namespace Terminals.Connections
         private AxMsRdpClient6NotSafeForScripting client = null;
 
         private readonly RdpService service = new RdpService();
+
+        /// <summary>
+        /// Waits after the connection is established to type the password on the server logon screen.
+        /// </summary>
+        private readonly Timer autoTypeTimer = new Timer();
+
+        /// <summary>
+        /// Keyboard layout announced to the server, used to translate the password to scan codes.
+        /// </summary>
+        private IntPtr typingLayout = IntPtr.Zero;
+
+        private bool loginCompleted;
+
+        /// <summary>
+        /// Fills the saved password into the local "Windows Security" dialog, if the RDP client asks for it.
+        /// </summary>
+        private CredentialPromptFiller credentialPromptFiller;
+
+        /// <summary>
+        /// The password is typed automatically only once per connection. After a reconnect the session
+        /// may be already logged in and the keys would be typed into the user desktop.
+        /// </summary>
+        private bool autoTypeUsed;
 
         public TerminalServer Server { get{ return this.service.Server; } }
 
@@ -535,6 +559,7 @@ namespace Terminals.Connections
 
             this.client.UserName = security.UserName;
             this.client.Domain = security.Domain;
+            this.ConfigureAutoTypePassword(rdpOptions, security.Password);
             try
             {
                 if (!String.IsNullOrEmpty(security.Password))
@@ -546,6 +571,103 @@ namespace Terminals.Connections
             catch (Exception exc)
             {
                 Logging.Error("Error when trying to set the ClearTextPassword on the nonScriptable mstsc object", exc);
+            }
+        }
+
+        private void ConfigureAutoTypePassword(RdpOptions rdpOptions, string password)
+        {
+            this.typingLayout = IntPtr.Zero;
+            if (!rdpOptions.Security.AutoTypePassword)
+                return;
+
+            if (string.IsNullOrEmpty(password))
+            {
+                Logging.Info("Password auto typing: no saved password for " + this.Favorite.Name);
+                return;
+            }
+
+            // the server may require the client to ask for the password before the session is created
+            this.credentialPromptFiller = new CredentialPromptFiller(this.Favorite.Name, () => this.ResolveFavoriteCredentials().Password);
+            this.credentialPromptFiller.Start();
+
+            string layoutToAnnounce;
+            if (!PasswordTyper.TryResolveLayout(password, out this.typingLayout, out layoutToAnnounce))
+            {
+                Logging.Info("The saved password can't be typed using available keyboard layout, auto typing is disabled for " + this.Favorite.Name);
+                this.typingLayout = IntPtr.Zero;
+                return;
+            }
+
+            // the current layout isn't able to type the password, the session has to use the same layout as the scan codes
+            if (layoutToAnnounce != null)
+                this.client.AdvancedSettings2.KeyBoardLayoutStr = layoutToAnnounce;
+
+            int delay = Math.Max(1, Math.Min(60, rdpOptions.Security.AutoTypePasswordDelay));
+            this.autoTypeTimer.Interval = delay * 1000;
+            this.autoTypeTimer.Tick += this.AutoTypeTimer_Tick;
+            Logging.Info(string.Format("Password auto typing: enabled for {0}, delay {1}s, layout {2}",
+                this.Favorite.Name, delay, layoutToAnnounce ?? "current"));
+        }
+
+        private void AutoTypeTimer_Tick(object sender, EventArgs e)
+        {
+            this.autoTypeTimer.Stop();
+            Logging.Info(string.Format("Password auto typing: timer elapsed, login completed {0}, already used {1}",
+                this.loginCompleted, this.autoTypeUsed));
+            // the server accepted the credentials sent by the client, nothing to type
+            if (this.loginCompleted || this.autoTypeUsed)
+                return;
+
+            this.autoTypeUsed = true;
+
+            this.TypePassword(this.typingLayout);
+        }
+
+        /// <summary>
+        /// Types the saved password followed by Enter into the remote session, e.g. on the logon or lock screen.
+        /// </summary>
+        internal void TypeSavedPassword()
+        {
+            if (this.client == null || !this.Connected)
+                return;
+
+            IGuardedSecurity security = this.ResolveFavoriteCredentials();
+            if (string.IsNullOrEmpty(security.Password))
+            {
+                MessageBox.Show(this, Translator.T("The connection doesn't have a saved password."), "Terminals",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            IntPtr layout = this.typingLayout;
+            string layoutToAnnounce;
+            if (layout == IntPtr.Zero && !PasswordTyper.TryResolveLayout(security.Password, out layout, out layoutToAnnounce))
+            {
+                MessageBox.Show(this, Translator.T("The saved password contains characters, which can't be typed using the keyboard layout of the session."),
+                    "Terminals", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            this.TypePassword(layout);
+        }
+
+        private void TypePassword(IntPtr layout)
+        {
+            try
+            {
+                IGuardedSecurity security = this.ResolveFavoriteCredentials();
+                List<PasswordTyper.KeyEvent> keys;
+                bool capsLock = Control.IsKeyLocked(Keys.CapsLock);
+                if (!PasswordTyper.TryCreateKeys(security.Password, layout, capsLock, out keys))
+                    return;
+
+                this.client.Focus();
+                PasswordTyper.Send(this.nonScriptable, keys);
+                Logging.Info("Password was typed into the remote session of " + this.Favorite.Name);
+            }
+            catch (Exception exception)
+            {
+                Logging.Error("Unable to type the password into the remote session", exception);
             }
         }
 
@@ -567,6 +689,7 @@ namespace Terminals.Connections
             this.client.OnFatalError += new IMsTscAxEvents_OnFatalErrorEventHandler(this.client_OnFatalError);
             this.client.OnLogonError += new IMsTscAxEvents_OnLogonErrorEventHandler(this.client_OnLogonError);
             this.client.OnConnected += new EventHandler(client_OnConnected);
+            this.client.OnLoginComplete += new EventHandler(this.client_OnLoginComplete);
             // assign the drag and drop event handlers directly throws an exception
             var clientControl = (Control)this.client;
             clientControl.DragEnter += new DragEventHandler(this.client_DragEnter);
@@ -577,6 +700,26 @@ namespace Terminals.Connections
         {
             // setting the full screen directly in constructor may affect screen resolution changes
             this.client.FullScreen = true;
+
+            this.loginCompleted = false;
+            if (this.credentialPromptFiller != null)
+                this.credentialPromptFiller.Stop();
+
+            if (this.typingLayout != IntPtr.Zero && !this.autoTypeUsed)
+            {
+                Logging.Info("Password auto typing: connected, waiting for logon screen of " + this.Favorite.Name);
+                this.autoTypeTimer.Start();
+            }
+        }
+
+        private void client_OnLoginComplete(object sender, EventArgs e)
+        {
+            if (this.typingLayout != IntPtr.Zero)
+                Logging.Info("Password auto typing: login completed for " + this.Favorite.Name);
+
+            this.loginCompleted = true;
+            this.autoTypeUsed = true;
+            this.autoTypeTimer.Stop();
         }
 
         // Only called from Dispose(). Connect() is asynchronous, so wiping these
@@ -614,6 +757,9 @@ namespace Terminals.Connections
             if (disposing)
             {
                 this.ClearCredentialsFromComObject();
+                this.autoTypeTimer.Dispose();
+                if (this.credentialPromptFiller != null)
+                    this.credentialPromptFiller.Dispose();
                 this.connectionStateDetector.Dispose();
                 this.client.Dispose();
                 this.client = null;

@@ -139,6 +139,7 @@
     <Compile Include="Connections\ConnectionManagerOtionsTests.cs" />
     <Compile Include="Connections\FavoriteSerializerTests.cs" />
     <Compile Include="Connections\PluginBasedTests.cs" />
+    <Compile Include="Connections\PasswordTyperTests.cs" />
     <Compile Include="Connections\PluginLoaderTests.cs" />
     <Compile Include="Connections\TestConnectionManager.cs" />
     <Compile Include="FilePersisted\FavoritesTest.cs" />

@@ -46,6 +46,8 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="UIAutomationClient" />
+    <Reference Include="UIAutomationTypes" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -102,6 +104,8 @@
     <Compile Include="RdpSecurityControl.Designer.cs">
       <DependentUpon>RdpSecurityControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="CredentialPromptFiller.cs" />
+    <Compile Include="PasswordTyper.cs" />
     <Compile Include="RdpSecurityOptions.cs" />
     <Compile Include="RdpService.cs" />
     <Compile Include="RdpTimeOutOptions.cs" />
