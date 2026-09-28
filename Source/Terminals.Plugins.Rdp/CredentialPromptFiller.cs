@@ -112,9 +112,10 @@ namespace Terminals.Connections
             try
             {
                 AutomationElement root = AutomationElement.FromHandle(candidate.Window);
-                if (!candidate.OwnProcess && !this.MentionsServer(root))
+                if (!candidate.OwnProcess && !IsOwnedByThisProcess(candidate.Window) && !this.MentionsServer(root))
                 {
-                    Logging.Info("Password auto typing: credential dialog doesn't mention server of " + this.connectionName + ", skipped");
+                    Logging.Info("Password auto typing: credential dialog isn't owned by Terminals and doesn't mention server of " +
+                        this.connectionName + ", skipped. Dialog texts: " + DescribeTexts(root));
                     return;
                 }
 
@@ -136,19 +137,51 @@ namespace Terminals.Connections
         }
 
         /// <summary>
+        /// The credential broker shows the dialog for the window, which requested it,
+        /// the owner window belongs to this process.
+        /// </summary>
+        private static bool IsOwnedByThisProcess(IntPtr dialog)
+        {
+            const uint GW_OWNER = 4;
+            int currentProcess = Process.GetCurrentProcess().Id;
+            IntPtr owner = GetWindow(dialog, GW_OWNER);
+            while (owner != IntPtr.Zero)
+            {
+                int ownerProcess;
+                GetWindowThreadProcessId(owner, out ownerProcess);
+                if (ownerProcess == currentProcess)
+                    return true;
+
+                owner = GetWindow(owner, GW_OWNER);
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// The dialog texts contain the target server, e.g. "These credentials will be used to connect to server".
+        /// The server may be shown without the domain part or with port.
         /// </summary>
         private bool MentionsServer(AutomationElement root)
         {
             if (string.IsNullOrEmpty(this.serverName))
                 return false;
 
+            string server = this.serverName.Trim();
+            int dot = server.IndexOf('.');
+            bool isAddress = server.Length > 0 && char.IsDigit(server[0]);
+            string shortName = !isAddress && dot > 0 ? server.Substring(0, dot) : server;
+
             for (int attempt = 0; attempt < 20; attempt++)
             {
                 foreach (AutomationElement element in root.FindAll(TreeScope.Descendants, Condition.TrueCondition))
                 {
-                    string name = element.Current.Name;
-                    if (!string.IsNullOrEmpty(name) && name.IndexOf(this.serverName, StringComparison.OrdinalIgnoreCase) >= 0)
+                    string text = GetText(element);
+                    if (string.IsNullOrEmpty(text))
+                        continue;
+
+                    if (text.IndexOf(server, StringComparison.OrdinalIgnoreCase) >= 0 ||
+                        text.IndexOf(shortName, StringComparison.OrdinalIgnoreCase) >= 0)
                         return true;
                 }
 
@@ -157,6 +190,36 @@ namespace Terminals.Connections
             }
 
             return false;
+        }
+
+        private static string GetText(AutomationElement element)
+        {
+            string name = element.Current.Name;
+            object pattern;
+            if (element.Current.IsPassword || !element.TryGetCurrentPattern(ValuePattern.Pattern, out pattern))
+                return name;
+
+            return name + " " + ((ValuePattern)pattern).Current.Value;
+        }
+
+        /// <summary>
+        /// Diagnostics, why the dialog wasn't recognized. The password field is never included.
+        /// </summary>
+        private static string DescribeTexts(AutomationElement root)
+        {
+            var texts = new List<string>();
+            foreach (AutomationElement element in root.FindAll(TreeScope.Descendants, Condition.TrueCondition))
+            {
+                string text = GetText(element);
+                if (string.IsNullOrEmpty(text) || string.IsNullOrEmpty(text.Trim()))
+                    continue;
+
+                texts.Add("'" + text.Trim() + "'");
+                if (texts.Count == 10)
+                    break;
+            }
+
+            return string.Join(", ", texts.ToArray());
         }
 
         private static bool TryFill(AutomationElement root, string password)
@@ -365,6 +428,9 @@ namespace Terminals.Connections
             public uint time;
             public IntPtr dwExtraInfo;
         }
+
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetWindow(IntPtr hWnd, uint uCmd);
 
         [DllImport("user32.dll")]
         private static extern bool EnumWindows(EnumWindowsProc lpEnumFunc, IntPtr lParam);

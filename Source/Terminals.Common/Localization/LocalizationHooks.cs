@@ -241,7 +241,8 @@ namespace Terminals.Localization
         {
             try
             {
-                if (assembly.IsDynamic || !assembly.GetName().Name.StartsWith("Terminals", StringComparison.OrdinalIgnoreCase))
+                // plugins are first loaded only for inspection, their code can't run
+                if (assembly.IsDynamic || assembly.ReflectionOnly || !assembly.GetName().Name.StartsWith("Terminals", StringComparison.OrdinalIgnoreCase))
                     return;
 
                 foreach (Type type in GetLoadableTypes(assembly))
