@@ -62,6 +62,16 @@ namespace Tests.Connections
             Assert.IsTrue(layoutToAnnounce == null || layoutToAnnounce == PasswordTyper.US_LAYOUT);
         }
 
+        [TestMethod]
+        public void UserWithDomain_GetUserWithoutDomain_ReturnsUserPart()
+        {
+            Assert.AreEqual("HmaraAdm", CredentialPromptFiller.GetUserWithoutDomain("HMARA" + (char)92 + "HmaraAdm"));
+            Assert.AreEqual("HmaraAdm", CredentialPromptFiller.GetUserWithoutDomain("HmaraAdm@hmara.eu"));
+            Assert.AreEqual("HmaraAdm", CredentialPromptFiller.GetUserWithoutDomain(" HmaraAdm "));
+            Assert.IsNull(CredentialPromptFiller.GetUserWithoutDomain("ab"), "Too short names would match unrelated texts");
+            Assert.IsNull(CredentialPromptFiller.GetUserWithoutDomain(null));
+        }
+
         private static string Format(IEnumerable<PasswordTyper.KeyEvent> keys)
         {
             return string.Join(" ", keys.Select(key => key.ToString()));

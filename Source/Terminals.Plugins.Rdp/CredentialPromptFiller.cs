@@ -38,6 +38,8 @@ namespace Terminals.Connections
 
         private readonly string serverName;
 
+        private readonly string userName;
+
         /// <summary>
         /// Dialog windows already checked, prevents repeated filling of the same dialog.
         /// </summary>
@@ -52,10 +54,11 @@ namespace Terminals.Connections
 
         private volatile bool filled;
 
-        internal CredentialPromptFiller(string connectionName, string serverName, Func<string> passwordProvider)
+        internal CredentialPromptFiller(string connectionName, string serverName, string userName, Func<string> passwordProvider)
         {
             this.connectionName = connectionName;
             this.serverName = serverName;
+            this.userName = userName;
             this.passwordProvider = passwordProvider;
             this.timer.Interval = CHECK_INTERVAL;
             this.timer.Tick += this.Timer_Tick;
@@ -112,9 +115,9 @@ namespace Terminals.Connections
             try
             {
                 AutomationElement root = AutomationElement.FromHandle(candidate.Window);
-                if (!candidate.OwnProcess && !IsOwnedByThisProcess(candidate.Window) && !this.MentionsServer(root))
+                if (!candidate.OwnProcess && !IsOwnedByThisProcess(candidate.Window) && !this.MentionsConnection(root))
                 {
-                    Logging.Info("Password auto typing: credential dialog isn't owned by Terminals and doesn't mention server of " +
+                    Logging.Info("Password auto typing: credential dialog isn't owned by Terminals and doesn't mention server or user of " +
                         this.connectionName + ", skipped. Dialog texts: " + DescribeTexts(root));
                     return;
                 }
@@ -159,18 +162,29 @@ namespace Terminals.Connections
         }
 
         /// <summary>
-        /// The dialog texts contain the target server, e.g. "These credentials will be used to connect to server".
-        /// The server may be shown without the domain part or with port.
+        /// The dialog texts contain the target server, e.g. "These credentials will be used to connect to server",
+        /// or at least the user of the connection (Windows 11 shows only the user tile).
+        /// The server may be shown without the domain part or with port, the user with or without domain.
         /// </summary>
-        private bool MentionsServer(AutomationElement root)
+        private bool MentionsConnection(AutomationElement root)
         {
-            if (string.IsNullOrEmpty(this.serverName))
-                return false;
+            var expected = new List<string>();
+            if (!string.IsNullOrEmpty(this.serverName))
+            {
+                string server = this.serverName.Trim();
+                int dot = server.IndexOf('.');
+                bool isAddress = server.Length > 0 && char.IsDigit(server[0]);
+                expected.Add(server);
+                if (!isAddress && dot > 0)
+                    expected.Add(server.Substring(0, dot));
+            }
 
-            string server = this.serverName.Trim();
-            int dot = server.IndexOf('.');
-            bool isAddress = server.Length > 0 && char.IsDigit(server[0]);
-            string shortName = !isAddress && dot > 0 ? server.Substring(0, dot) : server;
+            string user = GetUserWithoutDomain(this.userName);
+            if (!string.IsNullOrEmpty(user))
+                expected.Add(user);
+
+            if (expected.Count == 0)
+                return false;
 
             for (int attempt = 0; attempt < 20; attempt++)
             {
@@ -180,9 +194,11 @@ namespace Terminals.Connections
                     if (string.IsNullOrEmpty(text))
                         continue;
 
-                    if (text.IndexOf(server, StringComparison.OrdinalIgnoreCase) >= 0 ||
-                        text.IndexOf(shortName, StringComparison.OrdinalIgnoreCase) >= 0)
-                        return true;
+                    foreach (string value in expected)
+                    {
+                        if (text.IndexOf(value, StringComparison.OrdinalIgnoreCase) >= 0)
+                            return true;
+                    }
                 }
 
                 // the dialog content is created asynchronously
@@ -190,6 +206,27 @@ namespace Terminals.Connections
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// "DOMAIN\user" or "user@domain" gives "user".
+        /// </summary>
+        internal static string GetUserWithoutDomain(string user)
+        {
+            if (string.IsNullOrEmpty(user))
+                return null;
+
+            string result = user.Trim();
+            int backslash = result.LastIndexOf('\\');
+            if (backslash >= 0)
+                result = result.Substring(backslash + 1);
+
+            int at = result.IndexOf('@');
+            if (at > 0)
+                result = result.Substring(0, at);
+
+            // too short names would match unrelated texts
+            return result.Length >= 3 ? result : null;
         }
 
         private static string GetText(AutomationElement element)

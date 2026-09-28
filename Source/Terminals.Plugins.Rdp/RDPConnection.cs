@@ -559,7 +559,7 @@ namespace Terminals.Connections
 
             this.client.UserName = security.UserName;
             this.client.Domain = security.Domain;
-            this.ConfigureAutoTypePassword(rdpOptions, security.Password);
+            this.ConfigureAutoTypePassword(rdpOptions, security.UserName, security.Password);
             try
             {
                 if (!String.IsNullOrEmpty(security.Password))
@@ -574,7 +574,7 @@ namespace Terminals.Connections
             }
         }
 
-        private void ConfigureAutoTypePassword(RdpOptions rdpOptions, string password)
+        private void ConfigureAutoTypePassword(RdpOptions rdpOptions, string userName, string password)
         {
             this.typingLayout = IntPtr.Zero;
             if (!rdpOptions.Security.AutoTypePassword)
@@ -587,7 +587,7 @@ namespace Terminals.Connections
             }
 
             // the server may require the client to ask for the password before the session is created
-            this.credentialPromptFiller = new CredentialPromptFiller(this.Favorite.Name, this.Favorite.ServerName,
+            this.credentialPromptFiller = new CredentialPromptFiller(this.Favorite.Name, this.Favorite.ServerName, userName,
                 () => this.ResolveFavoriteCredentials().Password);
             this.credentialPromptFiller.Start();
 
