@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -10,12 +11,17 @@ namespace Terminals.Connections
 {
     /// <summary>
     /// Some servers require the client to ask for the password on every connection. The RDP client then shows
-    /// the "Windows Security" credential dialog in this process and ignores the password configured by Terminals.
+    /// the "Windows Security" credential dialog and ignores the password configured by Terminals.
     /// This watcher finds the dialog, fills the saved password and confirms it.
+    /// On Windows 10 the dialog is hosted in this process, on Windows 11 it is shown
+    /// by the CredentialUIBroker process. The dialog of other process is filled only,
+    /// if it mentions the server of this connection.
     /// </summary>
     internal sealed class CredentialPromptFiller : IDisposable
     {
         private const string CREDENTIAL_DIALOG_CLASS = "Credential Dialog Xaml Host";
+
+        private const string CREDENTIAL_BROKER_PROCESS = "CredentialUIBroker";
 
         /// <summary>
         /// Stop watching, if the connection doesn't show the dialog in this time.
@@ -30,13 +36,26 @@ namespace Terminals.Connections
 
         private readonly string connectionName;
 
+        private readonly string serverName;
+
+        /// <summary>
+        /// Dialog windows already checked, prevents repeated filling of the same dialog.
+        /// </summary>
+        private readonly HashSet<IntPtr> examined = new HashSet<IntPtr>();
+
+        /// <summary>
+        /// Process names by id, the windows are enumerated several times per second.
+        /// </summary>
+        private readonly Dictionary<int, string> processNames = new Dictionary<int, string>();
+
         private DateTime watchStarted;
 
-        private bool filled;
+        private volatile bool filled;
 
-        internal CredentialPromptFiller(string connectionName, Func<string> passwordProvider)
+        internal CredentialPromptFiller(string connectionName, string serverName, Func<string> passwordProvider)
         {
             this.connectionName = connectionName;
+            this.serverName = serverName;
             this.passwordProvider = passwordProvider;
             this.timer.Interval = CHECK_INTERVAL;
             this.timer.Tick += this.Timer_Tick;
@@ -50,6 +69,8 @@ namespace Terminals.Connections
         {
             this.watchStarted = DateTime.Now;
             this.filled = false;
+            this.examined.Clear();
+            this.processNames.Clear();
             this.timer.Start();
         }
 
@@ -60,32 +81,52 @@ namespace Terminals.Connections
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            if ((DateTime.Now - this.watchStarted).TotalMilliseconds > WATCH_DURATION)
+            if (this.filled)
             {
                 this.Stop();
                 return;
             }
 
-            IntPtr dialog = FindCredentialDialog();
-            if (dialog == IntPtr.Zero || this.filled)
+            if ((DateTime.Now - this.watchStarted).TotalMilliseconds > WATCH_DURATION)
+            {
+                this.Stop();
+                Logging.Info("Password auto typing: credential dialog not found for " + this.connectionName + ". " + this.DescribeCandidates());
                 return;
+            }
 
-            this.filled = true;
-            this.Stop();
-            string password = this.passwordProvider();
-            Logging.Info("Password auto typing: credential dialog found for " + this.connectionName);
-            // UI Automation must not be called from the thread, which owns the dialog
-            ThreadPool.QueueUserWorkItem(state => this.Fill(dialog, password));
+            foreach (DialogCandidate candidate in this.FindCredentialDialogs())
+            {
+                if (!this.examined.Add(candidate.Window))
+                    continue;
+
+                Logging.Info(string.Format("Password auto typing: credential dialog found for {0} in process {1}",
+                    this.connectionName, candidate.ProcessName));
+                string password = this.passwordProvider();
+                // UI Automation must not be called from the thread, which owns the dialog
+                ThreadPool.QueueUserWorkItem(state => this.Fill(candidate, password));
+            }
         }
 
-        private void Fill(IntPtr dialog, string password)
+        private void Fill(DialogCandidate candidate, string password)
         {
             try
             {
-                if (TryFill(dialog, password))
+                AutomationElement root = AutomationElement.FromHandle(candidate.Window);
+                if (!candidate.OwnProcess && !this.MentionsServer(root))
+                {
+                    Logging.Info("Password auto typing: credential dialog doesn't mention server of " + this.connectionName + ", skipped");
+                    return;
+                }
+
+                if (TryFill(root, password))
+                {
+                    this.filled = true;
                     Logging.Info("Password auto typing: credential dialog filled for " + this.connectionName);
+                }
                 else
+                {
                     Logging.Info("Password auto typing: password field or OK button not found in credential dialog");
+                }
             }
             catch (Exception exception)
             {
@@ -94,10 +135,32 @@ namespace Terminals.Connections
             }
         }
 
-        private static bool TryFill(IntPtr dialog, string password)
+        /// <summary>
+        /// The dialog texts contain the target server, e.g. "These credentials will be used to connect to server".
+        /// </summary>
+        private bool MentionsServer(AutomationElement root)
         {
-            AutomationElement root = AutomationElement.FromHandle(dialog);
-            // the dialog content is created asynchronously
+            if (string.IsNullOrEmpty(this.serverName))
+                return false;
+
+            for (int attempt = 0; attempt < 20; attempt++)
+            {
+                foreach (AutomationElement element in root.FindAll(TreeScope.Descendants, Condition.TrueCondition))
+                {
+                    string name = element.Current.Name;
+                    if (!string.IsNullOrEmpty(name) && name.IndexOf(this.serverName, StringComparison.OrdinalIgnoreCase) >= 0)
+                        return true;
+                }
+
+                // the dialog content is created asynchronously
+                Thread.Sleep(150);
+            }
+
+            return false;
+        }
+
+        private static bool TryFill(AutomationElement root, string password)
+        {
             AutomationElement passwordBox = WaitFor(root, new PropertyCondition(AutomationElement.IsPasswordProperty, true));
             if (passwordBox == null)
                 return false;
@@ -113,12 +176,21 @@ namespace Terminals.Connections
                 TypeUnicode(password);
             }
 
-            AutomationElement okButton = WaitFor(root, new PropertyCondition(AutomationElement.AutomationIdProperty, "OkButton"));
+            AutomationElement okButton = WaitFor(root, new PropertyCondition(AutomationElement.AutomationIdProperty, "OkButton")) ??
+                                         FindButton(root, "OK");
             if (okButton == null || !okButton.TryGetCurrentPattern(InvokePattern.Pattern, out pattern))
                 return false;
 
             ((InvokePattern)pattern).Invoke();
             return true;
+        }
+
+        private static AutomationElement FindButton(AutomationElement root, string name)
+        {
+            var condition = new AndCondition(
+                new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Button),
+                new PropertyCondition(AutomationElement.NameProperty, name));
+            return root.FindFirst(TreeScope.Descendants, condition);
         }
 
         private static AutomationElement WaitFor(AutomationElement root, Condition condition)
@@ -135,26 +207,94 @@ namespace Terminals.Connections
             return null;
         }
 
-        private static IntPtr FindCredentialDialog()
+        private List<DialogCandidate> FindCredentialDialogs()
         {
-            int processId = Process.GetCurrentProcess().Id;
-            IntPtr found = IntPtr.Zero;
+            int currentProcess = Process.GetCurrentProcess().Id;
+            var found = new List<DialogCandidate>();
             EnumWindows((window, param) =>
             {
+                if (!IsWindowVisible(window))
+                    return true;
+
                 int windowProcess;
                 GetWindowThreadProcessId(window, out windowProcess);
-                if (windowProcess != processId || !IsWindowVisible(window))
+                string className = GetClassName(window);
+                bool ownProcess = windowProcess == currentProcess;
+                if (ownProcess && className == CREDENTIAL_DIALOG_CLASS)
+                {
+                    found.Add(new DialogCandidate(window, true, "Terminals"));
                     return true;
+                }
 
-                var className = new StringBuilder(64);
-                GetClassName(window, className, className.Capacity);
-                if (className.ToString() != CREDENTIAL_DIALOG_CLASS)
-                    return true;
+                if (!ownProcess && (className == CREDENTIAL_DIALOG_CLASS || this.IsCredentialBroker(windowProcess)))
+                    found.Add(new DialogCandidate(window, false, this.GetProcessName(windowProcess)));
 
-                found = window;
-                return false;
+                return true;
             }, IntPtr.Zero);
             return found;
+        }
+
+        private bool IsCredentialBroker(int processId)
+        {
+            return string.Equals(this.GetProcessName(processId), CREDENTIAL_BROKER_PROCESS, StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        /// Diagnostics for the log: class and process of windows, which could be the credential dialog.
+        /// Window titles aren't logged, they may contain user data.
+        /// </summary>
+        private string DescribeCandidates()
+        {
+            var described = new List<string>();
+            EnumWindows((window, param) =>
+            {
+                if (!IsWindowVisible(window))
+                    return true;
+
+                string className = GetClassName(window);
+                int processId;
+                GetWindowThreadProcessId(window, out processId);
+                string processName = this.GetProcessName(processId);
+                if (className.IndexOf("Credential", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                    processName.IndexOf("Credential", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                    processName.Equals("consent", StringComparison.OrdinalIgnoreCase) ||
+                    processId == Process.GetCurrentProcess().Id)
+                {
+                    described.Add(processName + "/" + className);
+                }
+
+                return true;
+            }, IntPtr.Zero);
+            return "Visible windows: " + string.Join(", ", described.ToArray());
+        }
+
+        private static string GetClassName(IntPtr window)
+        {
+            var className = new StringBuilder(128);
+            GetClassName(window, className, className.Capacity);
+            return className.ToString();
+        }
+
+        private string GetProcessName(int processId)
+        {
+            string name;
+            if (this.processNames.TryGetValue(processId, out name))
+                return name;
+
+            try
+            {
+                using (Process process = Process.GetProcessById(processId))
+                {
+                    name = process.ProcessName;
+                }
+            }
+            catch (Exception)
+            {
+                name = string.Empty;
+            }
+
+            this.processNames[processId] = name;
+            return name;
         }
 
         /// <summary>
@@ -186,6 +326,22 @@ namespace Terminals.Connections
         public void Dispose()
         {
             this.timer.Dispose();
+        }
+
+        private sealed class DialogCandidate
+        {
+            internal IntPtr Window { get; private set; }
+
+            internal bool OwnProcess { get; private set; }
+
+            internal string ProcessName { get; private set; }
+
+            internal DialogCandidate(IntPtr window, bool ownProcess, string processName)
+            {
+                this.Window = window;
+                this.OwnProcess = ownProcess;
+                this.ProcessName = processName;
+            }
         }
 
         private delegate bool EnumWindowsProc(IntPtr window, IntPtr param);

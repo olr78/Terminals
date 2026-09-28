@@ -587,7 +587,8 @@ namespace Terminals.Connections
             }
 
             // the server may require the client to ask for the password before the session is created
-            this.credentialPromptFiller = new CredentialPromptFiller(this.Favorite.Name, () => this.ResolveFavoriteCredentials().Password);
+            this.credentialPromptFiller = new CredentialPromptFiller(this.Favorite.Name, this.Favorite.ServerName,
+                () => this.ResolveFavoriteCredentials().Password);
             this.credentialPromptFiller.Start();
 
             string layoutToAnnounce;
