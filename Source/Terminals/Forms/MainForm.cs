@@ -166,7 +166,8 @@ namespace Terminals
                 this.favsList1.AssignServices(this.persistence, this.connectionManager, favoriteIcons, this);
                 this.AssignToolStripsToContainer();
                 StartupProgress.Mark("tool strips assigned");
-                this.ApplyControlsEnableAndVisibleState();
+                // the window is shown by the application message loop, when it is completely built
+                this.ApplyControlsEnableAndVisibleState(false);
                 StartupProgress.Mark("controls state applied");
 
                 this.menuLoader.LoadGroups();
@@ -211,15 +212,12 @@ namespace Terminals
             this.favsList1.ConnectionsUiFactory = this.connectionsUiFactory;
         }
 
-        private void ApplyControlsEnableAndVisibleState()
+        /// <param name="showWindow">True to show the hidden window, when minimize to tray isn't enabled anymore.</param>
+        private void ApplyControlsEnableAndVisibleState(bool showWindow)
         {
             this.MainWindowNotifyIcon.Visible = settings.MinimizeToTray;
-            if (!settings.MinimizeToTray && !this.Visible)
-            {
-                StartupProgress.Mark("showing main window");
+            if (showWindow && !settings.MinimizeToTray && !this.Visible)
                 this.Visible = true;
-                StartupProgress.Mark("main window visible");
-            }
 
             this.lockToolbarsToolStripMenuItem.Checked = settings.ToolbarsLocked;
             this.MainMenuStrip.GripStyle = settings.ToolbarsLocked ? ToolStripGripStyle.Hidden : ToolStripGripStyle.Visible;
@@ -601,6 +599,7 @@ namespace Terminals
         {
             // Get initial window state, location and after the form has finished loading
             this.SetWindowState();
+            StartupProgress.Mark("main window shown");
             StartupProgress.Finish();
             this.Activate();
         }
@@ -1173,7 +1172,7 @@ namespace Terminals
             {
                 if (frmOptions.ShowDialog() == DialogResult.OK)
                 {
-                    this.ApplyControlsEnableAndVisibleState();
+                    this.ApplyControlsEnableAndVisibleState(true);
                 }
             }
         }

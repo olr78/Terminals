@@ -138,8 +138,22 @@ namespace Terminals
             /// </summary>
             private void UpdateMenuAndContextMenu()
             {
-                this.FillMainMenu();
-                this.FillTrayContextMenu();
+                // without suspended layout, each added or removed item relayouts the whole menu,
+                // which takes seconds for hundred of groups
+                ToolStrip favoritesMenu = this.favoritesToolStripMenuItem.DropDown;
+                favoritesMenu.SuspendLayout();
+                this.quickContextMenu.SuspendLayout();
+                try
+                {
+                    this.FillMainMenu();
+                    this.FillTrayContextMenu();
+                }
+                finally
+                {
+                    this.quickContextMenu.ResumeLayout();
+                    favoritesMenu.ResumeLayout();
+                }
+
                 StartupProgress.Mark("tray favorites menu filled");
             }
 
@@ -496,10 +510,22 @@ namespace Terminals
 
             internal void LoadGroups()
             {
-                RemoveGroupsFromGroupsMenu();
-                ClearAddToGroupMenuItem();
-                StartupProgress.Mark("groups menu cleared");
-                AddGroupMenuItems();
+                ToolStrip groupsMenu = this.groupsToolStripMenuItem.DropDown;
+                ToolStrip addToGroupMenu = this.addTerminalToGroupToolStripMenuItem.DropDown;
+                groupsMenu.SuspendLayout();
+                addToGroupMenu.SuspendLayout();
+                try
+                {
+                    RemoveGroupsFromGroupsMenu();
+                    ClearAddToGroupMenuItem();
+                    AddGroupMenuItems();
+                }
+                finally
+                {
+                    addToGroupMenu.ResumeLayout();
+                    groupsMenu.ResumeLayout();
+                }
+
                 StartupProgress.Mark("groups menu loaded");
                 addTerminalToGroupToolStripMenuItem.Enabled = false;
                 saveTerminalsAsGroupToolStripMenuItem.Enabled = false;
