@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace Terminals.Forms.Controls
@@ -12,6 +13,35 @@ namespace Terminals.Forms.Controls
     internal class FavoritesListView : ListView
     {
         private const int WM_PAINT = 0x000F;
+
+        private const int WM_REFLECT_NOTIFY = 0x2000 + 0x004E;
+
+        private const int LVN_GETINFOTIPA = -157;
+
+        private const int LVN_GETINFOTIPW = -158;
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct NMHDR
+        {
+            public IntPtr hwndFrom;
+            public IntPtr idFrom;
+            public int code;
+        }
+
+        /// <summary>
+        /// The header has to be nested structure, because on 64 bit it is padded to the pointer size.
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        private struct NMLVGETINFOTIP
+        {
+            public NMHDR hdr;
+            public int dwFlags;
+            public IntPtr pszText;
+            public int cchTextMax;
+            public int iItem;
+            public int iSubItem;
+            public IntPtr lParam;
+        }
 
         private readonly ToolTip notesToolTip = new ToolTip();
 
@@ -34,14 +64,40 @@ namespace Terminals.Forms.Controls
         }
 
         /// <summary>
+        /// Gets or sets the builder of the item tool tip. The tool tip is built only when the list asks for it,
+        /// because building it for SQL persistence loads the favorite details from database for each item.
+        /// </summary>
+        internal Func<FavoriteListViewItem, string> ItemToolTipBuilder { get; set; }
+
+        /// <summary>
         /// The icon is painted over the natively painted items, to keep the system look of the items.
         /// </summary>
         protected override void WndProc(ref Message m)
         {
+            if (m.Msg == WM_REFLECT_NOTIFY)
+                this.EnsureItemToolTip(m.LParam);
+
             base.WndProc(ref m);
 
             if (m.Msg == WM_PAINT)
                 this.PaintNotesIcons();
+        }
+
+        /// <summary>
+        /// The base list view copies the item ToolTipText, when the native control asks for the item info tip.
+        /// </summary>
+        private void EnsureItemToolTip(IntPtr lParam)
+        {
+            if (lParam == IntPtr.Zero || this.ItemToolTipBuilder == null)
+                return;
+
+            var info = (NMLVGETINFOTIP)Marshal.PtrToStructure(lParam, typeof(NMLVGETINFOTIP));
+            if ((info.hdr.code != LVN_GETINFOTIPW && info.hdr.code != LVN_GETINFOTIPA) || info.iItem < 0 || info.iItem >= this.Items.Count)
+                return;
+
+            var item = this.Items[info.iItem] as FavoriteListViewItem;
+            if (item != null && string.IsNullOrEmpty(item.ToolTipText))
+                item.ToolTipText = this.ItemToolTipBuilder(item);
         }
 
         private void PaintNotesIcons()

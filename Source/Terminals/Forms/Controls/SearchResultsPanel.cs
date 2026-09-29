@@ -100,6 +100,7 @@ namespace Terminals.Forms.Controls
             this.persistence = persistence;
             this.favoriteIcons = favoriteIcons;
             this.toolTipBuilder = new ToolTipBuilder(this.persistence.Security);
+            this.resultsListView.ItemToolTipBuilder = item => this.toolTipBuilder.BuildTooTip(item.Favorite);
             var iconsBuilder = new ProtocolImageListBuilder(favoriteIcons.GetProtocolIcons);
             iconsBuilder.Build(this.protocolsImageList);
             this.LoadAll();
@@ -108,7 +109,7 @@ namespace Terminals.Forms.Controls
         private ListViewItem FavoriteToListViewItem(IFavorite favorite)
         {
             var item = new FavoriteListViewItem(favorite);
-            item.ToolTipText = this.toolTipBuilder.BuildTooTip(favorite);
+            // tool tip is built on demand by the list view, see FavoritesListView.ItemToolTipBuilder
             item.ImageKey = this.favoriteIcons.GetTreeviewImageListKey(favorite.Protocol);
             return item;
         }

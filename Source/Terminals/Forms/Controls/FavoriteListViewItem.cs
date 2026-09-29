@@ -17,6 +17,11 @@ namespace Terminals.Forms.Controls
         /// </summary>
         internal string Notes { get; private set; }
 
+        internal IFavorite Favorite
+        {
+            get { return (IFavorite)this.Tag; }
+        }
+
         internal bool HasNotes
         {
             get { return !string.IsNullOrWhiteSpace(this.Notes); }
