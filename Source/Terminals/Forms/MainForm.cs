@@ -411,7 +411,12 @@ namespace Terminals
 
         private void OpenSavedConnections()
         {
-            this.connectionsUiFactory.ConnectByFavoriteNames(settings.SavedConnections);
+            string[] savedConnections = settings.SavedConnections;
+            // clearing the list saves the configuration file, don't do it on each start
+            if (savedConnections.Length == 0)
+                return;
+
+            this.connectionsUiFactory.ConnectByFavoriteNames(savedConnections);
             settings.ClearSavedConnectionsList();
         }
 
@@ -464,7 +469,11 @@ namespace Terminals
         internal void HandleCommandLineActions(CommandLineArgs commandLineArgs)
         {
             Boolean connectToConsole = commandLineArgs.console;
-            this.FullScreen = commandLineArgs.fullscreen;
+            // switching the full screen shows the window and restores its layout,
+            // which during the start shows the window before it is completely built
+            if (this.FullScreen != commandLineArgs.fullscreen)
+                this.FullScreen = commandLineArgs.fullscreen;
+
             if (commandLineArgs.HasUrlDefined)
                 QuickConnect(commandLineArgs.UrlServer, commandLineArgs.UrlPort, connectToConsole);
 
@@ -587,6 +596,7 @@ namespace Terminals
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            StartupProgress.Mark("main window loading");
             this.AssingTitle();
             StartupProgress.Report("Opening saved connections...", 98);
             this.CheckForNewRelease();

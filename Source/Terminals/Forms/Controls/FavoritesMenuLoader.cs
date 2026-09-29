@@ -478,6 +478,8 @@ namespace Terminals
             {
                 restoreScreenMenuItem = this.CreateGeneralTrayContextMenuItem(COMMAND_RESTORESCREEN, Resources.arrow_in);
                 fullScreenMenuItem = this.CreateGeneralTrayContextMenuItem(COMMAND_FULLSCREEN, Resources.arrow_out);
+                // the application always starts in window, full screen is switched only if requested
+                this.UpdateSwitchFullScreenMenuItemsVisibility(false);
 
                 this.quickContextMenu.Items.Add("-");
                 ToolStripItem showMenu = this.quickContextMenu.Items.Add(Program.Resources.GetString(COMMAND_SHOWMENU));

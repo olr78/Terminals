@@ -98,6 +98,7 @@ namespace Terminals
             this.searchPanel1.LoadEvents(this.persistence, this.favoriteIcons);
             StartupProgress.Mark("search list filled");
             this.renameCommand = new FavoriteRenameCommand(this.persistence, new RenameService(this.persistence.Favorites));
+            StartupProgress.Mark("favorites panel loaded");
         }
 
         private void HistoryTreeView_DoubleClick(object sender, EventArgs e)

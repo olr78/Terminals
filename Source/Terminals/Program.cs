@@ -146,6 +146,7 @@ namespace Terminals
             var mainForm = new MainForm(persistence, connectionManager, favoriteIcons);
             StartupProgress.Mark("main window created");
             SingleInstanceApplication.Instance.Initialize(mainForm, commandLine);
+            StartupProgress.Mark("single instance initialized");
             mainForm.HandleCommandLineActions(commandLine);
             StartupProgress.Mark("command line handled");
             Application.Run(mainForm);
