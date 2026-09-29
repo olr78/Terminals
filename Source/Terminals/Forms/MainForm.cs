@@ -139,6 +139,7 @@ namespace Terminals
                 this.Font = SystemFonts.IconTitleFont;
 
                 InitializeComponent(); // main designer procedure
+                StartupProgress.Mark("main window designer initialized");
 
                 this.formSettings = new FormSettings(this);
                 this.tabsFilter = new TabControlFilter(this.tcTerminals);
@@ -147,26 +148,33 @@ namespace Terminals
                     this.persistence, this.connectionManager, this.favoriteIcons);
                 this.terminalsControler.AssingUiFactory(this.connectionsUiFactory);
                 this.toolbarExtenders = this.connectionManager.CreateToolbarExtensions(this.terminalsControler);
+                StartupProgress.Mark("tabs and toolbar extensions created");
 
                 // Initialize FavsList outside of InitializeComponent
                 // Inside InitializeComponent it sometimes caused the design view in VS to return errors
                 this.InitializeFavsListControl();
+                StartupProgress.Mark("favorites panel created");
 
                 // Set notifyicon icon from embedded png image
                 this.MainWindowNotifyIcon.Icon = Icon.FromHandle(Properties.Resources.terminalsicon.GetHicon());
                 StartupProgress.Report("Building the connections menu...", 40);
                 this.menuLoader = new FavoritesMenuLoader(this, this.persistence);
+                StartupProgress.Mark("favorites menus created");
                 this.favoriteToolBar.Visible = this.toolStripMenuItemShowHideFavoriteToolbar.Checked;
                 this.fullScreenSwitch = new MainFormFullScreenSwitch(this);
                 this.tabControlRemover = new TabControlRemover(this.settings, this, this.terminalsControler, this.tcTerminals);
                 this.favsList1.AssignServices(this.persistence, this.connectionManager, favoriteIcons, this);
                 this.AssignToolStripsToContainer();
+                StartupProgress.Mark("tool strips assigned");
                 this.ApplyControlsEnableAndVisibleState();
+                StartupProgress.Mark("controls state applied");
 
                 this.menuLoader.LoadGroups();
                 StartupProgress.Report("Creating the main window...", 55);
                 this.UpdateControls();
+                StartupProgress.Mark("controls updated");
                 this.LoadWindowState();
+                StartupProgress.Mark("window state loaded");
                 this.CheckForMultiMonitorUse();
 
                 this.tcTerminals.TabControlItemDetach += new TabControlItemChangedHandler(this.TcTerminals_TabDetach);
@@ -174,9 +182,11 @@ namespace Terminals
 
                 this.QuickContextMenu.ItemClicked += new ToolStripItemClickedEventHandler(QuickContextMenu_ItemClicked);
                 this.LoadSpecialCommands();
+                StartupProgress.Mark("special commands loaded");
 
                 ProtocolHandler.Register();
                 this.persistence.AssignSynchronizationObject(this);
+                StartupProgress.Mark("protocol handler registered");
 
                 this.inactivityLockManager = new InactivityLockManager();
                 this.inactivityLockManager.Start();
@@ -205,7 +215,11 @@ namespace Terminals
         {
             this.MainWindowNotifyIcon.Visible = settings.MinimizeToTray;
             if (!settings.MinimizeToTray && !this.Visible)
+            {
+                StartupProgress.Mark("showing main window");
                 this.Visible = true;
+                StartupProgress.Mark("main window visible");
+            }
 
             this.lockToolbarsToolStripMenuItem.Checked = settings.ToolbarsLocked;
             this.MainMenuStrip.GripStyle = settings.ToolbarsLocked ? ToolStripGripStyle.Hidden : ToolStripGripStyle.Visible;
@@ -221,8 +235,10 @@ namespace Terminals
             this.pnlTagsFavorites.Width = 7;
 
             this.HideShowFavoritesPanel(settings.ShowFavoritePanel);
+            StartupProgress.Mark("favorites panel layout applied");
             this.UpdateCaptureButtonEnabled();
             this.ApplyTheme();
+            StartupProgress.Mark("theme applied");
         }
 
         private void ApplyTheme()
@@ -576,7 +592,9 @@ namespace Terminals
             this.AssingTitle();
             StartupProgress.Report("Opening saved connections...", 98);
             this.CheckForNewRelease();
+            StartupProgress.Mark("update check started");
             this.OpenSavedConnections();
+            StartupProgress.Mark("saved connections opened");
         }
 
         private void MainForm_Shown(object sender, EventArgs e)

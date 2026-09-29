@@ -96,6 +96,7 @@ namespace Terminals
             // hadle events
             StartupProgress.Report("Filling the search list...", 85);
             this.searchPanel1.LoadEvents(this.persistence, this.favoriteIcons);
+            StartupProgress.Mark("search list filled");
             this.renameCommand = new FavoriteRenameCommand(this.persistence, new RenameService(this.persistence.Favorites));
         }
 

@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using Terminals.Configuration;
 using Terminals.Connections;
 using Terminals.Data;
+using Terminals.Forms;
 using Terminals.Forms.Controls;
 using Terminals.Properties;
 using Terminals.Services;
@@ -92,6 +93,7 @@ namespace Terminals
                 this.favoritesToolStripMenuItem.DropDownItems.Add("-");
                 CreateUntaggedItem();
                 CreateTrayMenuItems();
+                StartupProgress.Mark("tray menu skeleton created");
                 UpdateMenuAndContextMenu();
                 RegisterEventHandlers();
             }
@@ -138,6 +140,7 @@ namespace Terminals
             {
                 this.FillMainMenu();
                 this.FillTrayContextMenu();
+                StartupProgress.Mark("tray favorites menu filled");
             }
 
             private void CreateUntaggedItem()
@@ -181,10 +184,13 @@ namespace Terminals
             private void FillMainMenu()
             {
                 ReFreshConnectionsComboBox();
+                StartupProgress.Mark("connections combo box filled");
                 this.untaggedToolStripMenuItem.ClearDropDownsToEmpty();
                 this.ClearFavoritesToolStripmenuItems();
                 this.CreateGroupsToolStripMenuItems();
+                StartupProgress.Mark("groups menu filled");
                 this.LoadFavoritesToolbar();
+                StartupProgress.Mark("favorites toolbar filled");
             }
 
             private void ReFreshConnectionsComboBox()
@@ -492,7 +498,9 @@ namespace Terminals
             {
                 RemoveGroupsFromGroupsMenu();
                 ClearAddToGroupMenuItem();
+                StartupProgress.Mark("groups menu cleared");
                 AddGroupMenuItems();
+                StartupProgress.Mark("groups menu loaded");
                 addTerminalToGroupToolStripMenuItem.Enabled = false;
                 saveTerminalsAsGroupToolStripMenuItem.Enabled = false;
             }

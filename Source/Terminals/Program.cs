@@ -144,8 +144,10 @@ namespace Terminals
             FavoriteIcons favoriteIcons, CommandLineArgs commandLine)
         {
             var mainForm = new MainForm(persistence, connectionManager, favoriteIcons);
+            StartupProgress.Mark("main window created");
             SingleInstanceApplication.Instance.Initialize(mainForm, commandLine);
             mainForm.HandleCommandLineActions(commandLine);
+            StartupProgress.Mark("command line handled");
             Application.Run(mainForm);
             // in case the main window was never shown
             StartupProgress.Finish();
@@ -159,6 +161,7 @@ namespace Terminals
         {
             StartupProgress.Report("Reading the connections list...", 15);
             int groupsCount = persistence.Groups.Count();
+            StartupProgress.Mark("groups loaded");
             int favoritesCount = persistence.Favorites.Count();
             Logging.Info(String.Format("Start state 9 Complete: Loaded {0} favorites in {1} groups", favoritesCount, groupsCount));
             StartupProgress.Report("Creating the main window...", 35);

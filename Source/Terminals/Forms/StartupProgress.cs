@@ -21,12 +21,19 @@ namespace Terminals.Forms
 
         private static string lastStatus;
 
+        /// <summary>
+        /// True from the start of the progress until it is finished, even if the window failed to show.
+        /// </summary>
+        private static bool started;
+
         internal static void Start()
         {
             lock (syncRoot)
             {
                 if (form != null)
                     return;
+
+                started = true;
 
                 string title = Program.Info.TitleVersion;
                 string status = Translator.T("Starting...");
@@ -75,6 +82,16 @@ namespace Terminals.Forms
         }
 
         /// <summary>
+        /// Writes detailed step of the start into the log only, to be able to find slow parts of the start.
+        /// Does nothing after the start is finished, because the same code runs also later.
+        /// </summary>
+        internal static void Mark(string step)
+        {
+            if (started)
+                Logging.Info("Startup timing: " + step);
+        }
+
+        /// <summary>
         /// Reports progress of items processed in current stage, which covers range of percents from stageStart to stageEnd.
         /// </summary>
         internal static void ReportItems(int stageStart, int stageEnd, int done, int total)
@@ -115,6 +132,7 @@ namespace Terminals.Forms
         /// </summary>
         internal static void Finish()
         {
+            started = false;
             StartupProgressForm current = form;
             if (current == null)
                 return;
