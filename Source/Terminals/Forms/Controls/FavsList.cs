@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Drawing;
 using System.Management;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ using Terminals.Data;
 using Terminals.Data.Validation;
 using Terminals.Forms;
 using Terminals.Forms.Controls;
+using Terminals.Localization;
 using Terminals.Network;
 using Terminals.Services;
 using TreeView = Terminals.Forms.Controls.TreeView;
@@ -35,6 +37,11 @@ namespace Terminals
         private IPersistence persistence;
 
         private IConnectionCommands connectionCommands;
+
+        /// <summary>
+        /// Shows the number of all favorites on the right side of the favorites tool bar.
+        /// </summary>
+        private readonly ToolStripLabel favoritesCountLabel = new ToolStripLabel();
 
         private IFavorites PersistedFavorites
         {
@@ -98,7 +105,31 @@ namespace Terminals
             this.searchPanel1.LoadEvents(this.persistence, this.favoriteIcons);
             StartupProgress.Mark("search list filled");
             this.renameCommand = new FavoriteRenameCommand(this.persistence, new RenameService(this.persistence.Favorites));
+            this.InitializeFavoritesCount();
             StartupProgress.Mark("favorites panel loaded");
+        }
+
+        private void InitializeFavoritesCount()
+        {
+            this.favoritesCountLabel.Alignment = ToolStripItemAlignment.Right;
+            this.favoritesCountLabel.ForeColor = SystemColors.GrayText;
+            this.favoritesCountLabel.ToolTipText = Translator.T("Number of connections");
+            this.favoritesTreeMenu.Items.Add(this.favoritesCountLabel);
+            this.persistence.Dispatcher.FavoritesChanged += this.OnFavoritesChanged;
+            this.UpdateFavoritesCount();
+        }
+
+        private void OnFavoritesChanged(FavoritesChangedEventArgs args)
+        {
+            if (this.IsDisposed)
+                this.persistence.Dispatcher.FavoritesChanged -= this.OnFavoritesChanged;
+            else
+                this.UpdateFavoritesCount();
+        }
+
+        private void UpdateFavoritesCount()
+        {
+            this.favoritesCountLabel.Text = this.persistence.Favorites.Count().ToString();
         }
 
         private void HistoryTreeView_DoubleClick(object sender, EventArgs e)
