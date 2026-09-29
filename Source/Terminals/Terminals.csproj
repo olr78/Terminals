@@ -190,6 +190,10 @@
     <Compile Include="Connections\PluginDefinition.cs" />
     <Compile Include="Forms\IConnectionCommands.cs" />
     <Compile Include="IStartupUi.cs" />
+    <Compile Include="Forms\StartupProgress.cs" />
+    <Compile Include="Forms\StartupProgressForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Network\PortScanner\NetworkAdapters.cs" />
     <Compile Include="Services\ExternalLinks.cs" />
     <Compile Include="Settings\IPluginSettings.cs" />

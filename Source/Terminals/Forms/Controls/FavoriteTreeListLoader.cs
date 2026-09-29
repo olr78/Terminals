@@ -113,10 +113,29 @@ namespace Terminals.Forms.Controls
 
             var nodes = new TreeListNodes(this.RootNodes, this.toolTipBuilder, this.favoriteIcons);
             // dont load everything, it is done by lazy loading after expand
-            IOrderedEnumerable<IGroup> rootGroups = GetSortedRootGroups();
-            nodes.InsertGroupNodes(rootGroups);
+            List<IGroup> rootGroups = GetSortedRootGroups().ToList();
             List<IFavorite> untaggedFavorites = GetUntaggedFavorites(this.favorites);
-            nodes.AddFavoriteNodes(untaggedFavorites);
+            int total = rootGroups.Count + untaggedFavorites.Count;
+            int done = 0;
+            this.treeList.BeginUpdate();
+            try
+            {
+                foreach (IGroup group in rootGroups)
+                {
+                    nodes.InsertGroupNode(group);
+                    StartupProgress.ReportItems(62, 72, ++done, total);
+                }
+
+                foreach (IFavorite favorite in untaggedFavorites)
+                {
+                    nodes.AddFavoriteNodes(new[] { favorite });
+                    StartupProgress.ReportItems(62, 72, ++done, total);
+                }
+            }
+            finally
+            {
+                this.treeList.EndUpdate();
+            }
         }
 
         internal static List<IFavorite> GetUntaggedFavorites(IEnumerable<IFavorite> favorites)

@@ -83,14 +83,18 @@ namespace Terminals
 
         private void FavsList_Load(object sender, EventArgs e)
         {
+            StartupProgress.Report("Building the connections tree...", 60);
             this.favsTree.AssignServices(this.persistence, this.favoriteIcons, this.connectionManager);
             this.treeLoader = new FavoriteTreeListLoader(this.favsTree, this.persistence, this.favoriteIcons);
             this.treeLoader.LoadRootNodes();
+            StartupProgress.Report("Loading the connections history...", 72);
             this.historyTreeView.Load(this.persistence, this.favoriteIcons);
+            StartupProgress.Report("Restoring expanded groups...", 76);
             this.LoadState();
             this.favsTree.MouseUp += new MouseEventHandler(this.FavsTree_MouseUp);
             this.searchTextBox.LoadEvents(this.persistence);
             // hadle events
+            StartupProgress.Report("Filling the search list...", 85);
             this.searchPanel1.LoadEvents(this.persistence, this.favoriteIcons);
             this.renameCommand = new FavoriteRenameCommand(this.persistence, new RenameService(this.persistence.Favorites));
         }

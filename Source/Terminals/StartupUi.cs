@@ -1,6 +1,7 @@
 using System;
 using System.Windows.Forms;
 using Terminals.Data;
+using Terminals.Forms;
 using Terminals.Security;
 
 namespace Terminals
@@ -25,6 +26,12 @@ namespace Terminals
         public void Exit()
         {
             Environment.Exit(-1);
+        }
+
+        public void ShowLoading()
+        {
+            StartupProgress.Start();
+            StartupProgress.Report("Reading the connections list...", 5);
         }
     }
 }

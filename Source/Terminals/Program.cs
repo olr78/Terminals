@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Resources;
 using System.Threading;
@@ -72,6 +73,7 @@ namespace Terminals
             var startupUi = new StartupUi();
             persistence = persistenceFactory.AuthenticateByMasterPassword(persistence, startupUi);
             PersistenceErrorForm.RegisterDataEventHandler(persistence.Dispatcher);
+            PreloadFavorites(persistence);
 
             RunMainForm(persistence, connectionManager, favoriteIcons, commandLine);
 
@@ -145,6 +147,21 @@ namespace Terminals
             SingleInstanceApplication.Instance.Initialize(mainForm, commandLine);
             mainForm.HandleCommandLineActions(commandLine);
             Application.Run(mainForm);
+            // in case the main window was never shown
+            StartupProgress.Finish();
+        }
+
+        /// <summary>
+        /// Loads the favorites and groups into the persistence cache, which is otherwise done lazily
+        /// by the first control asking for them, so the reading is visible in the startup progress.
+        /// </summary>
+        private static void PreloadFavorites(IPersistence persistence)
+        {
+            StartupProgress.Report("Reading the connections list...", 15);
+            int groupsCount = persistence.Groups.Count();
+            int favoritesCount = persistence.Favorites.Count();
+            Logging.Info(String.Format("Start state 9 Complete: Loaded {0} favorites in {1} groups", favoritesCount, groupsCount));
+            StartupProgress.Report("Creating the main window...", 35);
         }
 
         /// <summary>

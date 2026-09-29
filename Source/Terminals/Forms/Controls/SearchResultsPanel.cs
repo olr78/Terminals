@@ -145,7 +145,13 @@ namespace Terminals.Forms.Controls
         internal void LoadFromFavorites(List<IFavorite> favorites)
         {
             this.resultsListView.Items.Clear();
-            ListViewItem[] transformed = favorites.Select(FavoriteToListViewItem).ToArray();
+            var transformed = new ListViewItem[favorites.Count];
+            for (int index = 0; index < favorites.Count; index++)
+            {
+                transformed[index] = this.FavoriteToListViewItem(favorites[index]);
+                StartupProgress.ReportItems(87, 97, index + 1, favorites.Count);
+            }
+
             this.resultsListView.Items.AddRange(transformed);
             this.resultsListView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
             // the notes icon is painted after the item text, make it visible also in the widest item

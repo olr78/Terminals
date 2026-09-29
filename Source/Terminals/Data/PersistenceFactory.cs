@@ -50,6 +50,7 @@ namespace Terminals.Data
             if (!authenticated)
                 startupUi.Exit();
 
+            startupUi.ShowLoading();
             bool initialized = persistence.Initialize();
 
             if (!initialized)

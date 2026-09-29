@@ -154,6 +154,7 @@ namespace Terminals
 
                 // Set notifyicon icon from embedded png image
                 this.MainWindowNotifyIcon.Icon = Icon.FromHandle(Properties.Resources.terminalsicon.GetHicon());
+                StartupProgress.Report("Building the connections menu...", 40);
                 this.menuLoader = new FavoritesMenuLoader(this, this.persistence);
                 this.favoriteToolBar.Visible = this.toolStripMenuItemShowHideFavoriteToolbar.Checked;
                 this.fullScreenSwitch = new MainFormFullScreenSwitch(this);
@@ -163,6 +164,7 @@ namespace Terminals
                 this.ApplyControlsEnableAndVisibleState();
 
                 this.menuLoader.LoadGroups();
+                StartupProgress.Report("Creating the main window...", 55);
                 this.UpdateControls();
                 this.LoadWindowState();
                 this.CheckForMultiMonitorUse();
@@ -572,6 +574,7 @@ namespace Terminals
         private void MainForm_Load(object sender, EventArgs e)
         {
             this.AssingTitle();
+            StartupProgress.Report("Opening saved connections...", 98);
             this.CheckForNewRelease();
             this.OpenSavedConnections();
         }
@@ -580,6 +583,8 @@ namespace Terminals
         {
             // Get initial window state, location and after the form has finished loading
             this.SetWindowState();
+            StartupProgress.Finish();
+            this.Activate();
         }
 
         private void MainForm_KeyUp(object sender, KeyEventArgs e)
