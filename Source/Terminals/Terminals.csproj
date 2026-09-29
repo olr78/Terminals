@@ -610,6 +610,11 @@
       <DependentUpon>FavoritesTreeView.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Controls\FavoriteTreeNode.cs" />
+    <Compile Include="Forms\Controls\FavoriteListViewItem.cs" />
+    <Compile Include="Forms\Controls\FavoritesListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Forms\Controls\NotesIcon.cs" />
     <Compile Include="Forms\Controls\HistoryTreeView.cs">
       <SubType>Component</SubType>
     </Compile>

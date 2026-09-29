@@ -36,7 +36,7 @@ namespace Terminals.Forms.Controls
         {
             this.components = new System.ComponentModel.Container();
             this.protocolsImageList = new System.Windows.Forms.ImageList(this.components);
-            this.resultsListView = new System.Windows.Forms.ListView();
+            this.resultsListView = new Terminals.Forms.Controls.FavoritesListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
@@ -77,7 +77,7 @@ namespace Terminals.Forms.Controls
         #endregion
 
         private System.Windows.Forms.ImageList protocolsImageList;
-        private System.Windows.Forms.ListView resultsListView;
+        private FavoritesListView resultsListView;
         private System.Windows.Forms.ColumnHeader columnHeader1;
     }
 }

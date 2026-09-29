@@ -107,9 +107,7 @@ namespace Terminals.Forms.Controls
        
         private ListViewItem FavoriteToListViewItem(IFavorite favorite)
         {
-            var item = new ListViewItem();
-            item.Tag = favorite;
-            item.Text = favorite.Name;
+            var item = new FavoriteListViewItem(favorite);
             item.ToolTipText = this.toolTipBuilder.BuildTooTip(favorite);
             item.ImageKey = this.favoriteIcons.GetTreeviewImageListKey(favorite.Protocol);
             return item;
@@ -150,6 +148,9 @@ namespace Terminals.Forms.Controls
             ListViewItem[] transformed = favorites.Select(FavoriteToListViewItem).ToArray();
             this.resultsListView.Items.AddRange(transformed);
             this.resultsListView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+            // the notes icon is painted after the item text, make it visible also in the widest item
+            if (this.resultsListView.HasItemsWithNotes)
+                this.columnHeader1.Width += FavoritesListView.NotesIconWidth;
         }
 
         internal void BeginRename()
