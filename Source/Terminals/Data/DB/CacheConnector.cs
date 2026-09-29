@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Data.Entity.Infrastructure;
 
 namespace Terminals.Data.DB
 {
@@ -138,10 +140,13 @@ namespace Terminals.Data.DB
 
         internal void DetachAll(IEnumerable<DbFavorite> favorites)
         {
-            foreach (DbFavorite favorite in favorites)
+            this.WithoutDetectChanges(() =>
             {
-                this.DetachFavorite(favorite);
-            }
+                foreach (DbFavorite favorite in favorites)
+                {
+                    this.DetachFavorite(favorite);
+                }
+            });
         }
 
         internal void DetachAll(List<DbGroup> entitiesToDetach)
@@ -150,9 +155,32 @@ namespace Terminals.Data.DB
             // So we have to backup all first, before detach them.
             LoadFieldsFromReferences(entitiesToDetach);
 
-            foreach (DbGroup group in entitiesToDetach)
+            this.WithoutDetectChanges(() =>
             {
-                this.Detach(group);
+                foreach (DbGroup group in entitiesToDetach)
+                {
+                    this.Detach(group);
+                }
+            });
+        }
+
+        /// <summary>
+        /// Each call of database.Entry detects changes of all tracked entities,
+        /// which makes the detach of all loaded entities quadratic (seconds for hundreds of favorites).
+        /// The detached entities were only loaded, so there are no changes to detect.
+        /// </summary>
+        private void WithoutDetectChanges(Action detach)
+        {
+            DbContextConfiguration configuration = this.database.Configuration;
+            bool autoDetect = configuration.AutoDetectChangesEnabled;
+            configuration.AutoDetectChangesEnabled = false;
+            try
+            {
+                detach();
+            }
+            finally
+            {
+                configuration.AutoDetectChangesEnabled = autoDetect;
             }
         }
 
