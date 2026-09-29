@@ -43,6 +43,11 @@ namespace Terminals
         /// </summary>
         private readonly ToolStripLabel favoritesCountLabel = new ToolStripLabel();
 
+        /// <summary>
+        /// Number of favorites found by the search, or -1 if the search results aren't shown.
+        /// </summary>
+        private int foundFavoritesCount = -1;
+
         private IFavorites PersistedFavorites
         {
             get { return this.persistence.Favorites; }
@@ -113,7 +118,6 @@ namespace Terminals
         {
             this.favoritesCountLabel.Alignment = ToolStripItemAlignment.Right;
             this.favoritesCountLabel.ForeColor = SystemColors.GrayText;
-            this.favoritesCountLabel.ToolTipText = Translator.T("Number of connections");
             this.favoritesTreeMenu.Items.Add(this.favoritesCountLabel);
             this.persistence.Dispatcher.FavoritesChanged += this.OnFavoritesChanged;
             this.UpdateFavoritesCount();
@@ -129,7 +133,17 @@ namespace Terminals
 
         private void UpdateFavoritesCount()
         {
-            this.favoritesCountLabel.Text = this.persistence.Favorites.Count().ToString();
+            int total = this.persistence.Favorites.Count();
+            if (this.foundFavoritesCount < 0)
+            {
+                this.favoritesCountLabel.Text = total.ToString();
+                this.favoritesCountLabel.ToolTipText = Translator.T("Number of connections");
+            }
+            else
+            {
+                this.favoritesCountLabel.Text = this.foundFavoritesCount + " / " + total;
+                this.favoritesCountLabel.ToolTipText = Translator.T("Found connections / all connections");
+            }
         }
 
         private void HistoryTreeView_DoubleClick(object sender, EventArgs e)
@@ -743,12 +757,16 @@ namespace Terminals
             this.searchPanel1.LoadFromFavorites(args.Favorites);
             this.searchPanel1.Visible = true;
             this.favsTree.Visible = false;
+            this.foundFavoritesCount = args.Favorites.Count;
+            this.UpdateFavoritesCount();
         }
 
         private void SearchTextBox_Canceled(object sender, EventArgs e)
         {
             this.searchPanel1.Visible = false;
             this.favsTree.Visible = true;
+            this.foundFavoritesCount = -1;
+            this.UpdateFavoritesCount();
         }
 
         #endregion
