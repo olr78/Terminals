@@ -191,6 +191,7 @@
     <Compile Include="Forms\IConnectionCommands.cs" />
     <Compile Include="IStartupUi.cs" />
     <Compile Include="Forms\StartupProgress.cs" />
+    <Compile Include="Forms\WindowCloak.cs" />
     <Compile Include="Forms\StartupProgressForm.cs">
       <SubType>Form</SubType>
     </Compile>

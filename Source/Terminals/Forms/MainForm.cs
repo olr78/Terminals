@@ -47,6 +47,14 @@ namespace Terminals
         private Boolean allScreens;
         private readonly TerminalTabsSelectionControler terminalsControler;
         private readonly FavoritesMenuLoader menuLoader;
+
+        /// <summary>
+        /// The window is shown by the system before its child controls are loaded,
+        /// so it is hidden by the window manager until it is completely built and painted.
+        /// </summary>
+        private bool cloakedUntilShown;
+
+        private bool wasShown;
         private readonly MainFormFullScreenSwitch fullScreenSwitch;
 
         private readonly ConnectionsUiFactory connectionsUiFactory;
@@ -605,13 +613,47 @@ namespace Terminals
             StartupProgress.Mark("saved connections opened");
         }
 
+        protected override void OnHandleCreated(EventArgs e)
+        {
+            base.OnHandleCreated(e);
+
+            if (!this.wasShown)
+                this.cloakedUntilShown = WindowCloak.SetCloaked(this.Handle, true);
+        }
+
         private void MainForm_Shown(object sender, EventArgs e)
         {
-            // Get initial window state, location and after the form has finished loading
-            this.SetWindowState();
-            StartupProgress.Mark("main window shown");
+            this.wasShown = true;
+            try
+            {
+                // Get initial window state, location and after the form has finished loading
+                this.SetWindowState();
+                StartupProgress.Mark("main window shown");
+            }
+            finally
+            {
+                this.ShowCloakedWindow();
+            }
+
             StartupProgress.Finish();
             this.Activate();
+        }
+
+        private void ShowCloakedWindow()
+        {
+            if (!this.cloakedUntilShown)
+                return;
+
+            this.cloakedUntilShown = false;
+            try
+            {
+                WindowCloak.PaintNow(this.Handle);
+                StartupProgress.Mark("main window painted");
+            }
+            finally
+            {
+                WindowCloak.SetCloaked(this.Handle, false);
+            }
         }
 
         private void MainForm_KeyUp(object sender, KeyEventArgs e)
