@@ -835,6 +835,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Updates\UpdateInstaller.cs" />
+    <Compile Include="Updates\UpdateProgressScript.cs" />
     <Compile Include="Updates\V20Upgrade.cs" />
     <Compile Include="Updates\V401ContentUpgrade.cs" />
     <Compile Include="Updates\V40XElementExtensions.cs" />
@@ -1520,6 +1521,7 @@
       <DependentUpon>WhoIs.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\BasicTree.xml" />
+    <EmbeddedResource Include="Updates\UpdateProgress.ps1" />
     <EmbeddedResource Include="Wizard\AddExistingRDPConnections.resx">
       <SubType>Designer</SubType>
       <DependentUpon>AddExistingRDPConnections.cs</DependentUpon>

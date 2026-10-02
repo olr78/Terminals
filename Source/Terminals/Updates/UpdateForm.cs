@@ -11,8 +11,8 @@ using Terminals.Localization;
 namespace Terminals.Updates
 {
     /// <summary>
-    /// Shows available release and downloads the package, if the user confirms the update.
-    /// DialogResult.OK means the package was downloaded, verified and is ready in PackagePath.
+    /// Shows available release, downloads and prepares the package, if the user confirms the update.
+    /// DialogResult.OK means the package was downloaded, verified and the update is prepared in UpdateDirectory.
     /// DialogResult.Ignore means the user wants to skip this version.
     /// </summary>
     internal class UpdateForm : Form
@@ -32,10 +32,12 @@ namespace Terminals.Updates
 
         private WebClient client;
 
+        private int reportedPreparation;
+
         /// <summary>
-        /// Gets full path to the downloaded and verified release package.
+        /// Gets full path to the directory with prepared update, which is ready to start.
         /// </summary>
-        internal string PackagePath { get; private set; }
+        internal string UpdateDirectory { get; private set; }
 
         private bool Downloading
         {
@@ -201,22 +203,65 @@ namespace Terminals.Updates
             }
 
             this.statusLabel.Text = Translator.T("Verifying the downloaded package...");
+            this.progressBar.Style = ProgressBarStyle.Marquee;
             Task.Factory.StartNew(() => UpdateInstaller.VerifyChecksum(packagePath, this.asset))
                 .ContinueWith(task => this.OnPackageVerified(task, packagePath), TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         private void OnPackageVerified(Task verification, string packagePath)
         {
+            AggregateException error = verification.Exception;
             if (this.IsDisposed)
                 return;
 
-            if (verification.Exception != null)
+            if (error != null)
             {
-                this.ShowFailure("Downloaded package is not valid", verification.Exception.GetBaseException());
+                this.ShowFailure("Downloaded package is not valid", error.GetBaseException());
                 return;
             }
 
-            this.PackagePath = packagePath;
+            this.statusLabel.Text = Translator.T("Preparing the update...");
+            this.progressBar.Style = ProgressBarStyle.Continuous;
+            this.progressBar.Value = 0;
+            this.reportedPreparation = 0;
+            Version version = this.release.Version;
+            Task<string>.Factory.StartNew(() => this.installer.Prepare(packagePath, version, this.ReportPreparation))
+                .ContinueWith(this.OnUpdatePrepared, TaskScheduler.FromCurrentSynchronizationContext());
+        }
+
+        /// <summary>
+        /// Called from the preparation thread.
+        /// </summary>
+        private void ReportPreparation(int percent)
+        {
+            if (percent == this.reportedPreparation)
+                return;
+
+            this.reportedPreparation = percent;
+            try
+            {
+                if (!this.IsDisposed && this.IsHandleCreated)
+                    this.BeginInvoke(new Action(() => this.progressBar.Value = percent));
+            }
+            catch (InvalidOperationException)
+            {
+                // the dialog was closed in the meantime
+            }
+        }
+
+        private void OnUpdatePrepared(Task<string> preparation)
+        {
+            AggregateException error = preparation.Exception;
+            if (this.IsDisposed)
+                return;
+
+            if (error != null)
+            {
+                this.ShowFailure("Unable to prepare the update", error.GetBaseException());
+                return;
+            }
+
+            this.UpdateDirectory = preparation.Result;
             this.DialogResult = DialogResult.OK;
         }
 
@@ -229,11 +274,12 @@ namespace Terminals.Updates
 
         private void SetDownloadingState(bool downloading)
         {
+            this.progressBar.Style = ProgressBarStyle.Continuous;
             this.progressBar.Value = 0;
             this.progressBar.Visible = downloading;
             this.updateButton.Enabled = !downloading;
             this.skipButton.Enabled = !downloading;
-            this.laterButton.Text = downloading ? "&Cancel" : "&Later";
+            this.laterButton.Text = Translator.T(downloading ? "&Cancel" : "&Later");
         }
 
         private void ReleasePageButton_Click(object sender, EventArgs e)

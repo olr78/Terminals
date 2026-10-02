@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using ICSharpCode.SharpZipLib.Zip;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Terminals.Updates;
@@ -75,6 +77,41 @@ namespace Tests
         {
             string zipPath = this.CreatePackage("Terminals.exe", @"..\evil.dll");
             UpdateInstaller.ExtractPackage(zipPath, Path.Combine(this.workDirectory, "files"));
+        }
+
+        [TestMethod]
+        public void ValidPackage_Extract_ReportsProgressForEachFile()
+        {
+            string zipPath = this.CreatePackage("Terminals.exe", "Terminals.Common.dll", @"Plugins\Rdp\Terminals.Plugins.Rdp.dll");
+            var reported = new List<int>();
+
+            UpdateInstaller.ExtractPackage(zipPath, Path.Combine(this.workDirectory, "files"), reported.Add);
+
+            CollectionAssert.AreEqual(new[] { 0, 33, 66 }, reported);
+        }
+
+        [TestMethod]
+        public void TextWithQuotes_ToLiteral_EscapesAllSingleQuotes()
+        {
+            string literal = UpdateProgressScript.ToLiteral("O'Test \u2019\u2018 $env:TEMP");
+
+            Assert.AreEqual("'O''Test \u2019\u2019\u2018\u2018 $env:TEMP'", literal);
+        }
+
+        [TestMethod]
+        public void PortableUpdate_Write_ReplacesAllPlaceholders()
+        {
+            var script = new UpdateProgressScript(@"C:\Program Files\Terminals", new Version(4, 3, 0), new[] { "Terminals.log4net.config" });
+            script.SetPortableInstallation(Path.Combine(this.workDirectory, "files"));
+            string scriptPath = Path.Combine(this.workDirectory, "update.ps1");
+
+            script.Write(scriptPath, Path.Combine(this.workDirectory, "update.cmd"), Path.Combine(this.workDirectory, "update.log"));
+
+            string generated = File.ReadAllText(scriptPath);
+            Assert.IsFalse(Regex.IsMatch(generated, "__[A-Z_]+__"), "All placeholders have to be replaced");
+            StringAssert.Contains(generated, "$updateMode = 'Portable'");
+            StringAssert.Contains(generated, @"$targetDirectory = 'C:\Program Files\Terminals'");
+            StringAssert.Contains(generated, "$preservedFiles = @('Terminals.log4net.config')");
         }
 
         private string CreateFile(string content)

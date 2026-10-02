@@ -560,16 +560,16 @@ namespace Terminals
                 if (result == DialogResult.Ignore)
                     settings.SkippedUpdateVersion = release.Version.ToString();
                 else if (result == DialogResult.OK)
-                    this.ApplyUpdate(installer, updateForm.PackagePath);
+                    this.StartUpdate(updateForm.UpdateDirectory);
             }
         }
 
-        private void ApplyUpdate(UpdateInstaller installer, string packagePath)
+        private void StartUpdate(string updateDirectory)
         {
             Process updateScript;
             try
             {
-                updateScript = installer.Apply(packagePath);
+                updateScript = UpdateInstaller.Start(updateDirectory);
             }
             catch (Exception exception)
             {
@@ -579,7 +579,7 @@ namespace Terminals
                 return;
             }
 
-            // the script waits until this process exits, than replaces the files and starts Terminals again
+            // the script waits until this process exits, than replaces the files, shows the progress and starts Terminals again
             this.Close();
             if (this.IsDisposed)
                 return;

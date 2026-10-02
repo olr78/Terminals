@@ -42,6 +42,12 @@ namespace Terminals.Updates
 
         private const int INSTALLSTATE_LOCAL = 3;
 
+        private const string SCRIPT = "update.cmd";
+
+        private const string PROGRESS_SCRIPT = "update.ps1";
+
+        private const string LOG = "update.log";
+
         /// <summary>
         /// Files the user may customize, the portable update keeps the current version.
         /// </summary>
@@ -173,40 +179,79 @@ namespace Terminals.Updates
         }
 
         /// <summary>
-        /// Prepares the downloaded package and starts the script, which applies the update after this process exits.
-        /// Returns the started script process.
+        /// Prepares the downloaded package and the scripts, which apply the update after this process exits.
+        /// Returns the directory with the prepared update, which is used to start it.
         /// </summary>
-        internal Process Apply(string packagePath)
+        /// <param name="packagePath">Downloaded and verified release package.</param>
+        /// <param name="version">Version of the release, which the update installs.</param>
+        /// <param name="reportProgress">Receives the preparation progress in percent.</param>
+        internal string Prepare(string packagePath, Version version, Action<int> reportProgress)
         {
             string workDirectory = Path.GetDirectoryName(packagePath);
             string script;
+            var progressScript = new UpdateProgressScript(this.applicationDirectory, version, preservedFiles);
             if (this.InstallationType == InstallationType.Msi)
             {
-                script = this.CreateMsiScript(packagePath);
+                string msiArguments = this.CreateMsiArguments(packagePath);
+                script = this.CreateMsiScript(msiArguments);
+                progressScript.SetMsiInstallation(msiArguments);
             }
             else
             {
                 string filesDirectory = Path.Combine(workDirectory, "files");
-                ExtractPackage(packagePath, filesDirectory);
+                ExtractPackage(packagePath, filesDirectory, reportProgress);
                 KeepPortableSetting(filesDirectory);
                 script = this.CreatePortableScript(filesDirectory);
+                progressScript.SetPortableInstallation(filesDirectory);
             }
 
-            string scriptPath = Path.Combine(workDirectory, "update.cmd");
             // cmd reads the script using the active code page, which is switched to UTF-8 as the first command
+            string scriptPath = Path.Combine(workDirectory, SCRIPT);
             File.WriteAllText(scriptPath, script, new UTF8Encoding(false));
-            return StartScript(scriptPath);
+            progressScript.Write(Path.Combine(workDirectory, PROGRESS_SCRIPT), scriptPath, Path.Combine(workDirectory, LOG));
+            reportProgress(100);
+            return workDirectory;
+        }
+
+        /// <summary>
+        /// Starts the update prepared in given directory, the update waits until this process exits.
+        /// The update shows its progress in a window of PowerShell script, if PowerShell isn't available,
+        /// the update runs without visible progress.
+        /// </summary>
+        internal static Process Start(string updateDirectory)
+        {
+            string progressScriptPath = Path.Combine(updateDirectory, PROGRESS_SCRIPT);
+            string powerShell = Path.Combine(Environment.SystemDirectory, @"WindowsPowerShell\v1.0\powershell.exe");
+            if (File.Exists(powerShell) && File.Exists(progressScriptPath))
+            {
+                try
+                {
+                    return StartPowerShell(powerShell, progressScriptPath);
+                }
+                catch (Exception exception)
+                {
+                    Logging.Info("Unable to start the update with progress", exception);
+                }
+            }
+
+            return StartScript(Path.Combine(updateDirectory, SCRIPT));
         }
 
         internal static void ExtractPackage(string zipPath, string targetDirectory)
         {
+            ExtractPackage(zipPath, targetDirectory, percent => { });
+        }
+
+        internal static void ExtractPackage(string zipPath, string targetDirectory, Action<int> reportProgress)
+        {
             string targetRoot = Path.GetFullPath(targetDirectory).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
             using (var zip = new ZipFile(zipPath))
             {
-                foreach (ZipEntry entry in zip)
+                ZipEntry[] files = zip.Cast<ZipEntry>().Where(entry => entry.IsFile).ToArray();
+                for (int index = 0; index < files.Length; index++)
                 {
-                    if (!entry.IsFile)
-                        continue;
+                    ZipEntry entry = files[index];
+                    reportProgress(index * 100 / files.Length);
 
                     string relativePath = entry.Name.Replace('/', Path.DirectorySeparatorChar);
                     string targetPath = Path.GetFullPath(Path.Combine(targetRoot, relativePath));
@@ -258,16 +303,21 @@ namespace Terminals.Updates
             return this.CreateScript(update);
         }
 
-        private string CreateMsiScript(string msiPath)
+        private string CreateMsiArguments(string msiPath)
         {
             string msiLog = Path.Combine(Path.GetDirectoryName(msiPath), "msi.log");
             // the upgrade has to keep the installation folder and type, otherwise the installer uses its defaults
             // (Program Files, data in user profile) and the current folder is removed together with the old version
             string installType = Properties.Settings.Default.Portable ? "0" : "1";
-            string update = string.Format(
-                "msiexec /i {0} /passive /norestart /l*v {1} INSTALLFOLDER={2} INSTALLTYPE={3}\r\n" +
-                "echo msiexec exit code %ERRORLEVEL% >> \"%LOG%\"\r\n",
-                QuotePath(msiPath), QuotePath(msiLog), QuotePath(this.applicationDirectory), installType);
+            return string.Format("/i {0} /passive /norestart /l*v {1} INSTALLFOLDER={2} INSTALLTYPE={3}",
+                QuoteArgument(msiPath), QuoteArgument(msiLog), QuoteArgument(this.applicationDirectory), installType);
+        }
+
+        private string CreateMsiScript(string msiArguments)
+        {
+            // percent sign in the paths has to be escaped for cmd
+            string update = "msiexec " + msiArguments.Replace("%", "%%") + "\r\n" +
+                "echo msiexec exit code %ERRORLEVEL% >> \"%LOG%\"\r\n";
             return this.CreateScript(update);
         }
 
@@ -279,7 +329,8 @@ namespace Terminals.Updates
             script.Append("@echo off\r\n");
             script.Append("chcp 65001 >nul\r\n");
             script.Append("set \"LOG=%~dp0update.log\"\r\n");
-            script.Append("echo Terminals update started %DATE% %TIME% > \"%LOG%\"\r\n");
+            // appends, because the script may run as fallback of the update with progress, which uses the same log
+            script.Append("echo Terminals update started %DATE% %TIME% >> \"%LOG%\"\r\n");
             script.Append("set /a WAITED=0\r\n");
             // wait max. 10 minutes for the application to exit, the user may cancel the close
             script.Append(":wait\r\n");
@@ -301,8 +352,24 @@ namespace Terminals.Updates
         /// </summary>
         private static string QuotePath(string path)
         {
-            string escaped = path.TrimEnd(Path.DirectorySeparatorChar).Replace("%", "%%");
-            return "\"" + escaped + "\"";
+            return QuoteArgument(path).Replace("%", "%%");
+        }
+
+        private static string QuoteArgument(string path)
+        {
+            return "\"" + path.TrimEnd(Path.DirectorySeparatorChar) + "\"";
+        }
+
+        private static Process StartPowerShell(string powerShell, string progressScriptPath)
+        {
+            // the script content runs as a command, because the execution policy (also from group policy) applies to script files only
+            string command = string.Format("Invoke-Expression ([System.IO.File]::ReadAllText('{0}'))", progressScriptPath.Replace("'", "''"));
+            string arguments = "-NoProfile -NonInteractive -Sta -ExecutionPolicy Bypass -WindowStyle Hidden -Command \"" + command + "\"";
+            var startInfo = new ProcessStartInfo(powerShell, arguments);
+            startInfo.UseShellExecute = false;
+            startInfo.CreateNoWindow = true;
+            startInfo.WorkingDirectory = Path.GetDirectoryName(progressScriptPath);
+            return Process.Start(startInfo);
         }
 
         private static Process StartScript(string scriptPath)
