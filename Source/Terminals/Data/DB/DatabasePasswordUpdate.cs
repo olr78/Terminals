@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Transactions;
 using System.Xml.Linq;
@@ -87,66 +90,45 @@ namespace Terminals.Data.DB
             this.UpdateCredentialBasePasswords();
             List<int> rdpFavoriteIds = this.database.GetRdpFavoriteIds();
             this.UpdateFavoriteProtocolPasswords(rdpFavoriteIds);
-            this.UpdateFavoriteNotes();
-            this.UpdateFavoriteName();
-            this.UpdateFavoriteServerName();
-            this.UpdateFavoritePort();
+            this.UpdateFavoriteEncryptedFields();
         }
 
         /// <summary>
-        /// Notes are stored encrypted the same way as passwords, so they also have to be
-        /// re-encrypted by the new master password key.
-        /// </summary>
-        private void UpdateFavoriteNotes()
-        {
-            foreach (DbFavorite favorite in this.database.Favorites)
-            {
-                if (!string.IsNullOrEmpty(favorite.Notes))
-                {
-                    string plainNotes = this.persistenceSecurity.DecryptPersistencePassword(favorite.Notes);
-                    favorite.Notes = PasswordFunctions2.EncryptPassword(plainNotes, this.newKeyMaterial);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Name, ServerName and Port are stored encrypted the same way as passwords, so they also
+        /// Notes, Name, ServerName and Port are stored encrypted the same way as passwords, so they also
         /// have to be re-encrypted by the new master password key.
+        /// Updated by plain SQL, because changing tracked favorites and calling SaveChanges also saves
+        /// their protocol properties from memory, which aren't loaded here (all would be replaced by empty options).
         /// </summary>
-        private void UpdateFavoriteName()
+        private void UpdateFavoriteEncryptedFields()
         {
-            foreach (DbFavorite favorite in this.database.Favorites)
+            var favorites = this.database.Favorites.AsNoTracking()
+                .Select(f => new { f.Id, f.Name, f.ServerName, f.Port, f.Notes })
+                .ToList();
+
+            foreach (var favorite in favorites)
             {
-                if (!string.IsNullOrEmpty(favorite.Name))
-                {
-                    string plainName = this.persistenceSecurity.DecryptPersistencePassword(favorite.Name);
-                    favorite.Name = PasswordFunctions2.EncryptPassword(plainName, this.newKeyMaterial);
-                }
+                this.database.Database.ExecuteSqlCommand(
+                    "UPDATE [dbo].[Favorites] SET [Name] = @p1, [ServerName] = @p2, [Port] = @p3, [Notes] = @p4 WHERE [Id] = @p0",
+                    new SqlParameter("@p0", favorite.Id),
+                    ToParameter("@p1", this.ReEncrypt(favorite.Name)),
+                    ToParameter("@p2", this.ReEncrypt(favorite.ServerName)),
+                    ToParameter("@p3", this.ReEncrypt(favorite.Port)),
+                    ToParameter("@p4", this.ReEncrypt(favorite.Notes)));
             }
         }
 
-        private void UpdateFavoriteServerName()
+        private string ReEncrypt(string encrypted)
         {
-            foreach (DbFavorite favorite in this.database.Favorites)
-            {
-                if (!string.IsNullOrEmpty(favorite.ServerName))
-                {
-                    string plainServerName = this.persistenceSecurity.DecryptPersistencePassword(favorite.ServerName);
-                    favorite.ServerName = PasswordFunctions2.EncryptPassword(plainServerName, this.newKeyMaterial);
-                }
-            }
+            if (string.IsNullOrEmpty(encrypted))
+                return encrypted;
+
+            string plain = this.persistenceSecurity.DecryptPersistencePassword(encrypted);
+            return PasswordFunctions2.EncryptPassword(plain, this.newKeyMaterial);
         }
 
-        private void UpdateFavoritePort()
+        private static SqlParameter ToParameter(string name, string value)
         {
-            foreach (DbFavorite favorite in this.database.Favorites)
-            {
-                if (!string.IsNullOrEmpty(favorite.Port))
-                {
-                    string plainPort = this.persistenceSecurity.DecryptPersistencePassword(favorite.Port);
-                    favorite.Port = PasswordFunctions2.EncryptPassword(plainPort, this.newKeyMaterial);
-                }
-            }
+            return new SqlParameter(name, SqlDbType.NVarChar, -1) { Value = (object)value ?? DBNull.Value };
         }
 
         private void UpdateFavoriteProtocolPasswords(List<int> rdpFavorites)
@@ -167,7 +149,10 @@ namespace Terminals.Data.DB
             if (document.Root == null)
                 return rdpOptions;
 
-            XElement tsgwPasswordHash = document.Root.Descendants("EncryptedPassword").First();
+            XElement tsgwPasswordHash = document.Root.Descendants("EncryptedPassword").FirstOrDefault();
+            if (tsgwPasswordHash == null)
+                return rdpOptions;
+
             string oldPassword = this.persistenceSecurity.DecryptPersistencePassword(tsgwPasswordHash.Value);
             tsgwPasswordHash.Value = PasswordFunctions2.EncryptPassword(oldPassword, this.newKeyMaterial);
             return document.ToString();
