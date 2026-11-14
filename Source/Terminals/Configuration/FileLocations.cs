@@ -65,6 +65,11 @@ namespace Terminals.Configuration
             get { return GetFullPath("LastUpdateCheck.txt"); }
         }
 
+        internal static string PasswordAttempts
+        {
+            get { return GetFullPath("PasswordAttempts.txt"); }
+        }
+
         internal static string WriteAccessLock
         {
             get { return GetFullPath("WriteAccessCheck.txt"); }

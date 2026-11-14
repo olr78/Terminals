@@ -62,7 +62,9 @@ namespace Terminals.Security
 
         private void SetInputEnabled(bool enabled)
         {
-            this.PasswordTextBox.Enabled = enabled;
+            // Read only instead of disabled keeps the focus in the text box. Disabled text box moves
+            // the focus to the Cancel button and then the Enter key cancels the prompt (and exits the application).
+            this.PasswordTextBox.ReadOnly = !enabled;
             this.OkButton.Enabled = enabled;
         }
 
