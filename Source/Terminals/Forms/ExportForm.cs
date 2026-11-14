@@ -119,7 +119,8 @@ namespace Terminals.Forms
                 if (prompt.Canceled)
                     return false;
 
-                if (PasswordFunctions2.MasterPasswordIsValid(prompt.Password, Settings.Instance.MasterPasswordHash))
+                if (PasswordAttemptThrottle.MasterPassword.Register(
+                        PasswordFunctions2.MasterPasswordIsValid(prompt.Password, Settings.Instance.MasterPasswordHash)))
                     return true;
 
                 firstTry = false;

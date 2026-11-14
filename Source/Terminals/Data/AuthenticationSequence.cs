@@ -1,5 +1,6 @@
 ﻿using System;
 using Terminals.Configuration;
+using Terminals.Security;
 
 namespace Terminals.Data
 {
@@ -51,7 +52,10 @@ namespace Terminals.Data
         private bool IsUserPaswordValid(AuthenticationPrompt promptResults)
         {
             if (!promptResults.Canceled)
-                return this.isMasterPasswordValid(promptResults.Password);
+            {
+                bool isValid = this.isMasterPasswordValid(promptResults.Password);
+                return PasswordAttemptThrottle.MasterPassword.Register(isValid);
+            }
 
             return false;
         }

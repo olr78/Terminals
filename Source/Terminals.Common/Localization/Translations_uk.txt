@@ -468,6 +468,7 @@ Favorite name is not valid	Неприпустима назва з’єднанн
 A connection named "{0}" already exists\nDo you want to overwrite it?	З’єднання з назвою «{0}» уже існує\nПерезаписати його?
 Quick Connect...	Швидке підключення...
 Invalid Password.	Неправильний пароль.
+Too many attempts. Wait {0} s.	Забагато спроб. Зачекайте {0} с.
 Terminals Password	Пароль Terminals
 Terminals Export - Set Password	Експорт Terminals - встановлення пароля
 Terminals Export - Confirm Password	Експорт Terminals - підтвердження пароля

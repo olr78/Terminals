@@ -80,8 +80,8 @@ namespace Terminals.Forms
             while (true)
             {
                 AuthenticationPrompt prompt = RequestPassword.KnowsUserPassword(wrongPassword);
-                if (!prompt.Canceled &&
-                    PasswordFunctions2.MasterPasswordIsValid(prompt.Password, Settings.Instance.MasterPasswordHash))
+                if (!prompt.Canceled && PasswordAttemptThrottle.MasterPassword.Register(
+                        PasswordFunctions2.MasterPasswordIsValid(prompt.Password, Settings.Instance.MasterPasswordHash)))
                     break;
 
                 // show "wrong password" hint only after a failed attempt (not after cancel)

@@ -91,12 +91,13 @@ namespace Terminals.Integration.Import
             bool firstTry = true;
             while (true)
             {
-                AuthenticationPrompt prompt = RequestPassword.KnowsUserPassword(!firstTry, "Terminals Import - Enter Export Password");
+                PasswordAttemptThrottle throttle = PasswordAttemptThrottle.ExportFilePassword;
+                AuthenticationPrompt prompt = RequestPassword.KnowsUserPassword(!firstTry, "Terminals Import - Enter Export Password", throttle);
                 if (prompt.Canceled)
                     return null;
 
                 string xml = EncryptedExportFile.TryReadDecrypted(filename, prompt.Password);
-                if (xml != null)
+                if (throttle.Register(xml != null))
                     return xml;
 
                 firstTry = false;
