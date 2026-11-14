@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Security;
 using Terminals.Configuration;
@@ -14,6 +15,12 @@ namespace Terminals.Data
     {
         private readonly Settings settings = Settings.Instance;
         private bool isAuthenticated;
+
+        /// <summary>
+        /// Master password entered by the user, kept only until the stored key created by outdated
+        /// key derivation is replaced, see <see cref="UpgradeKeyDerivationIfRequired"/>.
+        /// </summary>
+        private SecureString passwordToUpgrade;
 
         protected SecureString KeyMaterial { get; private set; }
 
@@ -57,21 +64,81 @@ namespace Terminals.Data
         private Boolean IsMasterPasswordValid(string passwordToCheck)
         {
             string storedMasterPassword = this.settings.MasterPasswordHash;
-            bool isValid = PasswordFunctions2.MasterPasswordIsValid(passwordToCheck, storedMasterPassword);
-            if (isValid)
+            string key;
+            if (PasswordFunctions2.TryCalculateMasterPasswordKey(passwordToCheck, storedMasterPassword, out key))
             {
-                string key = PasswordFunctions2.CalculateMasterPasswordKey(passwordToCheck, storedMasterPassword);
                 this.SetKeyMaterial(key);
+                if (PasswordFunctions2.IsKeyDerivationOutdated(storedMasterPassword))
+                    this.passwordToUpgrade = ToSecureString(passwordToCheck);
+
                 return true;
             }
 
             return false;
         }
 
+        /// <summary>
+        /// Replaces the master password key created by outdated (too fast) key derivation by new one,
+        /// using the same master password. All passwords encrypted by the master password key are
+        /// re-encrypted, same as when the master password is changed. Call only after the persistence
+        /// was initialized, because the file persistence handles the update event only after that.
+        /// </summary>
+        internal void UpgradeKeyDerivationIfRequired()
+        {
+            if (this.passwordToUpgrade == null)
+                return;
+
+            try
+            {
+                Logging.Info("Upgrading the master password key derivation.");
+                BackupFilesBeforeKeyUpgrade();
+                this.UpdateMasterPassword(ToUnsecureString(this.passwordToUpgrade));
+                Logging.Info("Master password key derivation upgraded.");
+            }
+            catch (Exception exception)
+            {
+                Logging.Error("Unable to upgrade the master password key derivation", exception);
+            }
+            finally
+            {
+                this.passwordToUpgrade.Dispose();
+                this.passwordToUpgrade = null;
+            }
+        }
+
+        private void BackupFilesBeforeKeyUpgrade()
+        {
+            FileLocations locations = this.settings.FileLocations;
+            BackupFile(locations.Configuration);
+            BackupFile(locations.Favorites);
+            BackupFile(locations.Credentials);
+        }
+
+        private static void BackupFile(string fileName)
+        {
+            string backup = fileName + ".before-key-upgrade.bak";
+            // keep the first backup, it is the last one encrypted by the old key
+            if (File.Exists(fileName) && !File.Exists(backup))
+                File.Copy(fileName, backup);
+        }
+
+        private static string ToUnsecureString(SecureString value)
+        {
+            IntPtr pointer = Marshal.SecureStringToGlobalAllocUnicode(value);
+            try
+            {
+                return Marshal.PtrToStringUni(pointer);
+            }
+            finally
+            {
+                Marshal.ZeroFreeGlobalAllocUnicode(pointer);
+            }
+        }
+
         internal void UpdateMasterPassword(string newPassword)
         {
-            string storedMasterPassword = PasswordFunctions2.CalculateStoredMasterPasswordKey(newPassword);
-            string newMasterKey = PasswordFunctions2.CalculateMasterPasswordKey(newPassword, storedMasterPassword);
+            string newMasterKey;
+            string storedMasterPassword = PasswordFunctions2.CalculateStoredMasterPasswordKey(newPassword, out newMasterKey);
 
             // start of not secured transaction. Old key is still present,
             // but passwords are already encrypted by new Key
@@ -143,6 +210,9 @@ namespace Terminals.Data
         {
             if (disposing && this.KeyMaterial != null)
                 this.KeyMaterial.Dispose();
+
+            if (disposing && this.passwordToUpgrade != null)
+                this.passwordToUpgrade.Dispose();
         }
     }
 }

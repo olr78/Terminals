@@ -784,6 +784,7 @@
     <Compile Include="ProgramInfo.cs" />
     <Compile Include="Security\PasswordFunctions2.cs" />
     <Compile Include="Security\PasswordAttemptThrottle.cs" />
+    <Compile Include="Security\Pbkdf2Sha256.cs" />
     <Compile Include="Settings\SettingsInstance.cs" />
     <Compile Include="Data\SerializableDictionary.cs" />
     <Compile Include="Data\SerializableSortedDictionary.cs" />

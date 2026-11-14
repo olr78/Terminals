@@ -63,8 +63,7 @@ namespace Terminals.Updates
         private void AssignFieldsByOldMasterPassword(string masterPassword)
         {
             this.oldKey = PasswordFunctions.CalculateMasterPasswordKey(masterPassword);
-            this.storedMasterPassword = PasswordFunctions2.CalculateStoredMasterPasswordKey(masterPassword);
-            this.newKey = PasswordFunctions2.CalculateMasterPasswordKey(masterPassword, this.storedMasterPassword);
+            this.storedMasterPassword = PasswordFunctions2.CalculateStoredMasterPasswordKey(masterPassword, out this.newKey);
         }
 
         internal string UpdateCredentialPasswords(string credentialsFileContent)

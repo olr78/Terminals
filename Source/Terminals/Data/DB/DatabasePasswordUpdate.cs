@@ -70,8 +70,9 @@ namespace Terminals.Data.DB
             this.persistenceSecurity.UpdateDatabaseKey(connectionString, oldPassword);
 
             if (!string.IsNullOrEmpty(newPassword))
-                this.newStoredKey = PasswordFunctions2.CalculateStoredMasterPasswordKey(newPassword);
-            this.newKeyMaterial = PasswordFunctions2.CalculateMasterPasswordKey(newPassword, this.newStoredKey);
+                this.newStoredKey = PasswordFunctions2.CalculateStoredMasterPasswordKey(newPassword, out this.newKeyMaterial);
+            else
+                this.newKeyMaterial = PasswordFunctions2.CalculateMasterPasswordKey(newPassword, this.newStoredKey);
         }
 
         private void CommitNewMastrerPassord(string connectionString)

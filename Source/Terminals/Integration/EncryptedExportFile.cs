@@ -20,8 +20,8 @@ namespace Terminals.Integration
 
         internal static void WriteEncrypted(string plainXml, string password, string fileName)
         {
-            string storedKey = PasswordFunctions2.CalculateStoredMasterPasswordKey(password);
-            string keyMaterial = PasswordFunctions2.CalculateMasterPasswordKey(password, storedKey);
+            string keyMaterial;
+            string storedKey = PasswordFunctions2.CalculateStoredMasterPasswordKey(password, out keyMaterial);
             string cipherText = PasswordFunctions2.EncryptPassword(plainXml, keyMaterial);
 
             var document = new XDocument(
@@ -65,10 +65,10 @@ namespace Terminals.Integration
             if (string.IsNullOrEmpty(storedKey) || string.IsNullOrEmpty(cipherText))
                 return null;
 
-            if (!PasswordFunctions2.MasterPasswordIsValid(password, storedKey))
+            string keyMaterial;
+            if (!PasswordFunctions2.TryCalculateMasterPasswordKey(password, storedKey, out keyMaterial))
                 return null;
 
-            string keyMaterial = PasswordFunctions2.CalculateMasterPasswordKey(password, storedKey);
             string plainXml = PasswordFunctions2.DecryptPassword(cipherText, keyMaterial);
             return string.IsNullOrEmpty(plainXml) ? null : plainXml;
         }

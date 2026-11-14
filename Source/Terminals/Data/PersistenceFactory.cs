@@ -58,6 +58,7 @@ namespace Terminals.Data
                return this.TryFallbackToPrimaryPersistence(persistence, startupUi);
             }
 
+            persistence.Security.UpgradeKeyDerivationIfRequired();
             return persistence;
         }
 
