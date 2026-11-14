@@ -65,9 +65,12 @@ namespace Terminals.Configuration
             get { return GetFullPath("LastUpdateCheck.txt"); }
         }
 
+        /// <summary>
+        /// Failed master password attempts. The file name intentionally doesn't reveal its purpose.
+        /// </summary>
         internal static string PasswordAttempts
         {
-            get { return GetFullPath("PasswordAttempts.txt"); }
+            get { return GetFullPath("LayoutCache.dat"); }
         }
 
         internal static string WriteAccessLock
