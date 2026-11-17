@@ -43,21 +43,27 @@ class ConnectionLauncher(private val context: Context) {
     }
 
     private fun connectRdp(favorite: Favorite): Result {
-        // .rdp file is supported by the Windows App / Remote Desktop client, rdp:// URI by older clients
+        // Windows App / Remote Desktop opens the rdp:// URI directly in a session. With the .rdp file
+        // it asks for "all files access" and doesn't connect without it (checked on Android 16).
+        val query = buildString {
+            append("full%20address=s:").append(Uri.encode(favorite.address, ":"))
+            if (favorite.fullUserName.isNotEmpty())
+                append("&username=s:").append(Uri.encode(favorite.fullUserName))
+        }
+        val uriIntent = Intent(Intent.ACTION_VIEW, Uri.parse("rdp://$query")).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        val microsoftClient = context.packageManager.queryIntentActivities(uriIntent, 0)
+            .map { it.activityInfo.packageName }
+            .firstOrNull { it in MICROSOFT_RDP_CLIENTS }
+        if (microsoftClient != null && start(Intent(uriIntent).setPackage(microsoftClient)))
+            return Result.Started
+
+        // other RDP clients: .rdp file (office suites and terminals accept any file, so the user chooses)
         val file = writeRdpFile(favorite)
         val fileUri = FileProvider.getUriForFile(context, "${context.packageName}.files", file)
         val fileIntent = Intent(Intent.ACTION_VIEW)
             .setDataAndType(fileUri, "application/x-rdp")
             .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK)
-        if (start(fileIntent))
-            return Result.Started
-
-        val query = buildString {
-            append("full%20address=s:").append(Uri.encode(favorite.address))
-            if (favorite.fullUserName.isNotEmpty())
-                append("&username=s:").append(Uri.encode(favorite.fullUserName))
-        }
-        if (start(Intent(Intent.ACTION_VIEW, Uri.parse("rdp://$query")).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)))
+        if (start(uriIntent) || start(fileIntent))
             return Result.Started
 
         return Result.NoClient(R.string.no_rdp_client)
@@ -136,5 +142,8 @@ class ConnectionLauncher(private val context: Context) {
 
     companion object {
         private const val CLEAR_CLIPBOARD_MILLIS = 60_000L
+
+        /** Windows App (new name of Remote Desktop) and the older Remote Desktop 8 client. */
+        private val MICROSOFT_RDP_CLIENTS = listOf("com.microsoft.rdc.androidx", "com.microsoft.rdc.android")
     }
 }

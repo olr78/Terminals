@@ -6,7 +6,7 @@ The app has no network permission and doesn't connect anywhere by itself.
 
 | Protocol | Opened by |
 | --- | --- |
-| RDP | Windows App / Microsoft Remote Desktop (`.rdp` file, then `rdp://` URI) |
+| RDP | Windows App / Microsoft Remote Desktop (`rdp://` URI), other clients via `.rdp` file |
 | SSH, Telnet | any app handling `ssh://` / `telnet://` (JuiceSSH, Termius, ...) |
 | VNC | any app handling `vnc://` (RealVNC Viewer, ...) |
 | HTTP, HTTPS | browser |

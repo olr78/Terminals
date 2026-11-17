@@ -33,7 +33,8 @@ data class Favorite(
         if (query.isBlank())
             return true
         return query.trim().split(Regex("\\s+")).all { word ->
-            name.contains(word, true) || serverName.contains(word, true) || notes.contains(word, true) ||
+            name.contains(word, true) || address.contains(word, true) || port.toString() == word ||
+                    notes.contains(word, true) ||
                     protocol.contains(word, true) || userName.contains(word, true) ||
                     groups.any { it.contains(word, true) }
         }

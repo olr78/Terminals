@@ -2,6 +2,7 @@ package net.terminals.companion.ui
 
 import android.content.Context
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
@@ -324,9 +325,9 @@ private fun ProtocolBadge(protocol: String) {
 private fun FavoriteSheet(favorite: Favorite, snackbar: SnackbarHostState, onDismiss: () -> Unit) {
     val context = LocalContext.current
     val launcher = remember { ConnectionLauncher(context.applicationContext) }
-    val scope = rememberCoroutineScope()
     var showPassword by remember { mutableStateOf(false) }
-    val show = { id: Int -> scope.launch { snackbar.showSnackbar(context.getString(id)) } }
+    // the modal sheet is a separate window above the snackbar host, toast is visible above it
+    val show = { id: Int -> Toast.makeText(context, id, Toast.LENGTH_SHORT).show() }
 
     ModalBottomSheet(onDismissRequest = onDismiss, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)) {
         Column(

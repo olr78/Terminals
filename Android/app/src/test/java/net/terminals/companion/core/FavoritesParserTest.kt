@@ -40,5 +40,7 @@ class FavoritesParserTest {
         assertTrue(rdp.matches("line2"))
         assertTrue(rdp.matches(""))
         assertFalse(rdp.matches("сервер linux"))
+        assertTrue(favorites.single { it.protocol == Protocols.SSH }.matches("2222"))
+        assertFalse(rdp.matches("2222"))
     }
 }
