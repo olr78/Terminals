@@ -40,4 +40,6 @@
     <string name="no_ssh_client">Install an SSH client (e.g. JuiceSSH or Termius) to connect</string>
     <string name="no_vnc_client">Install a VNC client (e.g. RealVNC Viewer) to connect</string>
     <string name="no_browser">No browser found</string>
+    <string name="check_updates">Check for updates</string>
+    <string name="version">Version %1$s</string>
 </resources>

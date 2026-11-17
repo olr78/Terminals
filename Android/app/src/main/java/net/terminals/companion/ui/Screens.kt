@@ -1,6 +1,9 @@
 package net.terminals.companion.ui
 
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -128,16 +131,21 @@ fun TerminalsApp(viewModel: VaultViewModel) {
                             Icon(Icons.Filled.Lock, stringResource(R.string.lock))
                         }
                     }
-                    if (state !is VaultState.Empty) {
-                        IconButton(onClick = { menuOpen = true }) {
-                            Icon(Icons.Filled.MoreVert, stringResource(R.string.menu))
-                        }
-                        DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
+                    IconButton(onClick = { menuOpen = true }) {
+                        Icon(Icons.Filled.MoreVert, stringResource(R.string.menu))
+                    }
+                    DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
+                        if (state !is VaultState.Empty) {
                             DropdownMenuItem(text = { Text(stringResource(R.string.import_new)) },
                                 onClick = { menuOpen = false; openPicker() })
                             DropdownMenuItem(text = { Text(stringResource(R.string.delete_export)) },
                                 onClick = { menuOpen = false; confirmDelete = true })
+                            HorizontalDivider()
                         }
+                        DropdownMenuItem(text = { Text(stringResource(R.string.check_updates)) },
+                            onClick = { menuOpen = false; openReleases(context) })
+                        DropdownMenuItem(text = { Text(stringResource(R.string.version, appVersion(context))) },
+                            onClick = {}, enabled = false)
                     }
                 })
         },
@@ -380,6 +388,24 @@ private fun FavoriteSheet(favorite: Favorite, snackbar: SnackbarHostState, onDis
         }
     }
 }
+
+/** Releases of the Android app on GitHub, opened in the browser: the app itself has no network access. */
+private const val RELEASES_URL = "https://github.com/olr78/Terminals/releases?q=android&expanded=true"
+
+private fun openReleases(context: Context) {
+    try {
+        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(RELEASES_URL)))
+    } catch (e: ActivityNotFoundException) {
+        Toast.makeText(context, R.string.no_browser, Toast.LENGTH_SHORT).show()
+    }
+}
+
+private fun appVersion(context: Context): String =
+    try {
+        context.packageManager.getPackageInfo(context.packageName, 0).versionName ?: "?"
+    } catch (e: PackageManager.NameNotFoundException) {
+        "?"
+    }
 
 private fun copy(context: Context, launcher: ConnectionLauncher, labelId: Int, text: String, sensitive: Boolean,
                  show: (Int) -> Any) {

@@ -39,4 +39,6 @@
     <string name="no_ssh_client">Встановіть SSH-клієнт (наприклад, JuiceSSH або Termius), щоб підключитися</string>
     <string name="no_vnc_client">Встановіть VNC-клієнт (наприклад, RealVNC Viewer), щоб підключитися</string>
     <string name="no_browser">Не знайдено браузера</string>
+    <string name="check_updates">Перевірити оновлення</string>
+    <string name="version">Версія %1$s</string>
 </resources>

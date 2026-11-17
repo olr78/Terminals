@@ -11,6 +11,9 @@ The app has no network permission and doesn't connect anywhere by itself.
 | VNC | any app handling `vnc://` (RealVNC Viewer, ...) |
 | HTTP, HTTPS | browser |
 
+Updates: menu → "Check for updates" opens the Android releases on GitHub in the browser (the app has no
+network access); install the new APK over the old one. The menu shows the installed version.
+
 The password isn't passed to the clients; the app copies it to the clipboard (marked as sensitive,
 cleared after a minute) before opening the connection.
 
