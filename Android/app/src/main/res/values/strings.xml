@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Terminals</string>
+    <string name="empty_title">Import connections</string>
+    <string name="empty_steps">1. In the desktop Terminals open File → Export connections.\n2. Select the connections, check \"Encrypt exported file with a password\" and, if you want them here, \"Include Passwords\".\n3. Copy the file to the phone and import it here.\n\nThe file stays encrypted on the phone. Connections are decrypted only after you enter the export password.</string>
+    <string name="import_file">Import export file</string>
+    <string name="import_new">Import new file</string>
+    <string name="import_done">The export was imported</string>
+    <string name="invalid_export">The file is not an encrypted Terminals export</string>
+    <string name="delete_export">Delete imported data</string>
+    <string name="delete_export_question">The imported export will be deleted from this phone.</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="menu">Menu</string>
+    <string name="lock">Lock</string>
+    <string name="unlock_title">Enter the export password</string>
+    <string name="export_password">Export password</string>
+    <string name="unlock">Unlock</string>
+    <string name="wrong_password">Wrong password</string>
+    <string name="too_many_attempts">Too many attempts. Wait %1$d s.</string>
+    <string name="search">Search</string>
+    <string name="clear">Clear</string>
+    <string name="all_groups">All</string>
+    <string name="count">%1$d of %2$d</string>
+    <string name="protocol">Protocol</string>
+    <string name="server">Server</string>
+    <string name="user">User</string>
+    <string name="password">Password</string>
+    <string name="groups">Groups</string>
+    <string name="notes">Notes</string>
+    <string name="copy">Copy</string>
+    <string name="copied">Copied</string>
+    <string name="password_copied">Password copied, it will be cleared in a minute</string>
+    <string name="password_copied_for_connect">Password copied, paste it in the client</string>
+    <string name="connect">Connect</string>
+    <string name="show_password">Show password</string>
+    <string name="hide_password">Hide password</string>
+    <string name="protocol_not_supported">The protocol can\'t be opened on Android</string>
+    <string name="no_rdp_client">Install Windows App (Microsoft Remote Desktop) to connect</string>
+    <string name="no_ssh_client">Install an SSH client (e.g. JuiceSSH or Termius) to connect</string>
+    <string name="no_vnc_client">Install a VNC client (e.g. RealVNC Viewer) to connect</string>
+    <string name="no_browser">No browser found</string>
+</resources>

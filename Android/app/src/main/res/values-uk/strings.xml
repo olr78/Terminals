@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="empty_title">Імпорт з’єднань</string>
+    <string name="empty_steps">1. У Terminals на комп’ютері відкрийте Файл → Експорт з’єднань.\n2. Виберіть з’єднання, увімкніть «Зашифрувати експортований файл паролем» і, якщо потрібні паролі, «Включити паролі».\n3. Скопіюйте файл на телефон і імпортуйте його тут.\n\nНа телефоні файл зберігається зашифрованим. З’єднання розшифровуються лише після введення пароля експорту.</string>
+    <string name="import_file">Імпортувати файл експорту</string>
+    <string name="import_new">Імпортувати новий файл</string>
+    <string name="import_done">Експорт імпортовано</string>
+    <string name="invalid_export">Файл не є зашифрованим експортом Terminals</string>
+    <string name="delete_export">Видалити імпортовані дані</string>
+    <string name="delete_export_question">Імпортований експорт буде видалено з цього телефона.</string>
+    <string name="delete">Видалити</string>
+    <string name="cancel">Скасувати</string>
+    <string name="menu">Меню</string>
+    <string name="lock">Заблокувати</string>
+    <string name="unlock_title">Введіть пароль експорту</string>
+    <string name="export_password">Пароль експорту</string>
+    <string name="unlock">Розблокувати</string>
+    <string name="wrong_password">Неправильний пароль</string>
+    <string name="too_many_attempts">Забагато спроб. Зачекайте %1$d с.</string>
+    <string name="search">Пошук</string>
+    <string name="clear">Очистити</string>
+    <string name="all_groups">Усі</string>
+    <string name="count">%1$d з %2$d</string>
+    <string name="protocol">Протокол</string>
+    <string name="server">Сервер</string>
+    <string name="user">Користувач</string>
+    <string name="password">Пароль</string>
+    <string name="groups">Групи</string>
+    <string name="notes">Нотатки</string>
+    <string name="copy">Копіювати</string>
+    <string name="copied">Скопійовано</string>
+    <string name="password_copied">Пароль скопійовано, його буде видалено з буфера за хвилину</string>
+    <string name="password_copied_for_connect">Пароль скопійовано, вставте його в клієнті</string>
+    <string name="connect">Підключитися</string>
+    <string name="show_password">Показати пароль</string>
+    <string name="hide_password">Сховати пароль</string>
+    <string name="protocol_not_supported">Цей протокол не відкривається на Android</string>
+    <string name="no_rdp_client">Встановіть Windows App (Microsoft Remote Desktop), щоб підключитися</string>
+    <string name="no_ssh_client">Встановіть SSH-клієнт (наприклад, JuiceSSH або Termius), щоб підключитися</string>
+    <string name="no_vnc_client">Встановіть VNC-клієнт (наприклад, RealVNC Viewer), щоб підключитися</string>
+    <string name="no_browser">Не знайдено браузера</string>
+</resources>

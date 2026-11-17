@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-16"?>
+<favorites>
+  <favorite>
+    <protocol>RDP</protocol>
+    <port>3389</port>
+    <serverName>srv1.example.local</serverName>
+    <url>http://</url>
+    <name>Сервер 1</name>
+    <notes>line1
+line2 &lt;&amp;&gt;</notes>
+    <tags>Office,Production</tags>
+    <newWindow>False</newWindow>
+    <toolBarIcon />
+    <bitmapPeristence>RDP</bitmapPeristence>
+    <credential />
+    <domainName>CORP</domainName>
+    <userName>admin</userName>
+    <password>p@ss'word"</password>
+  </favorite>
+  <favorite>
+    <protocol>SSH</protocol>
+    <port>2222</port>
+    <serverName>10.0.0.5</serverName>
+    <url>http://</url>
+    <name>linux box</name>
+    <notes />
+    <tags>Production</tags>
+    <newWindow>False</newWindow>
+    <toolBarIcon />
+    <bitmapPeristence>SSH</bitmapPeristence>
+    <credential />
+    <domainName />
+    <userName>root</userName>
+    <password>toor</password>
+  </favorite>
+  <favorite>
+    <protocol>VNC</protocol>
+    <port>5900</port>
+    <serverName>vnc.example.local</serverName>
+    <url>http://</url>
+    <name>vnc</name>
+    <notes />
+    <tags />
+    <newWindow>False</newWindow>
+    <toolBarIcon />
+    <bitmapPeristence>VNC</bitmapPeristence>
+    <credential />
+    <domainName />
+  </favorite>
+  <favorite>
+    <protocol>HTTPS</protocol>
+    <port>443</port>
+    <serverName>portal.example.local</serverName>
+    <url>https://portal.example.local/login</url>
+    <name>Portal</name>
+    <notes />
+    <tags>Office</tags>
+    <newWindow>False</newWindow>
+    <toolBarIcon />
+    <bitmapPeristence>HTTPS</bitmapPeristence>
+    <credential />
+    <domainName />
+    <userName />
+    <password />
+  </favorite>
+</favorites>
